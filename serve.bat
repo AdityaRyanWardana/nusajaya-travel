@@ -1,0 +1,3 @@
+@echo off
+echo Starting Laravel Server using local PHP 8.5...
+local-php\php.exe artisan serve
