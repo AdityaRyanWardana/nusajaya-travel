@@ -1,87 +1,108 @@
 @extends('layouts.public')
 
 @section('content')
-<main class="flex-1 bg-lightbg px-8 py-10 pb-20">
-    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
-        <!-- Hero Image -->
-        <div class="relative h-[400px]">
-            <img src="{{ $tour['image'] }}" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/80 to-transparent"></div>
-            <div class="absolute bottom-10 left-10">
-                <span class="bg-skyblue text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">{{ $tour['category'] }}</span>
-                <h1 class="text-4xl font-black text-white tracking-tight">{{ $tour['name'] }}</h1>
-            </div>
-        </div>
+<main class="flex-1 bg-lightbg px-8 py-16 pb-24">
+    <div class="max-w-6xl mx-auto">
+        <!-- Breadcrumb -->
+        <a href="{{ route('tours.index') }}" class="inline-flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-10 hover:text-brandblue transition group">
+            <svg class="w-4 h-4 group-hover:-translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Back to All Packages
+        </a>
 
-        <div class="p-10 grid md:grid-cols-3 gap-10">
-            <!-- Left: Description -->
-            <div class="md:col-span-2">
-                <h2 class="text-xl font-bold text-brandblue mb-4">Description</h2>
-                <p class="text-slate-600 leading-relaxed mb-8">
-                    {{ $tour['description'] }}
-                    <br><br>
-                    Experience the beauty and culture of Batam with our professional tour services. This package includes:
-                </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-sm text-slate-500">
-                        <svg class="w-5 h-5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Professional Guide
-                    </li>
-                    <li class="flex items-center gap-3 text-sm text-slate-500">
-                        <svg class="w-5 h-5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Comfortable Transportation
-                    </li>
-                    <li class="flex items-center gap-3 text-sm text-slate-500">
-                        <svg class="w-5 h-5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Lunch & Refreshments
-                    </li>
-                </ul>
-            </div>
+        <div class="grid lg:grid-cols-3 gap-12">
+            <!-- Left: Cinematic Content -->
+            <div class="lg:col-span-2 space-y-12">
+                <div class="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
+                    <img src="{{ $tour['image'] }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-12 left-12 right-12">
+                        <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-6 inline-block">
+                            {{ $tour['category'] }}
+                        </span>
+                        <h1 class="text-5xl font-black text-white uppercase italic leading-[0.9] tracking-tighter">{{ $tour['name'] }}</h1>
+                    </div>
+                </div>
 
-            <!-- Right: Booking Menu -->
-            <div class="md:col-span-1">
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 sticky top-24">
-                    <p class="text-[10px] text-slate-400 font-black tracking-widest uppercase mb-1">PRICE PER PERSON</p>
-                    <p class="text-2xl font-black text-brandblue mb-6">IDR {{ number_format($tour['price'], 0, ',', '.') }}</p>
+                <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-slate-100">
+                    <h2 class="text-2xl font-black text-brandblue uppercase italic mb-6">About the Experience</h2>
+                    <p class="text-slate-500 font-medium leading-relaxed mb-10">{{ $tour['description'] }}</p>
                     
-                    @if(session('success'))
-                        <div class="bg-green-50 text-green-600 p-3 rounded-lg text-xs font-bold mb-4">
-                            {{ session('success') }}
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Package Inclusions</h3>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-skyblue shadow-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            </div>
+                            <span class="text-[11px] font-black text-brandblue uppercase">Expert Local Guide</span>
                         </div>
-                    @endif
+                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-skyblue shadow-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            </div>
+                            <span class="text-[11px] font-black text-brandblue uppercase">VIP Transport</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-skyblue shadow-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.703 2.703 0 01-3 0 2.703 2.703 0 01-3 0 2.703 2.703 0 01-3 0 2.701 2.701 0 01-1.5-.454M9 16v2m3-6v6m3-8v8m-9-6a9 9 0 1118 0 9 9 0 01-18 0z"></path></svg>
+                            </div>
+                            <span class="text-[11px] font-black text-brandblue uppercase">Gourmet Dinner</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-skyblue shadow-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                            </div>
+                            <span class="text-[11px] font-black text-brandblue uppercase">Digital Memories</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Premium Booking Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-brandblue rounded-[3rem] p-10 text-white shadow-2xl sticky top-32">
+                    <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4">Base Package</p>
+                    <div class="flex items-baseline gap-2 mb-10">
+                        <span class="text-sm font-bold opacity-60">IDR</span>
+                        <span class="text-4xl font-black italic tracking-tighter">{{ number_format($tour['price'], 0, ',', '.') }}</span>
+                        <span class="text-xs font-bold opacity-60">/ pax</span>
+                    </div>
 
                     @auth
-                    <form action="{{ route('tours.book', $tour['slug']) }}" method="POST" class="space-y-4">
+                    <form action="{{ route('tours.book', $tour['slug']) }}" method="POST" class="space-y-6">
                         @csrf
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Travel Date</label>
-                            <input type="date" name="date" required class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brandblue">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Select Date</label>
+                            <input type="date" name="date" required class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none">
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Guests</label>
-                            <select name="guests" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brandblue">
-                                <option>1 Guest</option>
-                                <option>2 Guests</option>
-                                <option>3 Guests</option>
-                                <option>4 Guests</option>
-                                <option>5+ Guests</option>
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Total Guests</label>
+                            <select name="guests" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
+                                @for($i=1; $i<=10; $i++) <option value="{{ $i }}" class="text-brandblue">{{ $i }} Person{{ $i > 1 ? 's' : '' }}</option> @endfor
                             </select>
                         </div>
-                        <button type="submit" class="w-full bg-brandblue hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-brandblue/20">
-                            Book Now
+                        <button type="submit" class="w-full py-5 bg-skyblue hover:bg-white hover:text-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-500 shadow-xl shadow-skyblue/20">
+                            Book Experience
                         </button>
                     </form>
                     @else
-                    <div class="space-y-4">
-                        <p class="text-xs text-slate-500 text-center mb-4">Silakan login terlebih dahulu untuk melakukan pemesanan.</p>
-                        <a href="{{ route('login') }}" class="w-full bg-brandblue hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-brandblue/20 text-center block">
-                            Login to Book
+                    <div class="space-y-6">
+                        <p class="text-xs font-medium text-white/60 leading-relaxed italic">Login to your account to unlock exclusive member rates and secure your spot.</p>
+                        <a href="{{ route('login') }}" class="block w-full py-5 bg-white text-brandblue rounded-2xl text-xs font-black text-center uppercase tracking-[0.3em] hover:bg-skyblue hover:text-white transition-all duration-500 shadow-xl">
+                            Login & Book
                         </a>
-                        <p class="text-[10px] text-center text-slate-400">Belum punya akun? <a href="{{ route('register') }}" class="text-brandblue font-bold">Daftar sekarang</a></p>
+                        <p class="text-[10px] text-center font-bold text-white/40 uppercase tracking-widest leading-none">Not a member? <a href="{{ route('register') }}" class="text-skyblue border-b border-skyblue/30">Join the club</a></p>
                     </div>
                     @endauth
 
-                    <p class="text-[9px] text-slate-400 text-center mt-6 uppercase font-bold tracking-widest">Free Cancellation within 24h</p>
+                    <div class="mt-12 pt-12 border-t border-white/10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-skyblue/20 flex items-center justify-center text-skyblue">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            </div>
+                            <p class="text-[10px] font-black uppercase tracking-widest italic">Safety Certified</p>
+                        </div>
+                        <p class="text-[9px] text-white/40 leading-relaxed font-medium">All-in service includes professional guide, premium transport, and insurance coverage.</p>
+                    </div>
                 </div>
             </div>
         </div>

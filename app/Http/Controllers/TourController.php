@@ -9,52 +9,52 @@ class TourController extends Controller
 {
     private $destinations = [
         'batam-city-tour' => [
-            'name' => 'Batam City Tour',
+            'name' => 'Classic Batam City Tour',
             'slug' => 'batam-city-tour',
             'price' => 350000,
-            'image' => 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'A comprehensive journey through Batam\'s landmarks, shopping centers, and culinary hotspots.',
+            'image' => 'https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop',
+            'description' => 'A comprehensive journey through Batam\'s landmarks, shopping centers, and culinary hotspots. Perfect for first-timers.',
             'category' => 'Batam City Tour',
-        ],
-        'pantai-melur' => [
-            'name' => 'Pantai Melur Excursion',
-            'slug' => 'pantai-melur',
-            'price' => 450000,
-            'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Visit one of Batam\'s most legendary beaches with calm waters and white sand.',
-            'category' => 'PP Barelang',
-        ],
-        'pantai-mirota' => [
-            'name' => 'Pantai Mirota Beach Day',
-            'slug' => 'pantai-mirota',
-            'price' => 500000,
-            'image' => 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'A beautiful clean beach at Galang Island, perfect for family picnics and water sports.',
-            'category' => 'PP Barelang',
         ],
         'pantai-viovio' => [
             'name' => 'Pantai Viovio Sunset',
             'slug' => 'pantai-viovio',
             'price' => 550000,
             'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Known for its stunning sunset views and iconic swings in the shallow water.',
+            'description' => 'Experience the most beautiful sunset in Batam. Known for its iconic swings and crystal clear shallow water.',
             'category' => 'PP Barelang',
         ],
-        'nagoya-hill' => [
-            'name' => 'Nagoya Hill Shopping',
-            'slug' => 'nagoya-hill',
-            'price' => 300000,
+        'ranoh-island' => [
+            'name' => 'Ranoh Island Premium',
+            'slug' => 'ranoh-island',
+            'price' => 750000,
             'image' => 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Experience the best shopping experience in Batam at Nagoya Hill Mall. Find original products and local delicacies.',
-            'category' => 'Batam City Tour',
+            'description' => 'Escape to a secluded island with premium facilities. Includes snorkeling, kayaking, and an all-day buffet.',
+            'category' => 'Island Tour',
+        ],
+        'barelang-bridge' => [
+            'name' => 'Barelang Architectural Tour',
+            'slug' => 'barelang-bridge',
+            'price' => 550000,
+            'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
+            'description' => 'A dedicated tour to the 6 bridges of Barelang, showcasing the engineering marvel that connects Batam islands.',
+            'category' => 'PP Barelang',
         ],
         'maha-vihara' => [
-            'name' => 'Maha Vihara Temple',
+            'name' => 'Maha Vihara Spiritual',
             'slug' => 'maha-vihara',
             'price' => 400000,
-            'image' => 'https://images.unsplash.com/photo-1604104445831-2fb98f98ec4e?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Experience peace at the largest Buddhist temple in Southeast Asia, known for its Maitreya statues.',
+            'image' => '/images/maha_vihara.png',
+            'description' => 'Visit the largest Buddhist temple in Southeast Asia. A place of peace, stunning architecture, and spiritual reflection.',
             'category' => 'Batam City Tour',
+        ],
+        'galang-refugee' => [
+            'name' => 'Galang Refugee Camp History',
+            'slug' => 'galang-refugee',
+            'price' => 600000,
+            'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
+            'description' => 'Explore the poignant history of Vietnamese refugees in the late 70s. A deeply moving historical site in Galang Island.',
+            'category' => 'PP Barelang',
         ],
     ];
 
@@ -91,7 +91,7 @@ class TourController extends Controller
 
         $tour = $this->destinations[$slug];
 
-        Booking::create([
+        $booking = Booking::create([
             'user_id' => auth()->id(),
             'service_name' => $tour['name'],
             'service_slug' => $slug,
@@ -102,13 +102,49 @@ class TourController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('orders.my')->with('success', 'Thank you! Your booking for ' . $tour['name'] . ' has been received. Please complete the payment.');
+        return redirect()->route('orders.payment', $booking->id)->with('success', 'Thank you! Please complete your payment for ' . $tour['name']);
     }
 
     public function myOrders()
     {
         $orders = Booking::where('user_id', auth()->id())->latest()->get();
         return view('orders.index', compact('orders'));
+    }
+
+    public function resetOrders()
+    {
+        // Truncate table and reset sequence for SQLite
+        if (\DB::getDriverName() === 'sqlite') {
+            \DB::statement('PRAGMA foreign_keys = OFF;');
+            Booking::truncate(); // Laravel truncate on sqlite does 'delete from table'
+            \DB::table('sqlite_sequence')->where('name', 'bookings')->delete();
+            \DB::statement('PRAGMA foreign_keys = ON;');
+        } else {
+            \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            Booking::truncate();
+            \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
+        
+        return redirect()->route('orders.my')->with('success', 'Your order history and booking codes have been successfully reset.');
+    }
+
+    public function payment($id)
+    {
+        $order = Booking::where('user_id', auth()->id())->findOrFail($id);
+        if ($order->status !== 'pending') {
+            return redirect()->route('orders.my');
+        }
+        return view('orders.payment', compact('order'));
+    }
+
+    public function pay(Request $request, $id)
+    {
+        $order = Booking::where('user_id', auth()->id())->findOrFail($id);
+        
+        // Simulation of processing payment
+        $order->update(['status' => 'paid']);
+        
+        return redirect()->route('orders.my')->with('success', 'Payment successful! Your booking is now confirmed.');
     }
 
     public function cancelOrder($id)

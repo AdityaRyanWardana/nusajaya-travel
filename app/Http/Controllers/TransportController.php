@@ -13,24 +13,24 @@ class TransportController extends Controller
             'slug' => 'vip-high-deck',
             'name' => '50 Seat VIP High Deck',
             'category' => 'VIP BUS',
-            'price' => 1800000,
+            'price' => 900000,
             'capacity' => '50 Persons',
             'features' => 'VIP Legrest, Air Suspension, Toilet, High Deck (HDD)',
-            'description' => 'Armada premium Golden Dragon High Deck (HDD) dengan suspensi udara untuk kenyamanan maksimal. Dilengkapi kursi VIP dengan legrest dan fasilitas kelas atas untuk perjalanan grup eksklusif.',
-            'image' => '/images/goldendragon_bus.jpg',
+            'description' => 'Flagship Golden Dragon High Deck (HDD) armada dengan suspensi udara untuk keheningan dan kenyamanan maksimal. Dilengkapi kursi VIP dengan legrest dan sistem tata suara premium.',
+            'image' => 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069&auto=format&fit=crop',
             'available' => true,
             'is_flagship' => true
         ],
         2 => [
             'id' => 2,
             'slug' => 'vip-40-seat',
-            'name' => '40 Seat VIP',
+            'name' => '40 Seat VIP Executive',
             'category' => 'VIP BUS',
             'price' => 1500000,
             'capacity' => '40 Persons',
             'features' => 'VIP Reclining Seats, Full AC, TV/Karaoke, Audio System',
-            'description' => 'Armada 40 Seat VIP Golden Dragon yang didesain khusus untuk perjalanan grup kelas menengah dengan kenyamanan premium. Dilengkapi kursi reclining yang lega dan sistem hiburan lengkap untuk perjalanan jauh.',
-            'image' => '/images/goldendragon_40seat.jpg',
+            'description' => 'Edisi Executive Golden Dragon dengan konfigurasi kursi 40 seat yang lapang. Sangat cocok untuk perjalanan wisata korporat dengan fasilitas hiburan terlengkap di kelasnya.',
+            'image' => 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop',
             'available' => true,
             'is_flagship' => false
         ],
@@ -42,8 +42,8 @@ class TransportController extends Controller
             'price' => 2500000,
             'capacity' => '30 Persons',
             'features' => 'Comfortable Seats, Full AC, Audio System',
-            'description' => 'Perfect balance between size and luxury. Ideal for mid-sized groups exploring Batam city landmarks.',
-            'image' => 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop',
+            'description' => 'Armada medium yang tangguh dan mewah. Ideal bagi grup berukuran sedang yang ingin menjelajahi sudut-sudut eksotis Batam dengan kemudahan akses jalan sempit sekalipun.',
+            'image' => 'https://images.unsplash.com/photo-1562620644-644917a8080c?q=80&w=2070&auto=format&fit=crop',
             'available' => true,
             'is_flagship' => false
         ],
@@ -55,7 +55,7 @@ class TransportController extends Controller
             'price' => 2800000,
             'capacity' => '20 Persons',
             'features' => 'Eco-Friendly, Silent Engine, USB Ports',
-            'description' => 'Go green with our modern electric bus. Silent, comfortable, and sustainable for environmentally conscious groups.',
+            'description' => 'Simbol modernitas Batam. Bus listrik yang senyap, ramah lingkungan, dan dilengkapi port pengisian daya di setiap kursi. Pilihan tepat bagi rombongan yang peduli lingkungan.',
             'image' => 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop',
             'available' => true,
             'is_flagship' => false
@@ -68,7 +68,7 @@ class TransportController extends Controller
             'price' => 1800000,
             'capacity' => '20 Persons',
             'features' => 'Executive Interior, Full AC, Compact Size',
-            'description' => 'Excellent for quick transfers and executive group site visits where agility and comfort are needed.',
+            'description' => 'Mini bus dengan interior kelas eksekutif. Ukuran yang kompak memudahkan akses ke destinasi pantai tersembunyi tanpa mengurangi kemewahan perjalanan Anda.',
             'image' => 'https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=2070&auto=format&fit=crop',
             'available' => true,
             'is_flagship' => false
@@ -81,7 +81,7 @@ class TransportController extends Controller
             'price' => 1200000,
             'capacity' => '15 Persons',
             'features' => 'Standard AC, Comfortable Seats, Efficient',
-            'description' => 'An economical choice for smaller groups. Provides reliable transportation for airport transfers and short local trips.',
+            'description' => 'Solusi transportasi ekonomis untuk grup kecil. Efisien dan andal untuk antar-jemput bandara atau kunjungan lokasi di seputaran pusat kota Batam.',
             'image' => 'https://images.unsplash.com/photo-1532581133564-9ca29e55f65f?q=80&w=2070&auto=format&fit=crop',
             'available' => true,
             'is_flagship' => false
@@ -121,21 +121,53 @@ class TransportController extends Controller
     {
         $request->validate([
             'travel_date' => 'required|date',
+            'route_option' => 'nullable|string',
+            'duration_option' => 'nullable|string'
         ]);
 
         $transport = $this->fleet[$id] ?? null;
         if (!$transport) abort(404);
 
-        Booking::create([
+        $finalAmount = $transport['price'];
+        $routeName = 'Standard Tour';
+
+        if ($request->route_option === 'barelang') {
+            $finalAmount = 1800000;
+            $routeName = 'PP Barelang';
+        } elseif ($request->route_option === 'city_tour') {
+            switch ($request->duration_option) {
+                case 'one_way':
+                    $finalAmount = 900000;
+                    $routeName = 'Batam City Tour (One Way)';
+                    break;
+                case 'half_day':
+                    $finalAmount = 1400000;
+                    $routeName = 'Batam City Tour (Half Day - 4h)';
+                    break;
+                case 'one_day':
+                    $finalAmount = 1900000;
+                    $routeName = 'Batam City Tour (One Day - 8h)';
+                    break;
+                case 'full_day':
+                    $finalAmount = 2200000;
+                    $routeName = 'Batam City Tour (Full Day - 12h)';
+                    break;
+                default:
+                    $finalAmount = 900000;
+                    $routeName = 'Batam City Tour';
+            }
+        }
+
+        $booking = Booking::create([
             'user_id' => auth()->id(),
-            'service_name' => $transport['name'],
+            'service_name' => $transport['name'] . ' - ' . $routeName,
             'service_slug' => $transport['slug'],
             'type' => 'transport',
-            'amount' => $transport['price'],
+            'amount' => $finalAmount,
             'travel_date' => $request->travel_date,
             'status' => 'pending'
         ]);
 
-        return redirect()->route('orders.my')->with('success', 'Booking transport successful!');
+        return redirect()->route('orders.payment', $booking->id)->with('success', 'Booking transport successful! Please complete your payment.');
     }
 }

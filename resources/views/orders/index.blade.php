@@ -3,13 +3,21 @@
 @section('content')
 <main class="flex-1 bg-lightbg px-8 py-12">
     <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-end mb-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
                 <h1 class="text-4xl font-black text-brandblue tracking-tight mb-2">My Orders</h1>
                 <p class="text-slate-500 font-medium">Manage your travel bookings, rescheduling, and cancellations.</p>
             </div>
-            <div class="flex gap-3">
-                <a href="{{ route('tours.index') }}" class="bg-brandblue text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-brandblue/20 hover:bg-slate-800 transition">Book New Tour</a>
+            <div class="flex gap-4">
+                @if(count($orders) > 0)
+                    <form action="{{ route('orders.reset') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus seluruh riwayat pesanan? Tindakan ini tidak dapat dibatalkan.');">
+                        @csrf
+                        <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-500 px-8 py-3 rounded-2xl font-black text-xs uppercase transition">
+                            Reset History
+                        </button>
+                    </form>
+                @endif
+                <a href="{{ route('tours.index') }}" class="bg-brandblue text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase shadow-lg shadow-brandblue/20 hover:bg-slate-800 transition">Book New Tour</a>
             </div>
         </div>
 
@@ -133,6 +141,9 @@
 
                                             <div class="flex flex-col gap-3">
                                                 @if($order->status == 'pending')
+                                                    <a href="{{ route('orders.payment', $order->id) }}" class="w-full py-4 bg-brandblue text-white hover:bg-slate-800 rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition text-center shadow-xl shadow-brandblue/20 mb-2">
+                                                        Proceed to Payment
+                                                    </a>
                                                     <form action="{{ route('orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?')">
                                                         @csrf
                                                         <button type="submit" class="w-full py-3.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-2xl text-xs font-black uppercase tracking-widest transition">Cancel This Booking</button>

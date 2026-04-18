@@ -22,10 +22,11 @@
         <div>
             <h4 class="text-xs font-bold text-slate-400 tracking-widest uppercase mb-4">DESTINATIONS</h4>
             <ul class="space-y-3">
-                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Batam Island</a></li>
-                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Bintan Island</a></li>
-                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Bali</a></li>
-                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Jakarta</a></li>
+                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Barelang Bridge</a></li>
+                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Nagoya Hill</a></li>
+                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Ranoh Island</a></li>
+                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Harbour Bay</a></li>
+                <li><a href="#" class="text-xs text-slate-500 hover:text-brandblue">Batam Center</a></li>
             </ul>
         </div>
         <div>
