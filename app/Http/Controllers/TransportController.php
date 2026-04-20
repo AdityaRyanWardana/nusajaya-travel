@@ -7,19 +7,26 @@ use App\Models\Booking;
 
 class TransportController extends Controller
 {
+    public function __construct()
+    {
+        $this->fleet[1]['image'] = asset($this->fleet[1]['image']);
+        $this->fleet[2]['image'] = asset($this->fleet[2]['image']);
+        $this->fleet[3]['image'] = asset($this->fleet[3]['image']);
+    }
+
     private $fleet = [
         1 => [
             'id' => 1,
             'slug' => 'vip-high-deck',
             'name' => '50 Seat VIP High Deck',
             'category' => 'VIP BUS',
-            'price' => 900000,
+            'price' => 1800000,
             'capacity' => '50 Persons',
             'features' => 'VIP Legrest, Air Suspension, Toilet, High Deck (HDD)',
             'description' => 'Flagship Golden Dragon High Deck (HDD) armada dengan suspensi udara untuk keheningan dan kenyamanan maksimal. Dilengkapi kursi VIP dengan legrest dan sistem tata suara premium.',
-            'image' => 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069&auto=format&fit=crop',
+            'image' => 'images/bus_50_seat_vip.jpg',
             'available' => true,
-            'is_flagship' => true
+            'is_flagship' => false
         ],
         2 => [
             'id' => 2,
@@ -30,20 +37,20 @@ class TransportController extends Controller
             'capacity' => '40 Persons',
             'features' => 'VIP Reclining Seats, Full AC, TV/Karaoke, Audio System',
             'description' => 'Edisi Executive Golden Dragon dengan konfigurasi kursi 40 seat yang lapang. Sangat cocok untuk perjalanan wisata korporat dengan fasilitas hiburan terlengkap di kelasnya.',
-            'image' => 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop',
+            'image' => 'images/bus_40_seat_vip.jpg',
             'available' => true,
             'is_flagship' => false
         ],
         3 => [
             'id' => 3,
-            'slug' => 'medium-bus-premium',
-            'name' => 'Medium Bus Premium',
+            'slug' => 'coaster-24-seat',
+            'name' => 'Coaster 24 Seat',
             'category' => 'Medium Bus',
-            'price' => 2500000,
-            'capacity' => '30 Persons',
-            'features' => 'Comfortable Seats, Full AC, Audio System',
-            'description' => 'Armada medium yang tangguh dan mewah. Ideal bagi grup berukuran sedang yang ingin menjelajahi sudut-sudut eksotis Batam dengan kemudahan akses jalan sempit sekalipun.',
-            'image' => 'https://images.unsplash.com/photo-1562620644-644917a8080c?q=80&w=2070&auto=format&fit=crop',
+            'price' => 800000,
+            'capacity' => '24 Persons',
+            'features' => 'Individual AC Vents, Reclining Seats, PA System, ABS & VSC, Large Side Windows',
+            'description' => 'Toyota Coaster yang andal untuk kenyamanan grup menengah. Didesain dengan kabin luas, sistem pendingin udara yang merata di setiap baris, serta fitur keamanan canggih untuk perjalanan yang aman dan tenang di Batam.',
+            'image' => 'images/bus_coaster_24_seat.jpg',
             'available' => true,
             'is_flagship' => false
         ],
@@ -120,43 +127,14 @@ class TransportController extends Controller
     public function book(Request $request, $id)
     {
         $request->validate([
-            'travel_date' => 'required|date',
-            'route_option' => 'nullable|string',
-            'duration_option' => 'nullable|string'
+            'travel_date' => 'required|date'
         ]);
 
         $transport = $this->fleet[$id] ?? null;
         if (!$transport) abort(404);
 
         $finalAmount = $transport['price'];
-        $routeName = 'Standard Tour';
-
-        if ($request->route_option === 'barelang') {
-            $finalAmount = 1800000;
-            $routeName = 'PP Barelang';
-        } elseif ($request->route_option === 'city_tour') {
-            switch ($request->duration_option) {
-                case 'one_way':
-                    $finalAmount = 900000;
-                    $routeName = 'Batam City Tour (One Way)';
-                    break;
-                case 'half_day':
-                    $finalAmount = 1400000;
-                    $routeName = 'Batam City Tour (Half Day - 4h)';
-                    break;
-                case 'one_day':
-                    $finalAmount = 1900000;
-                    $routeName = 'Batam City Tour (One Day - 8h)';
-                    break;
-                case 'full_day':
-                    $finalAmount = 2200000;
-                    $routeName = 'Batam City Tour (Full Day - 12h)';
-                    break;
-                default:
-                    $finalAmount = 900000;
-                    $routeName = 'Batam City Tour';
-            }
-        }
+        $routeName = 'PP Barelang';
 
         $booking = Booking::create([
             'user_id' => auth()->id(),

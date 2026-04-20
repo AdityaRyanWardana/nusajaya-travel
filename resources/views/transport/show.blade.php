@@ -9,20 +9,7 @@
             Back to Fleet
         </a>
 
-        <div class="grid lg:grid-cols-3 gap-12" x-data="{ 
-            route: 'city_tour', 
-            duration: 'one_way',
-            price() {
-                if (this.route === 'barelang') return '1.800.000';
-                if (this.route === 'city_tour') {
-                    if (this.duration === 'one_way') return '900.000';
-                    if (this.duration === 'half_day') return '1.400.000';
-                    if (this.duration === 'one_day') return '1.900.000';
-                    if (this.duration === 'full_day') return '2.200.000';
-                }
-                return '{{ number_format($transport['price'], 0, ',', '.') }}';
-            }
-        }">
+        <div class="grid lg:grid-cols-3 gap-12">
             <!-- Left: Cinematic Content -->
             <div class="lg:col-span-2 space-y-12">
                 <div class="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
@@ -74,36 +61,16 @@
             <div class="lg:col-span-1">
                 <div class="bg-brandblue rounded-[3rem] p-10 text-white shadow-2xl sticky top-32">
                     <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4">
-                        {{ $transport['slug'] === 'vip-high-deck' ? 'Configurable Rate' : 'Fixed Rate' }}
+                        PP Barelang Rate
                     </p>
                     <div class="flex items-baseline gap-2 mb-10">
                         <span class="text-sm font-bold opacity-60">IDR</span>
-                        <span class="text-4xl font-black italic tracking-tighter" x-text="price()"></span>
+                        <span class="text-4xl font-black italic tracking-tighter">{{ number_format($transport['price'], 0, ',', '.') }}</span>
                     </div>
 
                     @auth
                     <form action="{{ route('transport.book', $transport['id']) }}" method="POST" class="space-y-6">
                         @csrf
-                        @if($transport['slug'] === 'vip-high-deck')
-                        <div class="space-y-2">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Select Route</label>
-                            <select name="route_option" x-model="route" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
-                                <option value="city_tour" class="text-brandblue">Batam City Tour</option>
-                                <option value="barelang" class="text-brandblue">PP Barelang</option>
-                            </select>
-                        </div>
-                        
-                        <div x-show="route === 'city_tour'" x-transition class="space-y-2">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Select Duration</label>
-                            <select name="duration_option" x-model="duration" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
-                                <option value="one_way" class="text-brandblue">One Way Transfer</option>
-                                <option value="half_day" class="text-brandblue">Half Day (4 Hours)</option>
-                                <option value="one_day" class="text-brandblue">One Day (8 Hours)</option>
-                                <option value="full_day" class="text-brandblue">Full Day (12 Hours)</option>
-                            </select>
-                        </div>
-                        @endif
-
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Travel Date</label>
                             <input type="date" name="travel_date" required class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none">
