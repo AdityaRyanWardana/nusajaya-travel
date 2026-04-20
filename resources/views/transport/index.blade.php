@@ -67,7 +67,7 @@
                         <div class="flex items-center justify-between pt-8 border-t border-slate-50 relative z-30 pointer-events-none">
                             <div>
                                 <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{{ $transport['is_flagship'] ? 'Starting From' : 'Standard Rate' }}</p>
-                                <p class="text-xl font-black text-brandblue italic">IDR {{ number_format($transport['price'], 0, ',', '.') }}{{ $transport['is_flagship'] ? '*' : '' }}</p>
+                                <p class="text-xl font-black text-brandblue italic">IDR {{ number_format($transport['price'], 0, ',', '.') }}</p>
                             </div>
 
                             @if($transport['available'])

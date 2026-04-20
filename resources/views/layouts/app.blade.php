@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Nusajaya Travel</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <!-- Tailwind CSS (CDN for quick styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -38,7 +39,7 @@
     <aside class="w-64 bg-dark text-white hidden md:flex flex-col flex-shrink-0 transition-all duration-300">
         <div class="h-20 flex items-center px-8 border-b border-white/10 shrink-0">
             <div class="text-xl font-bold tracking-wider flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" class="w-8 h-8 rounded-full object-cover">
+                <img src="{{ asset('images/logo.png') }}" class="w-10 h-10 rounded-full object-cover border-2 border-white/20 shadow-sm">
                 Nusajaya <span class="text-skyblue">Travel</span>
             </div>
         </div>

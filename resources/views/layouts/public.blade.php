@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'PT Nusa Jaya Indofast Tour & Travel')</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <!-- Tailwind CSS (CDN for quick styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -29,7 +30,8 @@
 
     <!-- Navbar -->
     <nav class="bg-white px-8 py-4 flex justify-between items-center z-50 sticky top-0 shadow-sm">
-        <a href="{{ url('/') }}" class="flex items-center tracking-tighter">
+        <a href="{{ url('/') }}" class="flex items-center gap-3">
+            <img src="{{ asset('images/logo.png') }}" alt="Nusajaya Travel" class="w-10 h-10 rounded-full object-cover border-2 border-slate-100 shadow-sm">
             <span class="font-black italic text-2xl text-brandblue">VisitToBatam<span class="text-skyblue">.com</span></span>
         </a>
         <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-500">

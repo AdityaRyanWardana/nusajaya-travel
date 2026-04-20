@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - PT Nusa Jaya Indofast Tour & Travel</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <!-- Tailwind CSS (CDN for quick styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +33,7 @@
     <div class="w-full max-w-[420px] bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-10 relative z-10 border border-slate-100">
         <!-- Logo -->
         <div class="flex justify-center mb-6">
-            <img src="{{ asset('images/logo.png') }}" alt="PT Nusa Jaya Indofast" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md">
+            <img src="{{ asset('images/logo.png') }}" alt="PT Nusa Jaya Indofast" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl">
         </div>
         
         <h1 class="text-[13px] font-bold text-brandblue text-center mb-8 uppercase tracking-wider">NUSA JAYA INDOFAST TOUR & TRAVEL</h1>
