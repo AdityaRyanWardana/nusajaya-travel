@@ -8,7 +8,7 @@
             <div>
                 <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Fleet Services</span>
                 <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6 leading-[0.9]">Premium Fleet Solutions</h1>
-                <p class="text-sm text-slate-500 font-medium max-w-lg leading-relaxed">Dari bus VIP mewah hingga antar-jemput eksekutif, armada kami siap menjamin kenyamanan perjalanan Anda di Batam.</p>
+                <p class="text-sm text-slate-500 font-medium max-w-lg leading-relaxed">From luxury VIP buses to executive shuttles, our fleet is ready to guarantee your travel comfort in Batam.</p>
             </div>
             
             <form action="{{ route('transport.index') }}" method="GET" class="bg-white p-4 rounded-[2.5rem] shadow-2xl shadow-brandblue/5 border border-slate-50 flex flex-col sm:flex-row items-center gap-4">
@@ -28,10 +28,10 @@
             @foreach($transports as $transport)
                 <div class="group relative bg-white rounded-[3rem] overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-brandblue/5 transition-all duration-700">
                     <!-- Whole Card Link -->
-                    <a href="{{ route('transport.show', $transport['slug']) }}" class="absolute inset-0 z-20" aria-label="View {{ $transport['name'] }} details"></a>
+                    <a href="{{ route('transport.show', $transport->slug) }}" class="absolute inset-0 z-20" aria-label="View {{ $transport->name }} details"></a>
                     
                     <!-- Status Badge -->
-                    @if(!$transport['available'])
+                    @if(!$transport->available)
                         <div class="absolute inset-x-0 top-0 h-1 bg-red-500 z-50"></div>
                         <div class="absolute top-8 right-8 z-50">
                             <span class="px-3 py-1 bg-red-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg">Not Available</span>
@@ -39,14 +39,14 @@
                     @endif
 
                     <!-- Image Wrapper -->
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="{{ $transport['image'] }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000 {{ !$transport['available'] ? 'grayscale opacity-50' : '' }}">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="{{ $transport->image ? (Str::startsWith($transport->image, 'http') ? $transport->image : asset('storage/' . $transport->image)) : 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2070&auto=format&fit=crop' }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                         <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-transparent to-transparent opacity-80"></div>
                         
                         <!-- Floating Category -->
                         <div class="absolute top-8 left-8">
                             <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[9px] font-black uppercase tracking-widest rounded-full">
-                                {{ $transport['category'] }}
+                                {{ $transport->type }}
                             </span>
                         </div>
 
@@ -54,23 +54,23 @@
                         <div class="absolute bottom-6 left-8 flex items-center gap-6 text-white/80">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                <span class="text-[10px] font-bold uppercase tracking-wider">{{ $transport['capacity'] }}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider">{{ $transport->capacity }} Persons</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Content -->
                     <div class="p-10">
-                        <h3 class="text-2xl font-black text-brandblue uppercase italic mb-4 leading-none group-hover:text-skyblue transition">{{ $transport['name'] }}</h3>
-                        <p class="text-sm text-slate-500 font-medium line-clamp-2 leading-relaxed mb-8">{{ $transport['description'] }}</p>
+                        <h3 class="text-2xl font-black text-brandblue uppercase italic mb-4 leading-none group-hover:text-skyblue transition">{{ $transport->name }}</h3>
+                        <p class="text-sm text-slate-500 font-medium line-clamp-2 leading-relaxed mb-8">{{ $transport->description }}</p>
                         
                         <div class="flex items-center justify-between pt-8 border-t border-slate-50 relative z-30 pointer-events-none">
                             <div>
-                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{{ $transport['is_flagship'] ? 'Starting From' : 'Standard Rate' }}</p>
-                                <p class="text-xl font-black text-brandblue italic">IDR {{ number_format($transport['price'], 0, ',', '.') }}</p>
+                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Standard Rate</p>
+                                <p class="text-xl font-black text-brandblue italic">IDR {{ number_format($transport->price_per_day, 0, ',', '.') }}</p>
                             </div>
 
-                            @if($transport['available'])
+                            @if($transport->available)
                                 <div class="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-brandblue shadow-sm">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                                 </div>
@@ -90,7 +90,7 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.813.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                 </div>
                 <h4 class="text-xs font-black text-brandblue uppercase tracking-widest mb-4">Five Star Drivers</h4>
-                <p class="text-[10px] text-slate-500 font-medium leading-relaxed">Pengemudi terlatih yang memahami rute Batam dengan sempurna, menjamin ketepatan waktu Anda.</p>
+                <p class="text-[10px] text-slate-500 font-medium leading-relaxed">Trained drivers who understand Batam routes perfectly, ensuring your punctuality and safety.</p>
             </div>
             <!-- ... repeated feature structures with updated text if needed ... -->
         </div>

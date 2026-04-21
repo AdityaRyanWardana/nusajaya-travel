@@ -30,8 +30,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
-            if (Auth::user()->role === 'admin') {
-                return redirect()->intended('dashboard');
+            
+            $user = Auth::user();
+            if (in_array($user->role, ['admin', 'superadmin'])) {
+                return redirect()->intended(route('admin.dashboard'));
             }
             return redirect()->route('home');
         }
@@ -64,6 +66,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'role' => 'user', // Set default role
         ]);
 
         Auth::login($user);

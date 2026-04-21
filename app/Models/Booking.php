@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 #[Fillable(['user_id', 'service_name', 'service_slug', 'type', 'amount', 'guests', 'travel_date', 'status'])]
 class Booking extends Model
 {
+    protected $casts = [
+        'travel_date' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

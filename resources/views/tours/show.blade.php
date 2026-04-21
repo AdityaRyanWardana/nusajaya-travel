@@ -9,23 +9,51 @@
             Back to All Packages
         </a>
 
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
         <div class="grid lg:grid-cols-3 gap-12">
             <!-- Left: Cinematic Content -->
             <div class="lg:col-span-2 space-y-12">
-                <div class="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
-                    <img src="{{ $tour['image'] }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-12 left-12 right-12">
+                <!-- Main Slider -->
+                <div class="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl group/slider">
+                    <div class="swiper mySwiper h-full w-full">
+                        <div class="swiper-wrapper">
+                            <!-- Main Image -->
+                            <div class="swiper-slide">
+                                <img src="{{ $tour->image ? (Str::startsWith($tour->image, 'http') ? $tour->image : asset('storage/' . $tour->image)) : 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2070&auto=format&fit=crop' }}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
+                            </div>
+                            
+                            <!-- Gallery Images -->
+                            @if($tour->images)
+                                @foreach($tour->images as $img)
+                                    <div class="swiper-slide">
+                                        <img src="{{ Str::startsWith($img, 'http') ? $img : asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                        
+                        <!-- Navigation Buttons -->
+                        <div class="swiper-button-next !text-white !w-12 !h-12 bg-white/10 backdrop-blur-md rounded-full opacity-0 group-hover/slider:opacity-100 transition-all after:!text-sm"></div>
+                        <div class="swiper-button-prev !text-white !w-12 !h-12 bg-white/10 backdrop-blur-md rounded-full opacity-0 group-hover/slider:opacity-100 transition-all after:!text-sm"></div>
+                        <div class="swiper-pagination !bottom-12"></div>
+                    </div>
+
+                    <!-- Overlay Info -->
+                    <div class="absolute bottom-12 left-12 right-12 z-50 pointer-events-none">
                         <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-6 inline-block">
-                            {{ $tour['category'] }}
+                            {{ $tour->destination }}
                         </span>
-                        <h1 class="text-5xl font-black text-white uppercase italic leading-[0.9] tracking-tighter">{{ $tour['name'] }}</h1>
+                        <h1 class="text-5xl font-black text-white uppercase italic leading-[0.9] tracking-tighter">{{ $tour->title }}</h1>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-slate-100">
                     <h2 class="text-2xl font-black text-brandblue uppercase italic mb-6">About the Experience</h2>
-                    <p class="text-slate-500 font-medium leading-relaxed mb-10">{{ $tour['description'] }}</p>
+                    <p class="text-slate-500 font-medium leading-relaxed mb-10">{{ $tour->description }}</p>
                     
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Package Inclusions</h3>
                     <div class="grid sm:grid-cols-2 gap-6">
@@ -63,12 +91,12 @@
                     <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4">Base Package</p>
                     <div class="flex items-baseline gap-2 mb-10">
                         <span class="text-sm font-bold opacity-60">IDR</span>
-                        <span class="text-4xl font-black italic tracking-tighter">{{ number_format($tour['price'], 0, ',', '.') }}</span>
+                        <span class="text-4xl font-black italic tracking-tighter">{{ number_format($tour->price, 0, ',', '.') }}</span>
                         <span class="text-xs font-bold opacity-60">/ pax</span>
                     </div>
 
                     @auth
-                    <form action="{{ route('tours.book', $tour['slug']) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('tours.book', $tour->id) }}" method="POST" class="space-y-6">
                         @csrf
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Select Date</label>
@@ -109,3 +137,27 @@
     </div>
 </main>
 @endsection
+
+@push('scripts')
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        loop: true,
+        spaceBetween: 0,
+        centeredSlides: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>
+@endpush

@@ -9,23 +9,51 @@
             Back to Fleet
         </a>
 
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
         <div class="grid lg:grid-cols-3 gap-12">
             <!-- Left: Cinematic Content -->
             <div class="lg:col-span-2 space-y-12">
-                <div class="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
-                    <img src="{{ $transport['image'] }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-12 left-12 right-12">
+                 <!-- Main Slider -->
+                 <div class="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl group/slider">
+                     <div class="swiper mySwiper h-full w-full">
+                         <div class="swiper-wrapper">
+                             <!-- Main Image -->
+                             <div class="swiper-slide">
+                                 <img src="{{ $transport->image ? (Str::startsWith($transport->image, 'http') ? $transport->image : asset('storage/' . $transport->image)) : 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2070&auto=format&fit=crop' }}" class="w-full h-full object-cover">
+                                 <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
+                             </div>
+                             
+                             <!-- Gallery Images -->
+                             @if($transport->images)
+                                 @foreach($transport->images as $img)
+                                     <div class="swiper-slide">
+                                         <img src="{{ Str::startsWith($img, 'http') ? $img : asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                                         <div class="absolute inset-0 bg-gradient-to-t from-brandblue via-transparent to-transparent opacity-90"></div>
+                                     </div>
+                                 @endforeach
+                             @endif
+                         </div>
+                        
+                        <!-- Navigation Buttons -->
+                        <div class="swiper-button-next !text-white !w-12 !h-12 bg-white/10 backdrop-blur-md rounded-full opacity-0 group-hover/slider:opacity-100 transition-all after:!text-sm"></div>
+                        <div class="swiper-button-prev !text-white !w-12 !h-12 bg-white/10 backdrop-blur-md rounded-full opacity-0 group-hover/slider:opacity-100 transition-all after:!text-sm"></div>
+                        <div class="swiper-pagination !bottom-12"></div>
+                    </div>
+
+                    <!-- Overlay Info -->
+                    <div class="absolute bottom-12 left-12 right-12 z-50 pointer-events-none">
                         <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-6 inline-block">
-                            {{ $transport['category'] }}
+                            {{ $transport->type }}
                         </span>
-                        <h1 class="text-5xl font-black text-white uppercase italic leading-[0.9] tracking-tighter">{{ $transport['name'] }}</h1>
+                        <h1 class="text-5xl font-black text-white uppercase italic leading-[0.9] tracking-tighter">{{ $transport->name }}</h1>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-slate-100">
                     <h2 class="text-2xl font-black text-brandblue uppercase italic mb-6">Fleet Specification</h2>
-                    <p class="text-slate-500 font-medium leading-relaxed mb-10">{{ $transport['description'] }}</p>
+                    <p class="text-slate-500 font-medium leading-relaxed mb-10">{{ $transport->description }}</p>
                     
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Premium Features</h3>
                     <div class="grid sm:grid-cols-2 gap-6">
@@ -58,24 +86,56 @@
             </div>
 
             <!-- Right: Premium Booking Sidebar -->
-            <div class="lg:col-span-1">
+            <div class="lg:col-span-1" x-data="{ 
+                category: 'City Tour', 
+                duration: 'one_day',
+                prices: {
+                    city_one_way: {{ $transport->price_city_one_way ?? 0 }},
+                    city_half_day: {{ $transport->price_city_half_day ?? 0 }},
+                    city_one_day: {{ $transport->price_city_one_day ?? 0 }},
+                    city_full_day: {{ $transport->price_city_full_day ?? 0 }},
+                    barelang: {{ $transport->price_barelang ?? 0 }}
+                },
+                get currentPrice() {
+                    if (this.category === 'PP Barelang') return this.prices.barelang;
+                    return this.prices['city_' + this.duration];
+                }
+            }">
                 <div class="bg-brandblue rounded-[3rem] p-10 text-white shadow-2xl sticky top-32">
-                    <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4">
-                        PP Barelang Rate
-                    </p>
-                    <div class="flex items-baseline gap-2 mb-10">
-                        <span class="text-sm font-bold opacity-60">IDR</span>
-                        <span class="text-4xl font-black italic tracking-tighter">{{ number_format($transport['price'], 0, ',', '.') }}</span>
+                    <div class="mb-10 p-8 bg-white/5 rounded-3xl border border-white/10 group hover:border-skyblue/30 transition-all text-center">
+                        <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4" x-text="category === 'City Tour' ? 'Batam City Tour Rate' : 'PP Barelang Rate'"></p>
+                        <div class="flex items-baseline justify-center gap-2">
+                            <span class="text-sm font-bold opacity-60">IDR</span>
+                            <span class="text-4xl font-black italic tracking-tighter" x-text="new Intl.NumberFormat('id-ID').format(currentPrice)"></span>
+                        </div>
                     </div>
 
                     @auth
-                    <form action="{{ route('transport.book', $transport['id']) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('transport.book', $transport->id) }}" method="POST" class="space-y-6">
                         @csrf
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Kategori Sewa</label>
+                            <select name="category" x-model="category" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
+                                <option value="City Tour" class="text-brandblue">Batam City Tour</option>
+                                <option value="PP Barelang" class="text-brandblue">PP Barelang</option>
+                            </select>
+                        </div>
+
+                        <!-- Duration Selector (Only for City Tour) -->
+                        <div class="space-y-2" x-show="category === 'City Tour'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Pilih Durasi</label>
+                            <select name="duration" x-model="duration" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
+                                <option value="one_way" class="text-brandblue">One Way Transfer</option>
+                                <option value="half_day" class="text-brandblue">Half Day (4 Hours)</option>
+                                <option value="one_day" class="text-brandblue">One Day (8 Hours)</option>
+                                <option value="full_day" class="text-brandblue">Full Day (12 Hours)</option>
+                            </select>
+                        </div>
+
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Travel Date</label>
                             <input type="date" name="travel_date" required class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none">
                         </div>
-
                         <button type="submit" class="w-full py-5 bg-skyblue hover:bg-white hover:text-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-500 shadow-xl shadow-skyblue/20">
                             Book Armada
                         </button>
@@ -104,3 +164,27 @@
     </div>
 </main>
 @endsection
+
+@push('scripts')
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        loop: true,
+        spaceBetween: 0,
+        centeredSlides: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>
+@endpush

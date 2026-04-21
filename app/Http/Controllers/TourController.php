@@ -3,71 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Tour;
 use App\Models\Booking;
 
 class TourController extends Controller
 {
-    private $destinations = [
-        'batam-city-tour' => [
-            'name' => 'Classic Batam City Tour',
-            'slug' => 'batam-city-tour',
-            'price' => 350000,
-            'image' => 'https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop',
-            'description' => 'A comprehensive journey through Batam\'s landmarks, shopping centers, and culinary hotspots. Perfect for first-timers.',
-            'category' => 'Batam City Tour',
-        ],
-        'pantai-viovio' => [
-            'name' => 'Pantai Viovio Sunset',
-            'slug' => 'pantai-viovio',
-            'price' => 550000,
-            'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Experience the most beautiful sunset in Batam. Known for its iconic swings and crystal clear shallow water.',
-            'category' => 'PP Barelang',
-        ],
-        'ranoh-island' => [
-            'name' => 'Ranoh Island Premium',
-            'slug' => 'ranoh-island',
-            'price' => 750000,
-            'image' => 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Escape to a secluded island with premium facilities. Includes snorkeling, kayaking, and an all-day buffet.',
-            'category' => 'Island Tour',
-        ],
-        'barelang-bridge' => [
-            'name' => 'Barelang Architectural Tour',
-            'slug' => 'barelang-bridge',
-            'price' => 550000,
-            'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'A dedicated tour to the 6 bridges of Barelang, showcasing the engineering marvel that connects Batam islands.',
-            'category' => 'PP Barelang',
-        ],
-        'maha-vihara' => [
-            'name' => 'Maha Vihara Spiritual',
-            'slug' => 'maha-vihara',
-            'price' => 400000,
-            'image' => '/images/maha_vihara.png',
-            'description' => 'Visit the largest Buddhist temple in Southeast Asia. A place of peace, stunning architecture, and spiritual reflection.',
-            'category' => 'Batam City Tour',
-        ],
-        'galang-refugee' => [
-            'name' => 'Galang Refugee Camp History',
-            'slug' => 'galang-refugee',
-            'price' => 600000,
-            'image' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop',
-            'description' => 'Explore the poignant history of Vietnamese refugees in the late 70s. A deeply moving historical site in Galang Island.',
-            'category' => 'PP Barelang',
-        ],
-    ];
-
     public function index(Request $request)
     {
         $category = $request->query('category');
-        $tours = $this->destinations;
+        
+        $query = Tour::query();
 
         if ($category && $category !== 'All') {
-            $tours = array_filter($this->destinations, function($tour) use ($category) {
-                return $tour['category'] === $category;
-            });
+            $query->where('destination', 'like', '%' . $category . '%');
         }
+
+        $tours = $query->latest()->get();
 
         return view('tours.index', [
             'tours' => $tours,
@@ -77,32 +28,26 @@ class TourController extends Controller
 
     public function show($slug)
     {
-        if (!isset($this->destinations[$slug])) {
-            abort(404);
-        }
-        return view('tours.show', ['tour' => $this->destinations[$slug]]);
+        $tour = Tour::where('slug', $slug)->firstOrFail();
+        return view('tours.show', compact('tour'));
     }
 
-    public function book(Request $request, $slug)
+    public function book(Request $request, $id)
     {
-        if (!isset($this->destinations[$slug])) {
-            abort(404);
-        }
-
-        $tour = $this->destinations[$slug];
+        $tour = Tour::findOrFail($id);
 
         $booking = Booking::create([
             'user_id' => auth()->id(),
-            'service_name' => $tour['name'],
-            'service_slug' => $slug,
+            'service_name' => $tour->title,
+            'service_slug' => $tour->slug,
             'type' => 'tour',
-            'amount' => $tour['price'],
+            'amount' => $tour->price,
             'guests' => (int) $request->guests,
             'travel_date' => $request->date,
             'status' => 'pending',
         ]);
 
-        return redirect()->route('orders.payment', $booking->id)->with('success', 'Thank you! Please complete your payment for ' . $tour['name']);
+        return redirect()->route('orders.payment', $booking->id)->with('success', 'Thank you! Please complete your payment for ' . $tour->title);
     }
 
     public function myOrders()

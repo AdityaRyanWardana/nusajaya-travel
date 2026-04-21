@@ -24,31 +24,31 @@
             @forelse($tours as $tour)
                 <div class="group relative bg-white rounded-[3rem] overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-brandblue/5 transition-all duration-700">
                     <!-- Whole Card Link -->
-                    <a href="{{ route('tours.show', $tour['slug']) }}" class="absolute inset-0 z-20" aria-label="View {{ $tour['name'] }} details"></a>
+                    <a href="{{ route('tours.show', $tour->slug) }}" class="absolute inset-0 z-20" aria-label="View {{ $tour->title }} details"></a>
                     
                     <!-- Image Wrapper -->
                     <div class="h-80 overflow-hidden relative">
-                        <img src="{{ $tour['image'] }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                        <img src="{{ $tour->image ? (Str::startsWith($tour->image, 'http') ? $tour->image : asset('storage/' . $tour->image)) : 'https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop' }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                         <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-transparent to-transparent opacity-80"></div>
                         
                         <!-- Floating Category Label -->
                         <div class="absolute top-8 left-8">
                             <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[9px] font-black uppercase tracking-widest rounded-full">
-                                {{ $tour['category'] }}
+                                {{ $tour->destination }}
                             </span>
                         </div>
 
                         <!-- Price Tag -->
                         <div class="absolute bottom-8 right-8">
                             <p class="text-[10px] text-white/60 font-black uppercase tracking-widest text-right mb-1">From</p>
-                            <p class="text-xl font-black text-skyblue italic">IDR {{ number_format($tour['price'], 0, ',', '.') }}</p>
+                            <p class="text-xl font-black text-skyblue italic">IDR {{ number_format($tour->price, 0, ',', '.') }}</p>
                         </div>
                     </div>
 
                     <!-- Content -->
                     <div class="p-10">
-                        <h3 class="text-2xl font-black text-brandblue uppercase italic mb-4 leading-none group-hover:text-skyblue transition">{{ $tour['name'] }}</h3>
-                        <p class="text-sm text-slate-500 font-medium line-clamp-2 leading-relaxed mb-8">{{ $tour['description'] }}</p>
+                        <h3 class="text-2xl font-black text-brandblue uppercase italic mb-4 leading-none group-hover:text-skyblue transition">{{ $tour->title }}</h3>
+                        <p class="text-sm text-slate-500 font-medium line-clamp-2 leading-relaxed mb-8">{{ $tour->description }}</p>
                         
                         <div class="flex items-center justify-between w-full p-2 pl-6 bg-slate-50 rounded-2xl group/btn hover:bg-brandblue transition-all duration-500 relative z-30 pointer-events-none">
                             <span class="text-[10px] font-black text-brandblue uppercase tracking-[0.2em] group-hover/btn:text-white transition">Full Details</span>

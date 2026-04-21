@@ -16,6 +16,26 @@ use App\Http\Controllers\UserController;
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
+Route::get('/fix-roles', function() {
+    \App\Models\User::whereNull('role')->orWhere('role', '')->update(['role' => 'user']);
+    \App\Models\User::where('email', 'hendrazhang@gmail.com')->update([
+        'password' => \Illuminate\Support\Facades\Hash::make('12345678')
+    ]);
+    
+    // Fix price for 14 Seat VIP (case insensitive search)
+    \Illuminate\Support\Facades\DB::table('armadas')
+        ->where('name', '14 Seat VIP')
+        ->orWhere('name', '14 SEAT VIP')
+        ->update(['price_per_day' => 1200000]);
+
+    $users = \App\Models\User::all(['email', 'role'])->toArray();
+    $fleets = \Illuminate\Support\Facades\DB::table('armadas')->select('name', 'price_per_day')->get();
+    return response()->json([
+        'message' => "Roles fixed, password reset, and 14 SEAT VIP price updated to 1.2M",
+        'debug_users' => $users,
+        'debug_fleets' => $fleets
+    ]);
+});
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -40,11 +60,38 @@ Route::get('/transport', [TransportController::class, 'index'])->name('transport
 Route::get('/transport/{slug}', [TransportController::class, 'show'])->name('transport.show');
 Route::post('/transport/{id}/book', [TransportController::class, 'book'])->name('transport.book')->middleware('auth');
 
-// Dashboard Route (Admin Only)
+// Dashboard Route (Admin & Superadmin Only)
+Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');
+    Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
+    Route::delete('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::resource('armadas', App\Http\Controllers\Admin\ArmadaController::class);
+    Route::delete('armadas/{armada}/delete-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteImage'])->name('armadas.delete-image');
+    Route::delete('armadas/{armada}/delete-main-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteMainImage'])->name('armadas.delete-main-image');
+    
+    Route::resource('tours', App\Http\Controllers\Admin\TourController::class);
+    Route::delete('tours/{tour}/delete-image', [App\Http\Controllers\Admin\TourController::class, 'deleteImage'])->name('tours.delete-image');
+    Route::delete('tours/{tour}/delete-main-image', [App\Http\Controllers\Admin\TourController::class, 'deleteMainImage'])->name('tours.delete-main-image');
+
+    // User Management (Superadmin Only)
+    Route::middleware('role:superadmin')->group(function() {
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    });
+
+    // Profile & Settings (All Admins)
+    Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/preferences', [App\Http\Controllers\Admin\ProfileController::class, 'preferences'])->name('preferences');
+    Route::put('/preferences', [App\Http\Controllers\Admin\ProfileController::class, 'updatePreferences'])->name('preferences.update');
+    Route::get('/security', [App\Http\Controllers\Admin\ProfileController::class, 'security'])->name('security');
+    Route::put('/security', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('security.update');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        if (auth()->user()->role === 'admin') {
-            return view('dashboard');
+        if (in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+            return redirect()->route('admin.dashboard');
         }
         return redirect()->route('home');
     })->name('dashboard');
