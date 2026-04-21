@@ -62,7 +62,7 @@
                                     </div>
                                     <div>
                                         <p class="font-bold text-brandblue text-sm">{{ $order->service_name }}</p>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{{ $order->order_number }}</p>
                                     </div>
                                 </div>
                             </td>
@@ -100,7 +100,7 @@
                                             <div class="flex justify-between items-start mb-6">
                                                 <div>
                                                     <h3 class="text-2xl font-black text-brandblue leading-tight mb-1">Booking Details</h3>
-                                                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
+                                                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">{{ $order->order_number }}</p>
                                                 </div>
                                                 <button onclick="toggleModal('modal-{{ $order->id }}')" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>

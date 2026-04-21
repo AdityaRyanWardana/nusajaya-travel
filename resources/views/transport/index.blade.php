@@ -56,6 +56,12 @@
                                 <svg class="w-4 h-4 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                                 <span class="text-[10px] font-bold uppercase tracking-wider">{{ $transport->capacity }} Persons</span>
                             </div>
+                            @if($transport->available)
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="text-[10px] font-bold uppercase tracking-wider">{{ $transport->units_left }} Units Left</span>
+                            </div>
+                            @endif
                         </div>
                     </div>
 
@@ -66,8 +72,8 @@
                         
                         <div class="flex items-center justify-between pt-8 border-t border-slate-50 relative z-30 pointer-events-none">
                             <div>
-                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Standard Rate</p>
-                                <p class="text-xl font-black text-brandblue italic">IDR {{ number_format($transport->price_per_day, 0, ',', '.') }}</p>
+                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">City Tour Rate (1 Day)</p>
+                                <p class="text-xl font-black text-brandblue italic">IDR {{ number_format($transport->price_city_one_day, 0, ',', '.') }}</p>
                             </div>
 
                             @if($transport->available)

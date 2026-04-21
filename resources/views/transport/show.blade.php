@@ -87,8 +87,39 @@
 
             <!-- Right: Premium Booking Sidebar -->
             <div class="lg:col-span-1" x-data="{ 
-                category: 'City Tour', 
+                category: 'Batam City Tour', 
                 duration: 'one_day',
+                pickup: '',
+                loadingLocation: false,
+                detectLocation() {
+                    this.loadingLocation = true;
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const lat = position.coords.latitude;
+                                const lon = position.coords.longitude;
+                                this.pickup = `Detecting... (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        this.pickup = data.display_name;
+                                        this.loadingLocation = false;
+                                    })
+                                    .catch(() => {
+                                        this.pickup = `${lat}, ${lon}`;
+                                        this.loadingLocation = false;
+                                    });
+                            },
+                            () => {
+                                alert('Geolocation failed. Please enter manually.');
+                                this.loadingLocation = false;
+                            }
+                        );
+                    } else {
+                        alert('Geolocation not supported.');
+                        this.loadingLocation = false;
+                    }
+                },
                 prices: {
                     city_one_way: {{ $transport->price_city_one_way ?? 0 }},
                     city_half_day: {{ $transport->price_city_half_day ?? 0 }},
@@ -98,56 +129,193 @@
                 },
                 get currentPrice() {
                     if (this.category === 'PP Barelang') return this.prices.barelang;
+                    if (this.category === 'Transfer Only') return this.prices.city_one_way;
                     return this.prices['city_' + this.duration];
-                }
+                },
+                destination: '',
+                get computedDestination() {
+                    if (this.category === 'PP Barelang') return this.barelangDest;
+                    if (this.category === 'Transfer Only') return this.transferDest;
+                    return '';
+                },
+                barelangDest: '',
+                transferDest: '',
             }">
                 <div class="bg-brandblue rounded-[3rem] p-10 text-white shadow-2xl sticky top-32">
                     <div class="mb-10 p-8 bg-white/5 rounded-3xl border border-white/10 group hover:border-skyblue/30 transition-all text-center">
-                        <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4" x-text="category === 'City Tour' ? 'Batam City Tour Rate' : 'PP Barelang Rate'"></p>
+                        <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4" 
+                           x-text="category === 'Batam City Tour' ? 'Batam City Tour Rate' : (category === 'PP Barelang' ? 'PP Barelang — Flat Rate' : 'Transfer Rate')"></p>
                         <div class="flex items-baseline justify-center gap-2">
                             <span class="text-sm font-bold opacity-60">IDR</span>
                             <span class="text-4xl font-black italic tracking-tighter" x-text="new Intl.NumberFormat('id-ID').format(currentPrice)"></span>
                         </div>
                     </div>
 
-                    @auth
                     <form action="{{ route('transport.book', $transport->id) }}" method="POST" class="space-y-6">
                         @csrf
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Kategori Sewa</label>
                             <select name="category" x-model="category" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
-                                <option value="City Tour" class="text-brandblue">Batam City Tour</option>
-                                <option value="PP Barelang" class="text-brandblue">PP Barelang</option>
+                                <option value="Batam City Tour" class="text-brandblue">Batam City Tour</option>
+                                <option value="PP Barelang" class="text-brandblue">PP Barelang (Bridge 1-6)</option>
+                                <option value="Transfer Only" class="text-brandblue">Transfer (One Way)</option>
                             </select>
                         </div>
 
                         <!-- Duration Selector (Only for City Tour) -->
-                        <div class="space-y-2" x-show="category === 'City Tour'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
+                        <div class="space-y-2" x-show="category === 'Batam City Tour'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Pilih Durasi</label>
                             <select name="duration" x-model="duration" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
-                                <option value="one_way" class="text-brandblue">One Way Transfer</option>
                                 <option value="half_day" class="text-brandblue">Half Day (4 Hours)</option>
                                 <option value="one_day" class="text-brandblue">One Day (8 Hours)</option>
                                 <option value="full_day" class="text-brandblue">Full Day (12 Hours)</option>
                             </select>
                         </div>
 
+                        <div class="space-y-2" x-data="{ locType: 'preset' }">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Titik Penjemputan</label>
+                                <div class="flex gap-4">
+                                    <button type="button" @click="locType = 'preset'" :class="locType === 'preset' ? 'text-skyblue' : 'text-white/40'" class="text-[8px] font-black uppercase tracking-widest transition">Preset</button>
+                                    <button type="button" @click="locType = 'manual'" :class="locType === 'manual' ? 'text-skyblue' : 'text-white/40'" class="text-[8px] font-black uppercase tracking-widest transition">Manual</button>
+                                    <button type="button" @click="detectLocation(); locType = 'manual'" class="text-[8px] font-black text-white hover:text-skyblue transition flex items-center gap-1 uppercase tracking-widest">
+                                        <svg x-show="!loadingLocation" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        <svg x-show="loadingLocation" class="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                        Detect
+                                    </button>
+                                </div>
+                            </div>
+                                                       <!-- Pickup Selection -->
+                            <div class="relative" x-data="{ open: false }">
+                                <button type="button" @click="open = !open" x-show="locType === 'preset'" 
+                                    class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-left focus:ring-2 focus:ring-skyblue transition outline-none flex items-center justify-between group">
+                                    <span :class="pickup ? 'text-white' : 'text-white/40'" x-text="pickup || '-- Pilih Lokasi --'"></span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-white/20 group-hover:text-skyblue transition-colors"></i>
+                                </button>
+                                
+                                <div x-show="open" @click.away="open = false" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    class="absolute z-50 mt-2 w-full bg-brandblue/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto custom-scrollbar">
+                                    
+                                    <div class="p-2 space-y-1">
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest">Seaports</div>
+                                        <button type="button" @click="pickup = 'Batam Centre Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Batam Centre Ferry Terminal</button>
+                                        <button type="button" @click="pickup = 'Harbour Bay Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Harbour Bay Ferry Terminal</button>
+                                        <button type="button" @click="pickup = 'Sekupang Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Sekupang Ferry Terminal</button>
+                                        
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Airports</div>
+                                        <button type="button" @click="pickup = 'Hang Nadim International Airport'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Hang Nadim International Airport</button>
+                                        
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Hotels</div>
+                                        <button type="button" @click="pickup = 'Nagoya Hill Hotel'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Nagoya Hill Hotel</button>
+                                        <button type="button" @click="pickup = 'Radisson Golf & Convention'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Radisson Golf & Convention</button>
+                                        <button type="button" @click="pickup = 'Swiss-Belhotel Harbour Bay'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Swiss-Belhotel Harbour Bay</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input x-show="locType === 'manual'" type="text" x-model="pickup" placeholder="Masukkan alamat lengkap..." class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none placeholder:text-white/20">
+                            <!-- Hidden input to ensure pickup is sent -->
+                            <input type="hidden" name="pickup_point" :value="pickup">
+                        </div>
+
+                        <!-- Barelang Destination Selector (only for PP Barelang) -->
+                        <div class="space-y-2" x-show="category === 'PP Barelang'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Destinasi Barelang</label>
+                            
+                            <div class="relative" x-data="{ open: false }">
+                                <button type="button" @click="open = !open" 
+                                    class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-left focus:ring-2 focus:ring-skyblue transition outline-none flex items-center justify-between group">
+                                    <span :class="barelangDest ? 'text-white' : 'text-white/40'" x-text="barelangDest || '-- Pilih Destinasi --'"></span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-white/20 group-hover:text-skyblue transition-colors"></i>
+                                </button>
+                                
+                                <div x-show="open" @click.away="open = false" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    class="absolute z-50 mt-2 w-full bg-brandblue/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden max-h-64 overflow-y-auto custom-scrollbar">
+                                    
+                                    <div class="p-2 space-y-1">
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest">Jembatan 1 — Barelang</div>
+                                        <button type="button" @click="barelangDest = 'Pantai Melayu (Jembatan 1 – Barelang)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Melayu</button>
+                                        <button type="button" @click="barelangDest = 'Pantai Nongsa (Jembatan 1 – Barelang)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Nongsa</button>
+                                        
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Jembatan 2 — Rempang</div>
+                                        <button type="button" @click="barelangDest = 'Pantai Glory Melur (Jembatan 2 – Rempang)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Glory Melur</button>
+                                        <button type="button" @click="barelangDest = 'Pantai Mirota (Jembatan 2 – Rempang)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Mirota</button>
+
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Jembatan 3 — Galang</div>
+                                        <button type="button" @click="barelangDest = 'Pantai Viovio (Jembatan 3 – Galang)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Viovio</button>
+                                        <button type="button" @click="barelangDest = 'Pantai Campa (Jembatan 3 – Galang)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Campa</button>
+
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Jembatan 4 — Galang Baru</div>
+                                        <button type="button" @click="barelangDest = 'Pantai Pulau Abang (Jembatan 4 – Galang Baru)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Pulau Abang</button>
+                                        <button type="button" @click="barelangDest = 'Pantai Sijantung (Jembatan 4 – Galang Baru)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Sijantung</button>
+
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Jembatan 5 - 6</div>
+                                        <button type="button" @click="barelangDest = 'Pantai Sembulang (Jembatan 5 – Galang Baru)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pantai Sembulang</button>
+                                        <button type="button" @click="barelangDest = 'Tanjung Piayu (Jembatan 6 – Galang Baru)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Tanjung Piayu</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-[9px] text-white/40 italic leading-relaxed">Harga PP Barelang adalah <span class="font-black text-skyblue">flat rate</span> untuk semua destinasi di atas.</p>
+                        </div>
+
+                        <!-- Transfer Destination (only for Transfer Only) -->
+                        <div class="space-y-2" x-show="category === 'Transfer Only'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Titik Tujuan (Drop Off)</label>
+                            <input type="text" x-model="transferDest" placeholder="Contoh: Hang Nadim Airport" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none placeholder:text-white/20">
+                        </div>
+
+                        <!-- Single hidden input sends the correct destination value -->
+                        <input type="hidden" name="destination" :value="computedDestination">
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Jam Penjemputan</label>
+                            <div class="grid gap-3" :class="category === 'Transfer Only' ? 'grid-cols-3' : 'grid-cols-2'">
+                                <label class="relative flex flex-col items-center justify-center p-4 rounded-2xl border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group">
+                                    <input type="radio" name="pickup_time" value="Pagi (08:00 - 11:00)" required class="absolute opacity-0">
+                                    <div class="w-2 h-2 rounded-full border border-white/40 mb-2 group-has-[:checked]:bg-skyblue group-has-[:checked]:border-skyblue transition-all"></div>
+                                    <span class="text-[9px] font-black uppercase text-white/60 group-hover:text-white transition-colors">Pagi</span>
+                                    <span class="text-[8px] font-bold text-white/30 uppercase mt-1">08:00-11:00</span>
+                                </label>
+                                <label class="relative flex flex-col items-center justify-center p-4 rounded-2xl border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group">
+                                    <input type="radio" name="pickup_time" value="Siang (12:00 - 15:00)" class="absolute opacity-0">
+                                    <div class="w-2 h-2 rounded-full border border-white/40 mb-2 group-has-[:checked]:bg-skyblue group-has-[:checked]:border-skyblue transition-all"></div>
+                                    <span class="text-[9px] font-black uppercase text-white/60 group-hover:text-white transition-colors">Siang</span>
+                                    <span class="text-[8px] font-bold text-white/30 uppercase mt-1">12:00-15:00</span>
+                                </label>
+                                <label class="relative flex flex-col items-center justify-center p-4 rounded-2xl border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group"
+                                    x-show="category === 'Transfer Only'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90">
+                                    <input type="radio" name="pickup_time" value="Malam (17:00 - 20:00)" :required="category === 'Transfer Only'" class="absolute opacity-0">
+                                    <div class="w-2 h-2 rounded-full border border-white/40 mb-2 group-has-[:checked]:bg-skyblue group-has-[:checked]:border-skyblue transition-all"></div>
+                                    <span class="text-[9px] font-black uppercase text-white/60 group-hover:text-white transition-colors">Malam</span>
+                                    <span class="text-[8px] font-bold text-white/30 uppercase mt-1">17:00-20:00</span>
+                                </label>
+                            </div>
+                        </div>
+
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Travel Date</label>
-                            <input type="date" name="travel_date" required class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none">
+                            <input type="date" name="travel_date" required class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none cursor-pointer">
                         </div>
-                        <button type="submit" class="w-full py-5 bg-skyblue hover:bg-white hover:text-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-500 shadow-xl shadow-skyblue/20">
-                            Book Armada
-                        </button>
+
+                        @auth
+                            <button type="submit" class="w-full py-5 bg-skyblue hover:bg-white hover:text-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-500 shadow-xl shadow-skyblue/20">
+                                Book Armada
+                            </button>
+                        @else
+                            <div class="pt-4 border-t border-white/10 space-y-4">
+                                <p class="text-[10px] text-white/40 text-center italic leading-relaxed">Please login to secure your booking and check availability.</p>
+                                <a href="{{ route('login') }}" class="block w-full py-5 bg-white text-brandblue rounded-2xl text-xs font-black text-center uppercase tracking-[0.3em] hover:bg-skyblue hover:text-white transition-all duration-500 shadow-xl">
+                                    Login & Book
+                                </a>
+                            </div>
+                        @endauth
                     </form>
-                    @else
-                    <div class="space-y-6 text-center">
-                        <p class="text-xs font-medium text-white/60 leading-relaxed italic">Login to your account to unlock exclusive member rates and secure your booking.</p>
-                        <a href="{{ route('login') }}" class="block w-full py-5 bg-white text-brandblue rounded-2xl text-xs font-black center uppercase tracking-[0.3em] hover:bg-skyblue hover:text-white transition-all duration-500 shadow-xl">
-                            Login & Book
-                        </a>
-                    </div>
-                    @endauth
 
                     <div class="mt-12 pt-12 border-t border-white/10">
                         <div class="flex items-center gap-4 mb-4">

@@ -16,14 +16,18 @@ class TransportController extends Controller
         $armadas = Armada::all();
         
         // Cek ketersediaan berdasarkan booking
-        $bookedSlugs = Booking::where('type', 'transport')
+        $bookingCounts = Booking::where('type', 'transport')
             ->whereDate('travel_date', $selectedDate)
-            ->whereIn('status', ['pending', 'paid'])
-            ->pluck('service_slug')
+            ->whereIn('status', ['pending', 'paid', 'completed']) // Include completed if you don't want double booking
+            ->select('service_slug', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->groupBy('service_slug')
+            ->pluck('count', 'service_slug')
             ->toArray();
 
         foreach ($armadas as $armada) {
-            $armada->available = !in_array($armada->slug, $bookedSlugs);
+            $bookedCount = $bookingCounts[$armada->slug] ?? 0;
+            $armada->available = $bookedCount < $armada->total_units;
+            $armada->units_left = $armada->total_units - $bookedCount;
         }
 
         return view('transport.index', [
@@ -41,18 +45,40 @@ class TransportController extends Controller
     public function book(Request $request, $id)
     {
         $request->validate([
-            'travel_date' => 'required|date'
+            'travel_date' => 'required|date',
+            'category' => 'required|string',
+            'pickup_point' => 'nullable|string',
+            'duration' => 'nullable|string',
+            'pickup_time' => 'required|string'
         ]);
 
         $transport = Armada::findOrFail($id);
+        
+        $price = 0;
+        $serviceName = $transport->name . ' - ' . $request->category;
+
+        if ($request->category === 'PP Barelang') {
+            $price = $transport->price_barelang;
+        } elseif ($request->category === 'Transfer Only') {
+            $price = $transport->price_city_one_way;
+            $serviceName = $transport->name . ' - Transfer One Way';
+        } else {
+            $duration = $request->duration ?? 'one_day';
+            $priceKey = 'price_city_' . $duration;
+            $price = $transport->$priceKey ?? 0;
+            $serviceName .= ' (' . str_replace('_', ' ', $duration) . ')';
+        }
 
         $booking = Booking::create([
             'user_id' => auth()->id(),
-            'service_name' => $transport->name . ' - PP Barelang',
+            'service_name' => $serviceName,
             'service_slug' => $transport->slug,
             'type' => 'transport',
-            'amount' => $transport->price_per_day,
+            'amount' => $price,
             'travel_date' => $request->travel_date,
+            'pickup_point' => $request->pickup_point,
+            'destination' => $request->destination ?? $request->category,
+            'pickup_time' => $request->pickup_time,
             'status' => 'pending'
         ]);
 

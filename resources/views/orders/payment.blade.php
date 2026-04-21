@@ -17,16 +17,86 @@
                     Booking Summary
                 </h3>
                 
-                <div class="space-y-6">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-sm font-bold text-brandblue">{{ $order->service_name }}</p>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
+                <div class="space-y-4">
+                    <!-- Order ID & Service Name -->
+                    <div class="p-4 bg-brandblue rounded-2xl text-white">
+                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">Order ID</p>
+                        <p class="text-[10px] font-black text-skyblue tracking-widest mb-3">{{ $order->order_number }}</p>
+                        <p class="text-sm font-black leading-snug">{{ $order->service_name }}</p>
+                    </div>
+
+                    <!-- Detail Grid -->
+                    <div class="space-y-3">
+                        <!-- Kategori Sewa -->
+                        @php
+                            $serviceNameParts = explode(' - ', $order->service_name, 2);
+                            $category = $serviceNameParts[1] ?? $order->service_name;
+                        @endphp
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                            <div class="w-7 h-7 bg-skyblue/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <svg class="w-3.5 h-3.5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kategori Sewa</p>
+                                <p class="text-xs font-bold text-brandblue">{{ $category }}</p>
+                            </div>
                         </div>
-                        <span class="text-xs font-bold text-slate-600 tracking-tight">{{ $order->guests }} Person{{ $order->guests > 1 ? 's' : '' }}</span>
+
+                        <!-- Pickup Point -->
+                        @if($order->pickup_point)
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                            <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Titik Penjemputan</p>
+                                <p class="text-xs font-bold text-brandblue leading-relaxed">{{ $order->pickup_point }}</p>
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Destination -->
+                        @if($order->destination && $order->destination !== $order->service_name)
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                            <div class="w-7 h-7 bg-red-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destinasi / Tujuan</p>
+                                <p class="text-xs font-bold text-brandblue leading-relaxed">{{ $order->destination }}</p>
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Travel Date -->
+                        @if($order->travel_date)
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                            <div class="w-7 h-7 bg-purple-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Tanggal Perjalanan</p>
+                                <p class="text-xs font-bold text-brandblue">{{ \Carbon\Carbon::parse($order->travel_date)->translatedFormat('d F Y') }}</p>
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Pickup Time -->
+                        @if($order->pickup_time)
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                            <div class="w-7 h-7 bg-orange-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <svg class="w-3.5 h-3.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Jam Penjemputan</p>
+                                <p class="text-xs font-bold text-brandblue">{{ $order->pickup_time }}</p>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                     
-                    <div class="pt-4 border-t border-slate-50 space-y-3">
+                    <!-- Total -->
+                    <div class="pt-4 border-t border-slate-100 space-y-3">
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-400 font-medium">Subtotal</span>
                             <span class="text-slate-600 font-bold">IDR {{ number_format($order->amount, 0, ',', '.') }}</span>

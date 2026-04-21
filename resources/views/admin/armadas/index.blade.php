@@ -20,6 +20,7 @@
                     <th class="px-6 py-4 font-semibold">Nama Kendaraan</th>
                     <th class="px-6 py-4 font-semibold">Tipe</th>
                     <th class="px-6 py-4 font-semibold">Kapasitas</th>
+                    <th class="px-6 py-4 font-semibold text-center">Total Unit</th>
                     <th class="px-6 py-4 font-semibold text-right">Harga / Hari</th>
                     <th class="px-6 py-4 font-semibold text-center">Aksi</th>
                 </tr>
@@ -47,6 +48,11 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-sm text-slate-600">{{ $armada->capacity }} Orang</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="text-sm font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                            {{ $armada->total_units }}
+                        </span>
+                    </td>
                     <td class="px-6 py-4 text-sm font-bold text-slate-800 text-right">
                         <div class="flex flex-col">
                             <span class="text-[10px] text-slate-400 font-normal">City: Rp {{ number_format($armada->price_city_tour, 0, ',', '.') }}</span>
@@ -70,7 +76,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-10 text-center text-slate-400 italic text-sm">Belum ada armada yang didaftarkan.</td>
+                    <td colspan="6" class="px-6 py-10 text-center text-slate-400 italic text-sm">Belum ada armada yang didaftarkan.</td>
                 </tr>
                 @endforelse
             </tbody>

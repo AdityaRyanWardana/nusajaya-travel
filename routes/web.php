@@ -44,6 +44,7 @@ Route::post('/transport/{id}/book', [TransportController::class, 'book'])->name(
 Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     Route::delete('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::resource('armadas', App\Http\Controllers\Admin\ArmadaController::class);
@@ -77,7 +78,9 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // New User Profile Routes
-    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::get('/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
+    Route::post('/profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user.profile.update');
+    Route::post('/profile/avatar/delete', [App\Http\Controllers\UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
     Route::get('/calendar', [UserController::class, 'calendar'])->name('user.calendar');
     Route::get('/preferences', [UserController::class, 'preferences'])->name('user.preferences');
 });

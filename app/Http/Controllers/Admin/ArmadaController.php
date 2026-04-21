@@ -36,6 +36,7 @@ class ArmadaController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'description' => 'nullable|string',
+            'total_units' => 'required|integer|min:1',
         ]);
 
         $data = $request->all();
@@ -83,6 +84,7 @@ class ArmadaController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'description' => 'nullable|string',
+            'total_units' => 'required|integer|min:1',
         ]);
 
         $armada = Armada::findOrFail($id);

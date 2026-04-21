@@ -95,8 +95,12 @@
                                 <p class="text-sm font-black text-slate-800 leading-none">{{ Auth::user()->name }}</p>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ Auth::user()->role }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-100 group-hover:scale-105 transition-transform">
-                                {{ substr(Auth::user()->name, 0, 1) }}
+                            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-100 group-hover:scale-105 transition-transform overflow-hidden">
+                                @if(Auth::user()->avatar)
+                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover" alt="{{ Auth::user()->name }}">
+                                @else
+                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                @endif
                             </div>
                         </button>
 

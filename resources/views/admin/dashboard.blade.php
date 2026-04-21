@@ -77,41 +77,64 @@
                     <h3 class="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Recent Booking Activity</h3>
                     <p class="text-slate-400 text-sm font-medium mt-1 italic">Real-time update from your customers</p>
                 </div>
-                <button class="px-6 py-3 text-xs font-black text-blue-600 bg-blue-50 rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300 uppercase tracking-widest">View All</button>
+                <a href="{{ route('admin.bookings.index') }}" class="px-6 py-3 text-xs font-black text-blue-600 bg-blue-50 rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300 uppercase tracking-widest">View All</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
                         <tr class="bg-slate-50/50">
-                            <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Customer Name</th>
-                            <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Service Details</th>
-                            <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Date</th>
+                            <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Customer</th>
+                            <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Order & Details</th>
+                            <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Amount</th>
                             <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
-                        @forelse(\App\Models\Booking::latest()->take(5)->get() as $booking)
-                        <tr class="hover:bg-slate-50/30 transition-colors">
+                        @forelse(\App\Models\Booking::with('user')->latest()->take(5)->get() as $booking)
+                        @php
+                            $statusColor = match($booking->status) {
+                                'paid'      => ['bg' => 'bg-emerald-50', 'text' => 'text-emerald-600', 'border' => 'border-emerald-200', 'dot' => 'bg-emerald-400'],
+                                'pending'   => ['bg' => 'bg-amber-50',   'text' => 'text-amber-600',   'border' => 'border-amber-200',   'dot' => 'bg-amber-400 animate-pulse'],
+                                'cancelled' => ['bg' => 'bg-red-50',     'text' => 'text-red-500',     'border' => 'border-red-200',     'dot' => 'bg-red-400'],
+                                'completed' => ['bg' => 'bg-blue-50',    'text' => 'text-blue-600',    'border' => 'border-blue-200',    'dot' => 'bg-blue-400'],
+                                default     => ['bg' => 'bg-slate-50',   'text' => 'text-slate-500',   'border' => 'border-slate-200',   'dot' => 'bg-slate-400'],
+                            };
+                        @endphp
+                        <tr onclick="window.location.href='{{ route('admin.bookings.show', $booking) }}'"
+                            class="hover:bg-slate-50/30 transition-colors cursor-pointer group">
                             <td class="px-10 py-8">
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 font-black">
-                                        {{ substr($booking->user->name, 0, 1) }}
+                                    <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500 font-black overflow-hidden shadow-sm shrink-0">
+                                        @if($booking->user->avatar)
+                                            <img src="{{ asset('storage/' . $booking->user->avatar) }}" class="w-full h-full object-cover" alt="{{ $booking->user->name }}">
+                                        @else
+                                            {{ substr($booking->user->name, 0, 1) }}
+                                        @endif
                                     </div>
                                     <div>
-                                        <p class="text-sm font-black text-slate-800">{{ $booking->user->name }}</p>
-                                        <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ $booking->user->phone }}</p>
+                                        <p class="text-sm font-black text-slate-800 group-hover:text-blue-600 transition-colors">{{ $booking->user->name }}</p>
+                                        <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ $booking->user->phone ?? $booking->user->email }}</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-8">
-                                <p class="text-sm font-black text-slate-700 leading-tight">{{ $booking->service_name }}</p>
-                                <p class="text-[10px] font-bold text-blue-500 uppercase mt-1 tracking-wider">{{ $booking->type }}</p>
+                                <p class="text-[9px] font-black text-skyblue uppercase tracking-widest mb-1">{{ $booking->order_number }}</p>
+                                <p class="text-sm font-black text-slate-700 leading-tight mb-1">{{ $booking->service_name }}</p>
+                                @if($booking->pickup_point)
+                                    <p class="text-[9px] font-bold text-slate-400">📍 {{ Str::limit($booking->pickup_point, 25) }}</p>
+                                @endif
+                                @if($booking->destination && $booking->destination !== $booking->service_name)
+                                    <p class="text-[9px] font-bold text-slate-400">🏁 {{ Str::limit($booking->destination, 25) }}</p>
+                                @endif
+                                <p class="text-[9px] font-bold text-slate-400 mt-1">🗓 {{ $booking->travel_date?->format('d M Y') }}</p>
                             </td>
-                            <td class="px-6 py-8 text-sm font-bold text-slate-500 italic">
-                                {{ $booking->created_at->diffForHumans() }}
+                            <td class="px-6 py-8">
+                                <p class="text-sm font-black text-brandblue">IDR {{ number_format($booking->amount, 0, ',', '.') }}</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{{ $booking->type }}</p>
                             </td>
                             <td class="px-10 py-8 text-right">
-                                <span class="inline-flex items-center px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest {{ $booking->status === 'pending' ? 'bg-orange-50 text-orange-600' : ($booking->status === 'completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600') }}">
+                                <span class="inline-flex items-center px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest {{ $statusColor['bg'] }} {{ $statusColor['text'] }} border {{ $statusColor['border'] }}">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $statusColor['dot'] }}"></span>
                                     {{ $booking->status }}
                                 </span>
                             </td>
@@ -144,7 +167,7 @@
                     <div class="space-y-6">
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-bold text-slate-300 uppercase tracking-widest">Available Units</span>
-                            <span class="text-2xl font-black">{{ \App\Models\Armada::count() }}</span>
+                            <span class="text-2xl font-black">{{ \App\Models\Armada::sum('total_units') }}</span>
                         </div>
                         <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                             <div class="bg-blue-400 h-full w-[85%] rounded-full shadow-lg shadow-blue-400/50"></div>

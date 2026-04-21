@@ -41,6 +41,12 @@
                     <input type="number" name="capacity" id="capacity" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="14" required>
                 </div>
 
+                <!-- Total Unit -->
+                <div>
+                    <label for="total_units" class="block text-sm font-bold text-slate-700 mb-2">Total Unit (Bus)</label>
+                    <input type="number" name="total_units" id="total_units" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="10" value="1" required>
+                </div>
+
                 <!-- Harga Batam City Tour -->
                 <div class="col-span-2">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Harga Batam City Tour</h3>

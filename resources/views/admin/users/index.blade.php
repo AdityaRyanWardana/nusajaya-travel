@@ -30,8 +30,12 @@
                     <tr class="hover:bg-slate-50/30 transition-colors">
                         <td class="px-10 py-8">
                             <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 font-black">
-                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500 font-black overflow-hidden">
+                                    @if($user->avatar)
+                                        <img src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover" alt="{{ $user->name }}">
+                                    @else
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    @endif
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">{{ $user->name }}</p>

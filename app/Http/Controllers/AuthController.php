@@ -13,6 +13,12 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
+        if (Auth::check()) {
+            if (in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->route('home');
+        }
         return view('auth.login');
     }
 
@@ -79,7 +85,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        // Auth::logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home');
