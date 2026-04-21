@@ -16,26 +16,6 @@ use App\Http\Controllers\UserController;
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
-Route::get('/fix-roles', function() {
-    \App\Models\User::whereNull('role')->orWhere('role', '')->update(['role' => 'user']);
-    \App\Models\User::where('email', 'hendrazhang@gmail.com')->update([
-        'password' => \Illuminate\Support\Facades\Hash::make('12345678')
-    ]);
-    
-    // Fix price for 14 Seat VIP (case insensitive search)
-    \Illuminate\Support\Facades\DB::table('armadas')
-        ->where('name', '14 Seat VIP')
-        ->orWhere('name', '14 SEAT VIP')
-        ->update(['price_per_day' => 1200000]);
-
-    $users = \App\Models\User::all(['email', 'role'])->toArray();
-    $fleets = \Illuminate\Support\Facades\DB::table('armadas')->select('name', 'price_per_day')->get();
-    return response()->json([
-        'message' => "Roles fixed, password reset, and 14 SEAT VIP price updated to 1.2M",
-        'debug_users' => $users,
-        'debug_fleets' => $fleets
-    ]);
-});
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
