@@ -10,7 +10,7 @@
             </div>
             <div class="flex gap-4">
                 @if(count($orders) > 0)
-                    <form action="{{ route('orders.reset') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus seluruh riwayat pesanan? Tindakan ini tidak dapat dibatalkan.');">
+
                         @csrf
                         <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-500 px-8 py-3 rounded-2xl font-black text-xs uppercase transition">
                             Reset History

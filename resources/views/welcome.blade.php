@@ -258,7 +258,7 @@
     <div class="grid grid-cols-4 grid-rows-2 gap-6 h-[700px]">
         <!-- Batam City (Large Vertical) -->
         <a href="{{ route('tours.show', 'batam-city-highlights') }}" class="col-span-2 row-span-2 relative rounded-[3rem] overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+            <img src="{{ asset('images/batam_city.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-transparent to-transparent"></div>
             <div class="absolute inset-0 bg-brandblue/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
             
@@ -271,7 +271,7 @@
         
         <!-- Ranoh Island (Wide Top) -->
         <a href="{{ route('tours.show', 'ranoh-island') }}" class="col-span-2 row-span-1 relative rounded-[3rem] overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+            <img src="{{ asset('images/ranoh_island.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-r from-brandblue/80 via-transparent to-transparent"></div>
             <div class="absolute top-8 right-8">
                 <div class="w-12 h-12 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/20">
@@ -286,7 +286,7 @@
         
         <!-- Maha Vihara (Standard Style) -->
         <a href="{{ route('tours.show', 'maha-vihara') }}" class="col-span-1 row-span-1 relative rounded-[3rem] overflow-hidden group">
-            <img src="{{ asset('images/maha_vihara.png') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+            <img src="{{ asset('images/maha_vihara.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-transparent to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
                 <p class="text-[9px] font-black text-skyblue uppercase tracking-widest mb-1 italic">Architecture</p>
@@ -296,7 +296,7 @@
         
         <!-- Barelang Bridge (Square Small) -->
         <a href="{{ route('tours.show', 'barelang-bridge') }}" class="col-span-1 row-span-1 relative rounded-[3rem] overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+            <img src="{{ asset('images/barelang_bridge.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
                 <h3 class="text-lg font-black text-white uppercase italic leading-none">Barelang <br>Bridge</h3>

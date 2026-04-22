@@ -70,7 +70,7 @@
                             <a href="{{ route('admin.armadas.edit', $armada->id) }}" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </a>
-                            <form action="{{ route('admin.armadas.destroy', $armada->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus armada ini?')">
+                            <form action="{{ route('admin.armadas.destroy', $armada->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this fleet?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2 text-slate-400 hover:text-red-600 transition-colors">

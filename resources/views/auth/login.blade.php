@@ -38,8 +38,8 @@
         <!-- Right Side: Login Form -->
         <div class="md:w-1/2 p-12 md:p-20 flex flex-col justify-center bg-white">
             <div class="mb-10">
-                <h3 class="text-3xl font-bold text-[#0B2447] mb-2 italic tracking-tight">Welcome Back</h3>
-                <p class="text-slate-400 font-medium italic text-sm">Please sign in to continue your journey</p>
+                <h3 class="text-3xl font-bold text-[#0B2447] mb-2 italic tracking-tight">{{ __('Welcome Back') }}</h3>
+                <p class="text-slate-400 font-medium italic text-sm">{{ __('Please sign in to continue your journey') }}</p>
             </div>
 
             <form action="{{ route('login.post') }}" method="POST" class="space-y-6">
@@ -60,7 +60,7 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-sky-500 text-slate-400">
                             <i data-lucide="mail" class="w-5 h-5"></i>
                         </div>
-                        <input type="email" name="email" id="email" class="block w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-[1.25rem] text-[#0B2447] font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all outline-none" placeholder="example@nusajaya.com" required autofocus>
+                        <input type="email" name="email" id="email" class="block w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-[1.25rem] text-[#0B2447] font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all outline-none" placeholder="{{ __('example@nusajaya.com') }}" required autofocus>
                     </div>
                     @error('email')
                         <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
@@ -88,7 +88,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-[#0B2447] text-white font-black py-5 rounded-[1.25rem] shadow-xl shadow-slate-200 hover:bg-slate-800 hover:shadow-sky-100 hover:-translate-y-0.5 transition-all active:scale-[0.98] uppercase tracking-widest text-xs flex items-center justify-center group">
-                    Sign In Now
+                    {{ __('Sign In Now') }}
                     <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </button>
             </form>

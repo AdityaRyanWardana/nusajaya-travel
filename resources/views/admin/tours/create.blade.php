@@ -19,19 +19,19 @@
                 <!-- Judul -->
                 <div class="col-span-2">
                     <label for="title" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Tour Package Name') }}</label>
-                    <input type="text" name="title" id="title" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="Contoh: Paket Wisata Bali 3 Hari 2 Malam" required>
+                    <input type="text" name="title" id="title" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="{{ __('Example: Bali Travel Package 3 Days 2 Nights') }}" required>
                 </div>
 
                 <!-- Destinasi -->
                 <div>
                     <label for="destination" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Destination') }}</label>
-                    <input type="text" name="destination" id="destination" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="Contoh: Denpasar, Bali" required>
+                    <input type="text" name="destination" id="destination" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="{{ __('Example: Denpasar, Bali') }}" required>
                 </div>
 
                 <!-- Durasi -->
                 <div>
                     <label for="duration" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Duration') }}</label>
-                    <input type="text" name="duration" id="duration" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="Contoh: 3 Hari 2 Malam" required>
+                    <input type="text" name="duration" id="duration" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="{{ __('Example: 3 Days 2 Nights') }}" required>
                 </div>
 
                 <!-- Harga -->
@@ -55,7 +55,7 @@
                 <!-- Deskripsi -->
                 <div class="col-span-2">
                     <label for="description" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Trip Description') }}</label>
-                    <textarea name="description" id="description" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="Jelaskan rincian perjalanan, fasilitas, dan jadwal..."></textarea>
+                    <textarea name="description" id="description" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="{{ __('Explain trip details, facilities, and schedule...') }}"></textarea>
                 </div>
             </div>
         </div>

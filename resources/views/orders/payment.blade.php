@@ -37,7 +37,7 @@
                                 <svg class="w-3.5 h-3.5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kategori Sewa</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Rental Category') }}</p>
                                 <p class="text-xs font-bold text-brandblue">{{ $category }}</p>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                                 <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Titik Penjemputan</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Pickup Point') }}</p>
                                 <p class="text-xs font-bold text-brandblue leading-relaxed">{{ $order->pickup_point }}</p>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                 <svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destinasi / Tujuan</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Destination') }}</p>
                                 <p class="text-xs font-bold text-brandblue leading-relaxed">{{ $order->destination }}</p>
                             </div>
                         </div>
@@ -75,8 +75,8 @@
                                 <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Tanggal Perjalanan</p>
-                                <p class="text-xs font-bold text-brandblue">{{ \Carbon\Carbon::parse($order->travel_date)->translatedFormat('d F Y') }}</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Travel Date') }}</p>
+                                <p class="text-xs font-bold text-brandblue">{{ \Carbon\Carbon::parse($order->travel_date)->format('d F Y') }}</p>
                             </div>
                         </div>
                         @endif
@@ -88,7 +88,7 @@
                                 <svg class="w-3.5 h-3.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Jam Penjemputan</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Pickup Time') }}</p>
                                 <p class="text-xs font-bold text-brandblue">{{ $order->pickup_time }}</p>
                             </div>
                         </div>
@@ -207,15 +207,15 @@
                         <ul class="text-[10px] space-y-3 text-slate-500 font-medium">
                             <li class="flex gap-3">
                                 <span class="w-5 h-5 rounded-full bg-brandblue text-white flex items-center justify-center shrink-0">1</span>
-                                <span>Pilih menu <span class="font-bold text-brandblue">Transfer > Virtual Account</span> di ATM atau M-Banking Anda.</span>
+                                <span>Select <span class="font-bold text-brandblue">Transfer > Virtual Account</span> menu on your ATM or M-Banking.</span>
                             </li>
                             <li class="flex gap-3">
                                 <span class="w-5 h-5 rounded-full bg-brandblue text-white flex items-center justify-center shrink-0">2</span>
-                                <span>Masukkan nomor virtual account yang tertera di atas.</span>
+                                <span>Enter the virtual account number shown above.</span>
                             </li>
                             <li class="flex gap-3">
                                 <span class="w-5 h-5 rounded-full bg-brandblue text-white flex items-center justify-center shrink-0">3</span>
-                                <span>Periksa nominal pembayaran dan konfirmasi transaksi.</span>
+                                <span>Check the payment amount and confirm the transaction.</span>
                             </li>
                         </ul>
                     </div>

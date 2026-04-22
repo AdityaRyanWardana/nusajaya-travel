@@ -75,7 +75,7 @@
                     <i data-lucide="chrome" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-black text-slate-800">Batam, Indonesia — Current Device</p>
+
                     <p class="text-[10px] font-bold text-slate-400 italic mt-1">Chrome on Windows 10</p>
                 </div>
             </div>

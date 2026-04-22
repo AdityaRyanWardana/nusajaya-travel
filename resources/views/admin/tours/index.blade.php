@@ -61,7 +61,7 @@
                             <a href="{{ route('admin.tours.edit', $tour->id) }}" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </a>
-                            <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus paket tour ini?')">
+                            <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tour package?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2 text-slate-400 hover:text-red-600 transition-colors">

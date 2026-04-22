@@ -19,7 +19,7 @@
                 <!-- Nama -->
                 <div class="col-span-2">
                     <label for="name" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Vehicle Name') }}</label>
-                    <input type="text" name="name" id="name" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="Contoh: Toyota Hiace Premio 2024" required>
+                    <input type="text" name="name" id="name" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="{{ __('Example: Toyota Hiace Premio 2024') }}" required>
                 </div>
 
                 <!-- Tipe -->
@@ -29,9 +29,7 @@
                         <option value="Bus">Bus</option>
                         <option value="Coaster">Coaster</option>
                         <option value="Hiace">Hiace</option>
-                        <option value="Elf">Elf</option>
-                        <option value="Innova">Innova</option>
-                        <option value="Lainnya">Lainnya</option>
+                        <option value="Private Car">Private Car</option>
                     </select>
                 </div>
 
@@ -96,7 +94,7 @@
                 <!-- Deskripsi -->
                 <div class="col-span-2">
                     <label for="description" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Short Description') }}</label>
-                    <textarea name="description" id="description" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="Jelaskan keunggulan atau fasilitas kendaraan..."></textarea>
+                    <textarea name="description" id="description" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="{{ __('Describe vehicle features or facilities...') }}"></textarea>
                 </div>
             </div>
         </div>
