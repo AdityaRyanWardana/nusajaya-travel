@@ -29,7 +29,7 @@
                 <span class="bg-emerald-50 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">+12%</span>
             </div>
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Booked</p>
-            <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ \App\Models\Booking::count() }}</h3>
+            <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ $stats['total_bookings'] }}</h3>
         </div>
 
         <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
@@ -40,7 +40,7 @@
                 <span class="bg-orange-50 text-orange-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">Waiting</span>
             </div>
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Waiting List</p>
-            <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ \App\Models\Booking::where('status', 'pending')->count() }}</h3>
+            <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ $stats['pending_bookings'] }}</h3>
         </div>
 
         <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
@@ -166,11 +166,25 @@
                     
                     <div class="space-y-6">
                         <div class="flex items-center justify-between">
-                            <span class="text-sm font-bold text-slate-300 uppercase tracking-widest">Available Units</span>
-                            <span class="text-2xl font-black">{{ \App\Models\Armada::sum('total_units') }}</span>
+                            <span class="text-sm font-bold text-slate-300 uppercase tracking-widest">Units in Service</span>
+                            <span class="text-2xl font-black text-emerald-400">{{ $stats['available_armada'] }}</span>
                         </div>
                         <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                            <div class="bg-blue-400 h-full w-[85%] rounded-full shadow-lg shadow-blue-400/50"></div>
+                            @php
+                                $percent = $stats['total_armada'] > 0 ? ($stats['available_armada'] / $stats['total_armada']) * 100 : 0;
+                            @endphp
+                            <div class="bg-emerald-400 h-full rounded-full shadow-lg shadow-emerald-400/50" style="width: {{ $percent }}%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-bold text-slate-300 uppercase tracking-widest">Under Maintenance</span>
+                            <span class="text-2xl font-black text-red-400">{{ $stats['maintenance_armada'] }}</span>
+                        </div>
+                        <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                            @php
+                                $mPercent = $stats['total_armada'] > 0 ? ($stats['maintenance_armada'] / $stats['total_armada']) * 100 : 0;
+                            @endphp
+                            <div class="bg-red-400 h-full rounded-full shadow-lg shadow-red-400/50" style="width: {{ $mPercent }}%"></div>
                         </div>
                     </div>
                 </div>

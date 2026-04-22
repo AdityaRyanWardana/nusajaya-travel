@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Nusajaya Travel</title>
+    <title>Nusajaya Travel - Welcome Back ✨</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
                 </div>
                 
                 <h2 class="text-4xl font-extrabold leading-[1.1] mb-6 italic uppercase tracking-tighter">Your Journey <br>Starts <br><span class="text-sky-400 not-italic tracking-normal lowercase">Here.</span></h2>
-                <p class="text-slate-300 text-lg font-medium leading-relaxed max-w-sm">Temukan kenyamanan perjalanan terbaik di Batam dengan layanan transportasi dan tour premium kami.</p>
+                <p class="text-slate-300 text-lg font-medium leading-relaxed max-w-sm">Experience the finest travel comfort in Batam with our premium transport and tour services.</p>
             </div>
 
             <div class="relative z-10 mt-12 pt-8 border-t border-white/10">
@@ -38,8 +38,8 @@
         <!-- Right Side: Login Form -->
         <div class="md:w-1/2 p-12 md:p-20 flex flex-col justify-center bg-white">
             <div class="mb-10">
-                <h3 class="text-3xl font-black text-[#0B2447] mb-2 italic uppercase tracking-tighter">Welcome Back</h3>
-                <p class="text-slate-400 font-medium italic text-sm">Please sign in to your account to continue</p>
+                <h3 class="text-3xl font-bold text-[#0B2447] mb-2 italic tracking-tight">Welcome Back</h3>
+                <p class="text-slate-400 font-medium italic text-sm">Please sign in to continue your journey</p>
             </div>
 
             <form action="{{ route('login.post') }}" method="POST" class="space-y-6">

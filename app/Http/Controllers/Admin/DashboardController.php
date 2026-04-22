@@ -17,7 +17,9 @@ class DashboardController extends Controller
         $stats = [
             'total_bookings' => Booking::count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
-            'total_armada' => Armada::count(),
+            'total_armada' => Armada::sum('total_units'),
+            'available_armada' => Armada::sum('total_units') - Armada::sum('maintenance_units'),
+            'maintenance_armada' => Armada::sum('maintenance_units'),
             'total_tours' => Tour::count(),
             'recent_bookings' => Booking::with('user')->latest()->take(5)->get(),
         ];

@@ -42,8 +42,18 @@ class ProfileController extends Controller
 
     public function updatePreferences(Request $request)
     {
-        // For demonstration, we can store these in session or a settings table
-        // For now, let's just pretend we saved them
+        $user = auth()->user();
+
+        $request->validate([
+            'theme' => 'required|string|in:light,dark',
+            'language' => 'required|string|in:en,id',
+        ]);
+
+        $user->update([
+            'theme' => $request->theme,
+            'language' => $request->language,
+        ]);
+
         return back()->with('success', 'Preferences saved successfully.');
     }
 

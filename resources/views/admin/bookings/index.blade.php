@@ -7,23 +7,23 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
             <p class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-2">Admin Panel</p>
-            <h2 class="text-4xl font-black text-slate-900 tracking-tight uppercase italic leading-none">Booking Requests</h2>
-            <p class="text-slate-400 font-medium mt-2">Manage all customer service requests and booking statuses.</p>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight uppercase italic leading-none">{{ __('Booking Requests') }}</h2>
+            <p class="text-slate-400 font-medium mt-2">{{ __('Manage all customer service requests and booking statuses.') }}</p>
         </div>
 
         {{-- Quick Status Summary --}}
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2 px-5 py-3 bg-amber-50 rounded-2xl border border-amber-100">
                 <div class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></div>
-                <span class="text-xs font-black text-amber-600">{{ $bookings->total() > 0 ? $bookings->where('status','pending')->count() : 0 }} Pending</span>
+                <span class="text-xs font-black text-amber-600">{{ $bookings->total() > 0 ? $bookings->where('status','pending')->count() : 0 }} {{ __('Pending') }}</span>
             </div>
             <div class="flex items-center gap-2 px-5 py-3 bg-emerald-50 rounded-2xl border border-emerald-100">
                 <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                <span class="text-xs font-black text-emerald-600">{{ $bookings->total() > 0 ? $bookings->where('status','paid')->count() : 0 }} Paid</span>
+                <span class="text-xs font-black text-emerald-600">{{ $bookings->total() > 0 ? $bookings->where('status','paid')->count() : 0 }} {{ __('Paid') }}</span>
             </div>
             <div class="flex items-center gap-2 px-5 py-3 bg-red-50 rounded-2xl border border-red-100">
                 <div class="w-2 h-2 rounded-full bg-red-400"></div>
-                <span class="text-xs font-black text-red-500">{{ $bookings->total() > 0 ? $bookings->where('status','cancelled')->count() : 0 }} Cancelled</span>
+                <span class="text-xs font-black text-red-500">{{ $bookings->total() > 0 ? $bookings->where('status','cancelled')->count() : 0 }} {{ __('Cancelled') }}</span>
             </div>
         </div>
     </div>
@@ -100,7 +100,7 @@
 
                             {{-- Travel Date --}}
                             <div class="text-center shrink-0 lg:w-28">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Travel Date</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ __('Travel Date') }}</p>
                                 <p class="text-sm font-black text-slate-700">{{ $booking->travel_date?->format('d') }}</p>
                                 <p class="text-xs font-bold text-slate-500">{{ $booking->travel_date?->format('M Y') }}</p>
                             </div>
@@ -110,7 +110,7 @@
 
                             {{-- Amount --}}
                             <div class="text-center shrink-0 lg:w-36">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ __('Total') }}</p>
                                 <p class="text-lg font-black text-slate-800 leading-tight">IDR</p>
                                 <p class="text-base font-black text-blue-600 leading-tight">{{ number_format($booking->amount, 0, ',', '.') }}</p>
                             </div>
@@ -169,7 +169,7 @@
             <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mb-6 mx-auto">
                 <i data-lucide="calendar-x" class="w-10 h-10"></i>
             </div>
-            <p class="text-slate-400 font-bold italic">No bookings found in the database.</p>
+            <p class="text-slate-400 font-bold italic">{{ __('No bookings found in the database.') }}</p>
         </div>
         @endforelse
     </div>

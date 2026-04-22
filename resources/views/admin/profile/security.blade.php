@@ -3,8 +3,8 @@
 @section('content')
 <div class="max-w-4xl space-y-8">
     <div>
-        <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">Security Settings</h2>
-        <p class="text-slate-400 font-medium mt-2 italic text-lg">Update your password and manage account security protocols.</p>
+        <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">{{ __('Security Settings') }}</h2>
+        <p class="text-slate-400 font-medium mt-2 italic text-lg">{{ __('Update your password and manage account security protocols.') }}</p>
     </div>
 
     @if($errors->any())
@@ -25,25 +25,25 @@
             <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center">
                 <i data-lucide="shield-lock" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-lg font-black text-slate-800 uppercase italic">Change Password</h3>
+            <h3 class="text-lg font-black text-slate-800 uppercase italic">{{ __('Change Password') }}</h3>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
             <!-- Current Password -->
             <div class="md:col-span-2 space-y-4">
-                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Current Password</label>
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Current Password') }}</label>
                 <input type="password" name="current_password" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-red-500 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
             </div>
 
             <!-- New Password -->
             <div class="space-y-4">
-                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">New Password</label>
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('New Password') }}</label>
                 <input type="password" name="password" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
             </div>
 
             <!-- Confirm New Password -->
             <div class="space-y-4">
-                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Confirm New Password</label>
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Confirm New Password') }}</label>
                 <input type="password" name="password_confirmation" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
             </div>
         </div>
@@ -51,11 +51,11 @@
         <div class="pt-8 flex items-center justify-between border-t border-slate-50">
             <button type="submit" class="bg-[#0B2447] text-white px-10 py-5 rounded-[1.25rem] font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 flex items-center group">
                 <i data-lucide="key" class="w-4 h-4 mr-2 group-hover:rotate-45 transition-transform"></i>
-                Update Security Credentials
+                {{ __('Update Security Credentials') }}
             </button>
             <div class="flex items-center text-[10px] font-bold text-slate-400 italic">
                 <i data-lucide="info" class="w-4 h-4 mr-2"></i>
-                Requires current password to verify
+                {{ __('Requires current password to verify') }}
             </div>
         </div>
     </form>
@@ -66,7 +66,7 @@
             <div class="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center">
                 <i data-lucide="monitor" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-lg font-black text-slate-800 uppercase italic">Active Sessions</h3>
+            <h3 class="text-lg font-black text-slate-800 uppercase italic">{{ __('Active Sessions') }}</h3>
         </div>
         
         <div class="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100/50 opacity-60">

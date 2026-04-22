@@ -3,8 +3,8 @@
 @section('content')
 <div class="max-w-4xl space-y-8">
     <div>
-        <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">My Profile</h2>
-        <p class="text-slate-400 font-medium mt-2 italic text-lg">Manage your personal information and public profile.</p>
+        <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">{{ __('My Profile') }}</h2>
+        <p class="text-slate-400 font-medium mt-2 italic text-lg">{{ __('Manage your personal information and public profile.') }}</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -39,7 +39,7 @@
                 <div class="space-y-6">
                     <!-- Full Name -->
                     <div class="space-y-3">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Full Name') }}</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
                                 <i data-lucide="user" class="w-5 h-5"></i>
@@ -50,7 +50,7 @@
 
                     <!-- Email Address -->
                     <div class="space-y-3">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Email Address') }}</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
                                 <i data-lucide="mail" class="w-5 h-5"></i>
@@ -61,7 +61,7 @@
 
                     <!-- Phone Number -->
                     <div class="space-y-3">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Phone Number') }}</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
                                 <i data-lucide="phone" class="w-5 h-5"></i>
@@ -74,9 +74,9 @@
                 <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
                     <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-blue-100 flex items-center group">
                         <i data-lucide="save" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></i>
-                        Save Changes
+                        {{ __('Save Changes') }}
                     </button>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase italic">Last updated: {{ $user->updated_at->diffForHumans() }}</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase italic">{{ __('Last updated') }}: {{ $user->updated_at->diffForHumans() }}</p>
                 </div>
             </form>
         </div>

@@ -22,6 +22,7 @@ class Armada extends Model
         'images',
         'description',
         'total_units',
+        'maintenance_units',
     ];
 
     protected $casts = [

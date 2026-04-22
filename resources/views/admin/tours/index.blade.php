@@ -3,12 +3,12 @@
 @section('content')
 <div class="flex items-center justify-between mb-8">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Manajemen Paket Tour</h2>
-        <p class="text-slate-500 text-sm">Kelola semua destinasi wisata dan paket liburan.</p>
+        <h2 class="text-2xl font-bold text-slate-800">{{ __('Tour Package Management') }}</h2>
+        <p class="text-slate-500 text-sm">{{ __('Manage all travel destinations and holiday packages.') }}</p>
     </div>
     <a href="{{ route('admin.tours.create') }}" class="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/20">
         <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-        Tambah Paket Tour
+        {{ __('Add Tour Package') }}
     </a>
 </div>
 
@@ -17,11 +17,11 @@
         <table class="w-full text-left">
             <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
                 <tr>
-                    <th class="px-6 py-4 font-semibold">Paket Wisata</th>
-                    <th class="px-6 py-4 font-semibold">Destinasi</th>
-                    <th class="px-6 py-4 font-semibold">Durasi</th>
-                    <th class="px-6 py-4 font-semibold text-right">Harga</th>
-                    <th class="px-6 py-4 font-semibold text-center">Aksi</th>
+                    <th class="px-6 py-4 font-semibold">{{ __('TOUR PACKAGE') }}</th>
+                    <th class="px-6 py-4 font-semibold">{{ __('DESTINATION') }}</th>
+                    <th class="px-6 py-4 font-semibold">{{ __('DURATION') }}</th>
+                    <th class="px-6 py-4 font-semibold text-right">{{ __('PRICE') }}</th>
+                    <th class="px-6 py-4 font-semibold text-center">{{ __('ACTION') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
@@ -73,7 +73,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-10 text-center text-slate-400 italic text-sm">Belum ada paket tour yang didaftarkan.</td>
+                    <td colspan="5" class="px-6 py-10 text-center text-slate-400 italic text-sm">{{ __('No tour packages registered yet.') }}</td>
                 </tr>
                 @endforelse
             </tbody>

@@ -3,12 +3,12 @@
 @section('content')
 <div class="flex items-center justify-between mb-8">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Manajemen Armada</h2>
-        <p class="text-slate-500 text-sm">Kelola semua kendaraan transportasi yang tersedia.</p>
+        <h2 class="text-2xl font-bold text-slate-800">{{ __('Fleet Management') }}</h2>
+        <p class="text-slate-500 text-sm">{{ __('Manage all available transportation vehicles.') }}</p>
     </div>
     <a href="{{ route('admin.armadas.create') }}" class="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/20">
         <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-        Tambah Armada
+        {{ __('Add Fleet') }}
     </a>
 </div>
 
@@ -17,12 +17,13 @@
         <table class="w-full text-left">
             <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
                 <tr>
-                    <th class="px-6 py-4 font-semibold">Nama Kendaraan</th>
-                    <th class="px-6 py-4 font-semibold">Tipe</th>
-                    <th class="px-6 py-4 font-semibold">Kapasitas</th>
-                    <th class="px-6 py-4 font-semibold text-center">Total Unit</th>
-                    <th class="px-6 py-4 font-semibold text-right">Harga / Hari</th>
-                    <th class="px-6 py-4 font-semibold text-center">Aksi</th>
+                    <th class="px-6 py-4 font-semibold">{{ __('VEHICLE NAME') }}</th>
+                    <th class="px-6 py-4 font-semibold">{{ __('TYPE') }}</th>
+                    <th class="px-6 py-4 font-semibold">{{ __('CAPACITY') }}</th>
+                    <th class="px-6 py-4 font-semibold text-center">{{ __('AVAILABLE UNITS') }}</th>
+                    <th class="px-6 py-4 font-semibold text-center">{{ __('MAINTENANCE') }}</th>
+                    <th class="px-6 py-4 font-semibold text-right">{{ __('PRICE / DAY') }}</th>
+                    <th class="px-6 py-4 font-semibold text-center">{{ __('ACTION') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
@@ -47,10 +48,15 @@
                             {{ $armada->type }}
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-sm text-slate-600">{{ $armada->capacity }} Orang</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">{{ $armada->capacity }} {{ __('People') }}</td>
                     <td class="px-6 py-4 text-center">
-                        <span class="text-sm font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-                            {{ $armada->total_units }}
+                        <span class="text-sm font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                            {{ $armada->total_units - $armada->maintenance_units }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="text-sm font-black {{ $armada->maintenance_units > 0 ? 'text-red-600 bg-red-50' : 'text-slate-400 bg-slate-50' }} px-3 py-1 rounded-full">
+                            {{ $armada->maintenance_units }}
                         </span>
                     </td>
                     <td class="px-6 py-4 text-sm font-bold text-slate-800 text-right">
@@ -76,7 +82,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-10 text-center text-slate-400 italic text-sm">Belum ada armada yang didaftarkan.</td>
+                    <td colspan="7" class="px-6 py-10 text-center text-slate-400 italic text-sm">{{ __('No fleets registered yet.') }}</td>
                 </tr>
                 @endforelse
             </tbody>

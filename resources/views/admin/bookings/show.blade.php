@@ -10,7 +10,7 @@
                 <i data-lucide="chevron-left" class="w-6 h-6 group-hover:-translate-x-1 transition-transform"></i>
             </a>
             <div>
-                <h2 class="text-4xl font-black text-slate-900 tracking-tight uppercase italic leading-none">Booking Description</h2>
+                <h2 class="text-4xl font-black text-slate-900 tracking-tight uppercase italic leading-none">{{ __('Booking Description') }}</h2>
                 <p class="text-slate-400 font-medium mt-1 uppercase text-[10px] tracking-[0.2em] italic">{{ $booking->order_number }}</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="status" value="paid">
-                <button type="submit" class="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-200 hover:scale-105 transition-all">Confirm Payment</button>
+                <button type="submit" class="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-200 hover:scale-105 transition-all">{{ __('Confirm Payment') }}</button>
             </form>
             @endif
             
@@ -45,7 +45,7 @@
                 <div class="absolute -top-24 -right-24 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
                 
                 <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-3 relative z-10">
-                    <span class="w-8 h-px bg-slate-100"></span> Customer Profile
+                    <span class="w-8 h-px bg-slate-100"></span> {{ __('Customer Profile') }}
                 </h4>
 
                 <div class="flex flex-col md:flex-row items-center gap-10 relative z-10">
@@ -63,11 +63,11 @@
                         <p class="text-slate-400 font-bold uppercase tracking-wider text-xs">{{ $booking->user->email }}</p>
                         <div class="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
                             <div class="px-5 py-3 bg-blue-50 rounded-2xl border border-blue-100">
-                                <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none mb-1">Phone Number</p>
-                                <p class="text-sm font-black text-blue-600">{{ $booking->user->phone ?? 'Not Set' }}</p>
+                                <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none mb-1">{{ __('Phone Number') }}</p>
+                                <p class="text-sm font-black text-blue-600">{{ $booking->user->phone ?? __('Not Set') }}</p>
                             </div>
                             <div class="px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">User Status</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">{{ __('User Status') }}</p>
                                 <p class="text-sm font-black text-slate-700 uppercase">{{ $booking->user->role }}</p>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                 <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-50/30 rounded-full blur-3xl"></div>
                 
                 <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10 flex items-center gap-3 relative z-10">
-                    <span class="w-8 h-px bg-slate-100"></span> Booking Description
+                    <span class="w-8 h-px bg-slate-100"></span> {{ __('Booking Description') }}
                 </h4>
 
                 <div class="grid md:grid-cols-2 gap-12 relative z-10">
@@ -89,16 +89,16 @@
                     <div class="space-y-8">
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <i data-lucide="map-pin" class="w-3 h-3 text-emerald-500"></i> Pickup Point
+                                <i data-lucide="map-pin" class="w-3 h-3 text-emerald-500"></i> {{ __('Pickup Point') }}
                             </p>
                             <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
-                                <p class="text-sm font-bold text-slate-800 leading-relaxed italic">"{{ $booking->pickup_point ?? 'Not specified' }}"</p>
+                                <p class="text-sm font-bold text-slate-800 leading-relaxed italic">"{{ $booking->pickup_point ?? __('Not specified') }}"</p>
                             </div>
                         </div>
 
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <i data-lucide="flag" class="w-3 h-3 text-red-500"></i> Final Destination
+                                <i data-lucide="flag" class="w-3 h-3 text-red-500"></i> {{ __('Final Destination') }}
                             </p>
                             <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
                                 <p class="text-sm font-bold text-slate-800 leading-relaxed italic">"{{ $booking->destination ?? $booking->service_name }}"</p>
@@ -113,7 +113,7 @@
                                 <i data-lucide="car" class="w-7 h-7"></i>
                             </div>
                             <div>
-                                <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Armada / Service</p>
+                                <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">{{ __('Armada / Service') }}</p>
                                 <h5 class="text-xl font-black text-brandblue italic leading-tight">{{ $booking->service_name }}</h5>
                                 <span class="inline-block mt-2 px-3 py-1 bg-white text-blue-600 rounded-full text-[9px] font-black uppercase tracking-widest">{{ $booking->type }}</span>
                             </div>
@@ -121,12 +121,12 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Travel Date</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ __('Travel Date') }}</p>
                                 <p class="text-sm font-black text-brandblue">{{ $booking->travel_date?->format('d M Y') }}</p>
                             </div>
                             <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Jam Penjemputan</p>
-                                <p class="text-sm font-black text-brandblue">{{ $booking->pickup_time ?? 'Not Set' }}</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ __('Pickup Time') }}</p>
+                                <p class="text-sm font-black text-brandblue">{{ $booking->pickup_time ?? __('Not Set') }}</p>
                             </div>
                         </div>
                     </div>
@@ -149,13 +149,13 @@
                     };
                 @endphp
                 <div class="flex items-center justify-between mb-6">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Current Status</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ __('Current Status') }}</p>
                     <span class="w-10 h-10 {{ $statusConfig['bg'] }} {{ $statusConfig['text'] }} rounded-xl flex items-center justify-center">
                         <i data-lucide="{{ $statusConfig['icon'] }}" class="w-6 h-6"></i>
                     </span>
                 </div>
                 <h3 class="text-4xl font-black {{ $statusConfig['text'] }} uppercase italic tracking-tighter">{{ $booking->status }}</h3>
-                <p class="text-[10px] font-bold text-slate-400 mt-2 italic leading-tight">Order received on {{ $booking->created_at->format('l, d F Y') }}</p>
+                <p class="text-[10px] font-bold text-slate-400 mt-2 italic leading-tight">{{ __('Order received on') }} {{ $booking->created_at->format('l, d F Y') }}</p>
             </div>
 
             {{-- Payment Card --}}
@@ -163,13 +163,13 @@
                 <div class="absolute -top-12 -left-12 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
                 
                 <h4 class="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-10 flex items-center gap-3 relative z-10">
-                    <span class="w-8 h-px bg-white/10"></span> Payment Summary
+                    <span class="w-8 h-px bg-white/10"></span> {{ __('Payment Summary') }}
                 </h4>
 
                 <div class="space-y-6 relative z-10">
                     <div class="flex justify-between items-end">
                         <div>
-                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Service Fee</p>
+                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">{{ __('Service Fee') }}</p>
                             <p class="text-sm font-bold">IDR {{ number_format($booking->amount, 0, ',', '.') }}</p>
                         </div>
                         <p class="text-[9px] font-black text-white/20">Qty: 1</p>
@@ -178,7 +178,7 @@
                     <div class="h-px bg-white/5"></div>
 
                     <div class="flex justify-between items-center pt-4">
-                        <p class="text-xs font-black uppercase tracking-widest">Grand Total</p>
+                        <p class="text-xs font-black uppercase tracking-widest">{{ __('Grand Total') }}</p>
                         <div class="text-right">
                             <p class="text-2xl font-black text-skyblue italic leading-none">IDR {{ number_format($booking->amount, 0, ',', '.') }}</p>
                         </div>
@@ -187,25 +187,25 @@
 
                 @if($booking->status == 'pending')
                 <div class="mt-12 p-6 bg-white/5 rounded-[2rem] border border-white/10 relative z-10">
-                    <p class="text-[9px] font-black text-white/50 uppercase tracking-widest mb-3 leading-relaxed">Admin Action Required</p>
-                    <p class="text-[10px] font-bold text-white/30 italic">Please verify the payment from the customer before confirming this booking.</p>
+                    <p class="text-[9px] font-black text-white/50 uppercase tracking-widest mb-3 leading-relaxed">{{ __('Admin Action Required') }}</p>
+                    <p class="text-[10px] font-bold text-white/30 italic">{{ __('Please verify the payment from the customer before confirming this booking.') }}</p>
                 </div>
                 @endif
             </div>
 
             {{-- Action History --}}
             <div class="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Booking Actions</h4>
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">{{ __('Booking Actions') }}</h4>
                 <div class="space-y-3">
                     <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="paid">
-                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 hover:bg-emerald-500 hover:text-white rounded-2xl transition-all duration-300">Set as Paid</button>
+                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 hover:bg-emerald-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Set as Paid') }}</button>
                     </form>
                     <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="cancelled">
-                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-amber-600 bg-amber-50 hover:bg-amber-500 hover:text-white rounded-2xl transition-all duration-300">Cancel Booking</button>
+                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-amber-600 bg-amber-50 hover:bg-amber-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Cancel Booking') }}</button>
                     </form>
                 </div>
             </div>

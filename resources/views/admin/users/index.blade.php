@@ -4,12 +4,12 @@
 <div class="space-y-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">Manage Users</h2>
-            <p class="text-slate-400 font-medium mt-2 italic text-lg">Create and manage administrative accounts and customers.</p>
+            <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">{{ __('Manage Users') }}</h2>
+            <p class="text-slate-400 font-medium mt-2 italic text-lg">{{ __('Create and manage administrative accounts and customers.') }}</p>
         </div>
         <a href="{{ route('admin.users.create') }}" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-blue-100 flex items-center group">
             <i data-lucide="user-plus" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></i>
-            Add New User
+            {{ __('Add New User') }}
         </a>
     </div>
 
@@ -18,11 +18,11 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-slate-50/50">
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">User Profile</th>
-                        <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Role</th>
-                        <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Contact</th>
-                        <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Joined</th>
-                        <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Actions</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ __('User Profile') }}</th>
+                        <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ __('Role') }}</th>
+                        <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ __('Contact') }}</th>
+                        <th class="px-6 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ __('Joined') }}</th>
+                        <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">

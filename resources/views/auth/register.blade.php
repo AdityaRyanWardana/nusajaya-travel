@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - Nusa Jaya Indofast T&T</title>
+    <title>Nusajaya Travel - Create Account ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -38,8 +38,8 @@
         <!-- Right Side: Register Form -->
         <div class="md:w-[55%] p-10 md:p-16 flex flex-col justify-center bg-white">
             <div class="mb-10">
-                <h3 class="text-3xl font-black text-[#0B2447] mb-2 italic uppercase tracking-tighter">Create Account</h3>
-                <p class="text-slate-400 font-medium italic text-sm">Join our community of premium travelers</p>
+                <h3 class="text-3xl font-bold text-[#0B2447] mb-2 italic tracking-tight">Create Account</h3>
+                <p class="text-slate-400 font-medium italic text-sm">Join our premium travel community</p>
             </div>
 
             @if($errors->any())

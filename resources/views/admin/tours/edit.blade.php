@@ -4,10 +4,10 @@
 <div class="mb-8">
     <a href="{{ route('admin.tours.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors mb-4">
         <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
-        Kembali ke Daftar
+        {{ __('Back to List') }}
     </a>
-    <h2 class="text-2xl font-bold text-slate-800">Edit Paket Tour: {{ $tour->title }}</h2>
-    <p class="text-slate-500 text-sm">Perbarui rincian destinasi dan harga paket wisata kamu.</p>
+    <h2 class="text-2xl font-bold text-slate-800">{{ __('Edit Tour Package') }}: {{ $tour->title }}</h2>
+    <p class="text-slate-500 text-sm">{{ __('Update destination details and tour package prices.') }}</p>
 </div>
 
 <div class="max-w-4xl">
@@ -19,31 +19,31 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Judul -->
                 <div class="col-span-2">
-                    <label for="title" class="block text-sm font-bold text-slate-700 mb-2">Nama Paket Tour</label>
+                    <label for="title" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Tour Package Name') }}</label>
                     <input type="text" name="title" id="title" value="{{ $tour->title }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" required>
                 </div>
 
                 <!-- Destinasi -->
                 <div>
-                    <label for="destination" class="block text-sm font-bold text-slate-700 mb-2">Destinasi</label>
+                    <label for="destination" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Destination') }}</label>
                     <input type="text" name="destination" id="destination" value="{{ $tour->destination }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" required>
                 </div>
 
                 <!-- Durasi -->
                 <div>
-                    <label for="duration" class="block text-sm font-bold text-slate-700 mb-2">Durasi</label>
+                    <label for="duration" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Duration') }}</label>
                     <input type="text" name="duration" id="duration" value="{{ $tour->duration }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" required>
                 </div>
 
                 <!-- Harga -->
                 <div>
-                    <label for="price" class="block text-sm font-bold text-slate-700 mb-2">Harga per Orang (Rp)</label>
+                    <label for="price" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Price per Person (Rp)') }}</label>
                     <input type="number" name="price" id="price" value="{{ intval($tour->price) }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" required>
                 </div>
 
                 <!-- Gambar Sampul -->
                 <div>
-                    <label for="image" class="block text-sm font-bold text-slate-700 mb-2">Foto Utama (Sampul)</label>
+                    <label for="image" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Main Photo (Cover)') }}</label>
                     <input type="file" name="image" id="image" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer border border-slate-200 rounded-xl p-1">
                     @if($tour->image)
                         <div class="relative group mt-4 w-32 h-20 rounded-xl overflow-hidden border border-slate-100 shadow-sm">
@@ -61,7 +61,7 @@
 
                 <!-- Galeri Foto -->
                 <div>
-                    <label for="gallery" class="block text-sm font-bold text-slate-700 mb-2">Galeri Foto (Bisa banyak)</label>
+                    <label for="gallery" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Photo Gallery (Multiple)') }}</label>
                     <input type="file" name="gallery[]" id="gallery" multiple class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer border border-slate-200 rounded-xl p-1">
                     @if($tour->images)
                         <div class="mt-4 flex flex-wrap gap-4">
@@ -83,7 +83,7 @@
 
                 <!-- Deskripsi -->
                 <div class="col-span-2">
-                    <label for="description" class="block text-sm font-bold text-slate-700 mb-2">Deskripsi Perjalanan</label>
+                    <label for="description" class="block text-sm font-bold text-slate-700 mb-2">{{ __('Trip Description') }}</label>
                     <textarea name="description" id="description" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">{{ $tour->description }}</textarea>
                 </div>
             </div>
@@ -91,7 +91,7 @@
 
         <div class="flex justify-end">
             <button type="submit" class="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/20">
-                Simpan Perubahan
+                {{ __('Save Changes') }}
             </button>
         </div>
     </form>
