@@ -15,11 +15,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Super Admin
+        User::updateOrCreate(['email' => 'superadmin@nusajaya.com'], [
+            'name'     => 'Super Admin',
+            'password' => bcrypt('password123'),
+            'role'     => 'superadmin',
         ]);
+
+        // Admin
+        User::updateOrCreate(['email' => 'admin@nusajaya.com'], [
+            'name'     => 'Admin Utama',
+            'password' => bcrypt('password123'),
+            'role'     => 'admin',
+        ]);
+
+        // Regular User
+        User::updateOrCreate(['email' => 'user@nusajaya.com'], [
+            'name'     => 'Regular User',
+            'password' => bcrypt('password123'),
+            'role'     => 'user',
+        ]);
+
+        // Transport & Tours
+        $this->call(TransportTourSeeder::class);
     }
 }

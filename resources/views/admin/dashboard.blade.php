@@ -13,11 +13,44 @@
                 <i data-lucide="calendar" class="w-7 h-7"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Today is</p>
-                <p class="text-xl font-black text-slate-800">{{ date('d F Y') }}</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">{{ __('Today is') }}</p>
+                <div id="real-time-date" class="text-xl font-black text-slate-800">
+                    {{ date('d F Y') }}
+                </div>
+                <div class="flex items-center space-x-2 mt-1">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    <div id="real-time-clock" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">
+                        00:00:00
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const lang = document.documentElement.lang || 'en';
+            
+            // Format Date: e.g., "24 April 2026"
+            const dateOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString(lang, dateOptions);
+            
+            // Format Time: e.g., "00:32:47"
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            const formattedTime = now.toLocaleTimeString(lang, timeOptions);
+            
+            document.getElementById('real-time-date').innerText = formattedDate;
+            document.getElementById('real-time-clock').innerText = formattedTime;
+        }
+
+        // Initialize and start interval
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
 
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -26,9 +59,15 @@
                 <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500">
                     <i data-lucide="ticket" class="w-7 h-7"></i>
                 </div>
-                <span class="bg-emerald-50 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">+12%</span>
+                @if($stats['booking_growth'] > 0)
+                    <span class="bg-emerald-50 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">+{{ $stats['booking_growth'] }}%</span>
+                @elseif($stats['booking_growth'] < 0)
+                    <span class="bg-red-50 text-red-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">{{ $stats['booking_growth'] }}%</span>
+                @else
+                    <span class="bg-slate-50 text-slate-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">0%</span>
+                @endif
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Booked</p>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">{{ __('Total Booked') }}</p>
             <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ $stats['total_bookings'] }}</h3>
         </div>
 
@@ -39,7 +78,7 @@
                 </div>
                 <span class="bg-orange-50 text-orange-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">Waiting</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Waiting List</p>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">{{ __('Waiting List') }}</p>
             <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ $stats['pending_bookings'] }}</h3>
         </div>
 
@@ -50,7 +89,7 @@
                 </div>
                 <span class="bg-emerald-50 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">Success</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Completed</p>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">{{ __('Completed') }}</p>
             <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ \App\Models\Booking::where('status', 'completed')->count() }}</h3>
         </div>
 
@@ -61,8 +100,23 @@
                     <i data-lucide="users" class="w-7 h-7"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-blue-100 uppercase tracking-[0.2em] mb-2">Active Admins</p>
-                    <h3 class="text-4xl font-black text-white tracking-tighter">{{ \App\Models\User::whereIn('role', ['admin', 'superadmin'])->count() }}</h3>
+                    <p class="text-[10px] font-black text-blue-100 uppercase tracking-[0.2em] mb-2">{{ __('Active Admins') }}</p>
+                    <h3 class="text-4xl font-black text-white tracking-tighter">
+                        @php
+                            $onlineCount = \App\Models\User::whereIn('role', ['admin', 'superadmin'])
+                                ->whereExists(function ($query) {
+                                    $query->select(\DB::raw(1))
+                                        ->from('sessions')
+                                        ->whereColumn('sessions.user_id', 'users.id')
+                                        ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp());
+                                })->count();
+                            // Ensure at least current user is counted if they are admin
+                            if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin']) && $onlineCount == 0) {
+                                $onlineCount = 1;
+                            }
+                        @endphp
+                        {{ $onlineCount }}
+                    </h3>
                 </div>
             </div>
         </div>
@@ -74,7 +128,7 @@
         <div class="lg:col-span-2 bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
             <div class="p-10 border-b border-slate-50 flex items-center justify-between">
                 <div>
-                    <h3 class="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Recent Booking Activity</h3>
+                    <h3 class="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">{{ __('Recent Booking Activity') }}</h3>
                     <p class="text-slate-400 text-sm font-medium mt-1 italic">Real-time update from your customers</p>
                 </div>
                 <a href="{{ route('admin.bookings.index') }}" class="px-6 py-3 text-xs font-black text-blue-600 bg-blue-50 rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300 uppercase tracking-widest">View All</a>
@@ -161,7 +215,7 @@
             <div class="bg-[#0B2447] rounded-[3rem] p-10 text-white relative overflow-hidden group shadow-2xl shadow-slate-200">
                 <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
                 <div class="relative z-10">
-                    <h4 class="text-xl font-black italic uppercase tracking-tighter mb-2">Fleet Overview</h4>
+                    <h4 class="text-xl font-black italic uppercase tracking-tighter mb-2">{{ __('Fleet Overview') }}</h4>
                     <p class="text-slate-400 text-xs font-medium italic mb-8">Current active units in the system</p>
                     
                     <div class="space-y-6">
@@ -198,7 +252,7 @@
                             <i data-lucide="shield-check" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-black text-slate-800">Server Stable</p>
+                            <p class="text-sm font-black text-slate-800">{{ __('Server Stable') }}</p>
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Uptime 99.9%</p>
                         </div>
                     </div>
@@ -207,7 +261,7 @@
                             <i data-lucide="database" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-black text-slate-800">Database Synced</p>
+                            <p class="text-sm font-black text-slate-800">{{ __('Database Synced') }}</p>
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Last backup: 1h ago</p>
                         </div>
                     </div>

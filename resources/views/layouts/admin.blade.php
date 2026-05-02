@@ -78,6 +78,11 @@
                     {{ __('Tour Packages') }}
                 </a>
 
+                <a href="{{ route('admin.promotions.index') }}" class="group flex items-center px-6 py-4 text-sm font-black rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.promotions.*') ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' : 'text-slate-500 hover:bg-blue-50 hover:text-blue-600' }}">
+                    <i data-lucide="megaphone" class="w-5 h-5 mr-4 transition-transform group-hover:scale-110"></i>
+                    {{ __('Promotions') }}
+                </a>
+
                 @if(auth()->user()->role === 'superadmin')
                 <div class="h-px bg-slate-50 my-6 mx-6"></div>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4 mb-4">{{ __('Management') }}</p>

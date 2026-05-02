@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Promotion;
+
 class HomeController extends Controller
 {
     /**
@@ -11,6 +13,18 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $promotions = Promotion::where('is_active', true)
+            ->where(function($query) {
+                $query->whereNull('expires_at')
+                      ->orWhere('expires_at', '>', now());
+            })
+            ->latest()
+            ->get();
+
+        $main_promotion = $promotions->first();
+        $grid_promotions = $promotions->skip(1)->take(3);
+        
+        // If no promotions in DB, we'll keep the defaults in blade or handle it there.
         $destinations = [
             [
                 'name' => 'Batam',
@@ -70,6 +84,6 @@ class HomeController extends Controller
             ],
         ];
 
-        return view('welcome', compact('destinations', 'services'));
+        return view('welcome', compact('destinations', 'services', 'main_promotion', 'grid_promotions'));
     }
 }

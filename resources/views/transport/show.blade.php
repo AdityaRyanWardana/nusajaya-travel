@@ -153,23 +153,55 @@
 
                     <form action="{{ route('transport.book', $transport->id) }}" method="POST" class="space-y-6">
                         @csrf
-                        <div class="space-y-2">
+                        <div class="space-y-2" x-data="{ open: false }">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Rental Category') }}</label>
-                            <select name="category" x-model="category" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
-                                <option value="Batam City Tour" class="text-brandblue">Batam City Tour</option>
-                                <option value="PP Barelang" class="text-brandblue">PP Barelang (Bridge 1-6)</option>
-                                <option value="Transfer Only" class="text-brandblue">Transfer (One Way)</option>
-                            </select>
+                            <div class="relative">
+                                <button type="button" @click="open = !open" 
+                                    class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-left focus:ring-2 focus:ring-skyblue transition outline-none flex items-center justify-between group">
+                                    <span x-text="category === 'Batam City Tour' ? 'Batam City Tour' : (category === 'PP Barelang' ? 'PP Barelang (Bridge 1-6)' : 'Transfer (One Way)')"></span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-white/20 group-hover:text-skyblue transition-colors"></i>
+                                </button>
+                                
+                                <div x-show="open" @click.away="open = false" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    class="absolute z-50 mt-2 w-full bg-brandblue/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                                    
+                                    <div class="p-2 space-y-1">
+                                        <button type="button" @click="category = 'Batam City Tour'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all" :class="category === 'Batam City Tour' ? 'bg-white/10 text-skyblue' : 'text-white'">Batam City Tour</button>
+                                        <button type="button" @click="category = 'PP Barelang'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all" :class="category === 'PP Barelang' ? 'bg-white/10 text-skyblue' : 'text-white'">PP Barelang (Bridge 1-6)</button>
+                                        <button type="button" @click="category = 'Transfer Only'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all" :class="category === 'Transfer Only' ? 'bg-white/10 text-skyblue' : 'text-white'">Transfer (One Way)</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="category" :value="category">
                         </div>
 
                         <!-- Duration Selector (Only for City Tour) -->
-                        <div class="space-y-2" x-show="category === 'Batam City Tour'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
+                        <div class="space-y-2" x-show="category === 'Batam City Tour'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-data="{ open: false }">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Select Duration') }}</label>
-                            <select name="duration" x-model="duration" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
-                                <option value="half_day" class="text-brandblue">{{ __('Half Day (4 Hours)') }}</option>
-                                <option value="one_day" class="text-brandblue">{{ __('One Day (8 Hours)') }}</option>
-                                <option value="full_day" class="text-brandblue">{{ __('Full Day (12 Hours)') }}</option>
-                            </select>
+                            <div class="relative">
+                                <button type="button" @click="open = !open" 
+                                    class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-left focus:ring-2 focus:ring-skyblue transition outline-none flex items-center justify-between group">
+                                    <span x-text="duration === 'half_day' ? '{{ __('Half Day (4 Hours)') }}' : (duration === 'one_day' ? '{{ __('One Day (8 Hours)') }}' : '{{ __('Full Day (12 Hours)') }}')"></span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-white/20 group-hover:text-skyblue transition-colors"></i>
+                                </button>
+                                
+                                <div x-show="open" @click.away="open = false" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    class="absolute z-50 mt-2 w-full bg-brandblue/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                                    
+                                    <div class="p-2 space-y-1">
+                                        <button type="button" @click="duration = 'half_day'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all" :class="duration === 'half_day' ? 'bg-white/10 text-skyblue' : 'text-white'">{{ __('Half Day (4 Hours)') }}</button>
+                                        <button type="button" @click="duration = 'one_day'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all" :class="duration === 'one_day' ? 'bg-white/10 text-skyblue' : 'text-white'">{{ __('One Day (8 Hours)') }}</button>
+                                        <button type="button" @click="duration = 'full_day'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all" :class="duration === 'full_day' ? 'bg-white/10 text-skyblue' : 'text-white'">{{ __('Full Day (12 Hours)') }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="duration" :value="duration">
                         </div>
 
                         <div class="space-y-2" x-data="{ locType: 'preset' }">

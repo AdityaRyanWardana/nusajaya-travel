@@ -312,7 +312,37 @@
         <h2 class="text-4xl font-black text-brandblue uppercase italic">Travel More, Spend Less</h2>
     </div>
 
-    <!-- Flash Sale Banner -->
+    <!-- Flash Sale Banner / Main Promotion -->
+    @if($main_promotion)
+    <div class="relative bg-brandblue rounded-[3rem] p-12 overflow-hidden mb-12 group">
+        <div class="absolute top-0 right-0 w-1/2 h-full opacity-20 group-hover:scale-110 transition duration-1000">
+            @if($main_promotion->image)
+                <img src="{{ asset('storage/' . $main_promotion->image) }}" class="w-full h-full object-cover">
+            @else
+                <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover">
+            @endif
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-brandblue via-brandblue/80 to-transparent"></div>
+        
+        <div class="relative z-10 max-w-xl">
+            <div class="flex items-center gap-3 mb-6">
+                @if($main_promotion->badge)
+                    <span class="bg-red-500 text-white text-[10px] font-black px-4 py-1 rounded-full animate-pulse">{{ $main_promotion->badge }}</span>
+                @endif
+                @if($main_promotion->expires_at)
+                    <span class="text-white/60 text-[10px] font-bold tracking-widest uppercase">Ends {{ $main_promotion->expires_at->diffForHumans() }}</span>
+                @endif
+            </div>
+            <h3 class="text-5xl font-black text-white mb-6 uppercase leading-none tracking-tighter">
+                {!! str_replace(['<br>', ' '], ['<br>', ' <br>'], $main_promotion->title) !!}
+            </h3>
+            <p class="text-slate-300 mb-8 font-medium leading-relaxed italic">{{ $main_promotion->description }}</p>
+            <a href="{{ $main_promotion->tour_id ? route('tours.show', $main_promotion->tour->slug) : ($main_promotion->link ?? route('tours.index')) }}" class="bg-skyblue hover:bg-white hover:text-brandblue text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition shadow-2xl shadow-skyblue/30 inline-block">
+                {{ $main_promotion->link_text ?? 'Learn More' }}
+            </a>
+        </div>
+    </div>
+    @else
     <div class="relative bg-brandblue rounded-[3rem] p-12 overflow-hidden mb-12 group">
         <div class="absolute top-0 right-0 w-1/2 h-full opacity-20 group-hover:scale-110 transition duration-1000">
             <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover">
@@ -329,35 +359,60 @@
             <a href="{{ route('tours.index') }}" class="bg-skyblue hover:bg-white hover:text-brandblue text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition shadow-2xl shadow-skyblue/30 inline-block">Book My Weekend</a>
         </div>
     </div>
+    @endif
 
     <!-- Feature Promo Grid -->
     <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
-            <div class="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-500 group-hover:text-white transition duration-500">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+        @if(isset($grid_promotions) && $grid_promotions->count() > 0)
+            @foreach($grid_promotions as $promo)
+                <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500 flex flex-col h-full">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition duration-500 
+                        {{ $promo->type == 'tour' ? 'bg-blue-50 text-blue-500 group-hover:bg-blue-500' : ($promo->type == 'transport' ? 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-500' : 'bg-red-50 text-red-500 group-hover:bg-red-500') }} group-hover:text-white">
+                        @if($promo->type == 'tour')
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                        @elseif($promo->type == 'transport')
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        @else
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                        @endif
+                    </div>
+                    <h4 class="text-lg font-black text-brandblue uppercase mb-2">{{ $promo->title }}</h4>
+                    <p class="text-xs text-slate-400 font-medium mb-6 flex-grow">{{ $promo->description }}</p>
+                    <a href="{{ $promo->tour_id ? route('tours.show', $promo->tour->slug) : ($promo->link ?? '#') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all mt-auto">
+                        {{ $promo->link_text ?? 'Learn More' }} 
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            @endforeach
+        @else
+            <!-- Default Promos -->
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
+                <div class="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-500 group-hover:text-white transition duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                </div>
+                <h4 class="text-lg font-black text-brandblue uppercase mb-2">Registration Bonus</h4>
+                <p class="text-xs text-slate-400 font-medium mb-6">IDR 50k credit for new members.</p>
+                <a href="{{ route('register') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Register Now <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
             </div>
-            <h4 class="text-lg font-black text-brandblue uppercase mb-2">Registration Bonus</h4>
-            <p class="text-xs text-slate-400 font-medium mb-6">IDR 50k credit for new members.</p>
-            <a href="{{ route('register') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Register Now <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-        </div>
 
-        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
-            <div class="w-14 h-14 bg-skyblue/10 text-skyblue rounded-2xl flex items-center justify-center mb-6 group-hover:bg-skyblue group-hover:text-white transition duration-500">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
+                <div class="w-14 h-14 bg-skyblue/10 text-skyblue rounded-2xl flex items-center justify-center mb-6 group-hover:bg-skyblue group-hover:text-white transition duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </div>
+                <h4 class="text-lg font-black text-brandblue uppercase mb-2">Transport Bundle</h4>
+                <p class="text-xs text-slate-400 font-medium mb-6">10% Off when booking car + tour.</p>
+                <a href="{{ route('transport.index') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Explore Fleet <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
             </div>
-            <h4 class="text-lg font-black text-brandblue uppercase mb-2">Transport Bundle</h4>
-            <p class="text-xs text-slate-400 font-medium mb-6">10% Off when booking car + tour.</p>
-            <a href="{{ route('transport.index') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Explore Fleet <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-        </div>
 
-        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
-            <div class="w-14 h-14 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition duration-500">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
+                <div class="w-14 h-14 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <h4 class="text-lg font-black text-brandblue uppercase mb-2">Corporate Rates</h4>
+                <p class="text-xs text-slate-400 font-medium mb-6">Custom pricing for group events.</p>
+                <a href="{{ route('about') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Learn More <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
             </div>
-            <h4 class="text-lg font-black text-brandblue uppercase mb-2">Corporate Rates</h4>
-            <p class="text-xs text-slate-400 font-medium mb-6">Custom pricing for group events.</p>
-            <a href="{{ route('about') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Learn More <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-        </div>
+        @endif
     </div>
 </section>
 
