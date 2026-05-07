@@ -28,4 +28,14 @@ class Armada extends Model
     protected $casts = [
         'images' => 'array',
     ];
+
+    public function tours()
+    {
+        return $this->hasMany(Tour::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

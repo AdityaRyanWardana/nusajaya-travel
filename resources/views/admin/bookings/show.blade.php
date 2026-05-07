@@ -175,6 +175,15 @@
                         <p class="text-[9px] font-black text-white/20">Qty: 1</p>
                     </div>
                     
+                    @if($booking->payment_method)
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">{{ __('Method') }}</p>
+                            <p class="text-sm font-bold uppercase tracking-widest text-skyblue">{{ $booking->payment_method }}</p>
+                        </div>
+                    </div>
+                    @endif
+                    
                     <div class="h-px bg-white/5"></div>
 
                     <div class="flex justify-between items-center pt-4">
@@ -185,7 +194,63 @@
                     </div>
                 </div>
 
-                @if($booking->status == 'pending')
+                @if($booking->payment_proof)
+                <div class="mt-10 pt-10 border-t border-white/5 relative z-10" x-data="{ showModal: false }">
+                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-6">{{ __('Payment Proof') }}</p>
+                    <button @click="showModal = true" class="w-full text-left block group/proof relative rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                        <img src="{{ asset('storage/' . $booking->payment_proof) }}" class="w-full h-48 object-cover group-hover/proof:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-slate-900/40 flex items-center justify-center opacity-0 group-hover/proof:opacity-100 transition-opacity">
+                            <div class="px-4 py-2 bg-white text-slate-900 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                Click to Expand
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Modal -->
+                    <template x-teleport="body">
+                        <div x-show="showModal" 
+                             x-init="$watch('showModal', value => { if(value) { setTimeout(() => lucide.createIcons(), 10) } })"
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/90 backdrop-blur-sm"
+                             x-cloak>
+                            
+                            <div class="absolute inset-0 cursor-pointer" @click="showModal = false"></div>
+                            
+                            <div class="relative max-w-4xl w-full bg-white rounded-[3rem] p-4 shadow-2xl"
+                                 x-show="showModal"
+                                 x-transition:enter="transition ease-out duration-300 transform"
+                                 x-transition:enter-start="scale-90 opacity-0"
+                                 x-transition:enter-end="scale-100 opacity-100"
+                                 @click.away="showModal = false">
+                                
+                                <button @click="showModal = false" class="absolute -top-4 -right-4 w-12 h-12 bg-white text-slate-900 rounded-full flex items-center justify-center shadow-xl hover:bg-red-500 hover:text-white transition-all z-20">
+                                    <i data-lucide="x" class="w-6 h-6"></i>
+                                </button>
+
+                                <div class="rounded-[2.5rem] overflow-hidden bg-slate-100">
+                                    <img src="{{ asset('storage/' . $booking->payment_proof) }}" class="w-full max-h-[80vh] object-contain">
+                                </div>
+
+                                <div class="mt-6 px-8 pb-4 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Payment Method</p>
+                                        <p class="text-sm font-black text-brandblue uppercase tracking-widest">{{ $booking->payment_method }}</p>
+                                    </div>
+                                    <a href="{{ asset('storage/' . $booking->payment_proof) }}" download class="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all">
+                                        <i data-lucide="download" class="w-4 h-4"></i>
+                                        Download Proof
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                @elseif($booking->status == 'pending')
                 <div class="mt-12 p-6 bg-white/5 rounded-[2rem] border border-white/10 relative z-10">
                     <p class="text-[9px] font-black text-white/50 uppercase tracking-widest mb-3 leading-relaxed">{{ __('Admin Action Required') }}</p>
                     <p class="text-[10px] font-bold text-white/30 italic">{{ __('Please verify the payment from the customer before confirming this booking.') }}</p>

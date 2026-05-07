@@ -1,83 +1,111 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="flex items-center justify-between mb-8">
-    <div>
-        <h2 class="text-2xl font-bold text-slate-800">{{ __('Tour Package Management') }}</h2>
-        <p class="text-slate-500 text-sm">{{ __('Manage all travel destinations and holiday packages.') }}</p>
+<div class="space-y-8">
+    {{-- Header --}}
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <p class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-2">Experiences Management</p>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight uppercase italic leading-none">{{ __('Tour Packages') }}</h2>
+            <p class="text-slate-400 font-medium mt-2">{{ __('Curate and publish unique travel experiences for your customers.') }}</p>
+        </div>
+        <a href="{{ route('admin.tours.create') }}" class="flex items-center px-8 py-4 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 group">
+            <i data-lucide="plus" class="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform"></i>
+            {{ __('Add New Package') }}
+        </a>
     </div>
-    <a href="{{ route('admin.tours.create') }}" class="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/20">
-        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-        {{ __('Add Tour Package') }}
-    </a>
-</div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left">
-            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
-                <tr>
-                    <th class="px-6 py-4 font-semibold">{{ __('TOUR PACKAGE') }}</th>
-                    <th class="px-6 py-4 font-semibold">{{ __('DESTINATION') }}</th>
-                    <th class="px-6 py-4 font-semibold">{{ __('DURATION') }}</th>
-                    <th class="px-6 py-4 font-semibold text-right">{{ __('PRICE') }}</th>
-                    <th class="px-6 py-4 font-semibold text-center">{{ __('ACTION') }}</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-                @forelse($tours as $tour)
-                <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-6 py-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-lg bg-slate-100 mr-4 overflow-hidden flex-shrink-0">
-                                @if($tour->image)
-                                    <img src="{{ Str::startsWith($tour->image, 'http') ? $tour->image : asset('storage/' . $tour->image) }}" alt="{{ $tour->title }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center text-slate-300">
-                                        <i data-lucide="image" class="w-6 h-6"></i>
-                                    </div>
-                                @endif
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold text-slate-800">{{ $tour->title }}</p>
-                                <p class="text-[10px] text-slate-400 font-mono tracking-tighter">{{ $tour->slug }}</p>
+    {{-- Tour Grid --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @forelse($tours as $tour)
+        <div class="group bg-white rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 overflow-hidden flex flex-col cursor-pointer" onclick="window.location.href='{{ route('admin.tours.edit', $tour->id) }}'">
+            {{-- Visual Header --}}
+            <div class="relative h-64 overflow-hidden">
+                @if($tour->image)
+                    <img src="{{ Str::startsWith($tour->image, 'http') ? $tour->image : asset('storage/' . $tour->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                @else
+                    <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200">
+                        <i data-lucide="image" class="w-12 h-12"></i>
+                    </div>
+                @endif
+                
+                {{-- Overlays --}}
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
+                
+                <div class="absolute top-6 left-6">
+                    <span class="px-4 py-2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-blue-900/40">
+                        {{ $tour->duration }}
+                    </span>
+                </div>
+
+                <div class="absolute bottom-6 left-6 right-6">
+                    <div class="flex items-center gap-2 text-white/70 text-[10px] font-black uppercase tracking-widest mb-2">
+                        <i data-lucide="map-pin" class="w-3 h-3"></i>
+                        {{ $tour->destination }}
+                    </div>
+                    <h3 class="text-2xl font-black text-white uppercase italic tracking-tight leading-none">{{ $tour->title }}</h3>
+                </div>
+            </div>
+
+            {{-- Body --}}
+            <div class="p-8 space-y-6 flex-1 flex flex-col">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pricing Starts at</p>
+                        <p class="text-xl font-black text-slate-900 leading-none">Rp {{ number_format($tour->price, 0, ',', '.') }}</p>
+                    </div>
+                    @if($tour->armada)
+                        <div class="text-right">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Assigned Fleet</p>
+                            <div class="flex items-center gap-2 justify-end">
+                                <span class="text-xs font-black text-blue-600 uppercase">{{ $tour->armada->name }}</span>
+                                <i data-lucide="bus" class="w-3 h-3 text-blue-400"></i>
                             </div>
                         </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-sm text-slate-600 flex items-center">
-                            <i data-lucide="map-pin" class="w-3 h-3 mr-1.5 text-slate-400"></i>
-                            {{ $tour->destination }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-blue-50 text-blue-600 rounded-md">
-                            {{ $tour->duration }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-sm font-bold text-slate-800 text-right">Rp {{ number_format($tour->price, 0, ',', '.') }}</td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('admin.tours.edit', $tour->id) }}" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
-                                <i data-lucide="edit-3" class="w-4 h-4"></i>
-                            </a>
-                            <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tour package?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="p-2 text-slate-400 hover:text-red-600 transition-colors">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="px-6 py-10 text-center text-slate-400 italic text-sm">{{ __('No tour packages registered yet.') }}</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                    @endif
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    @if($tour->inclusions)
+                        @foreach(array_slice($tour->inclusions, 0, 3) as $inc)
+                            <span class="px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-[8px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                                <i data-lucide="{{ $inc['icon'] ?? 'check' }}" class="w-3 h-3"></i>
+                                {{ $inc['label'] ?? 'Facility' }}
+                            </span>
+                        @endforeach
+                        @if(count($tour->inclusions) > 3)
+                            <span class="px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                                +{{ count($tour->inclusions) - 3 }} More
+                            </span>
+                        @endif
+                    @endif
+                </div>
+
+                {{-- Actions --}}
+                <div class="pt-6 border-t border-slate-50 flex items-center justify-between gap-4 mt-auto">
+                    <div class="flex-1 flex items-center justify-center px-6 py-4 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i data-lucide="settings-2" class="w-4 h-4 mr-2"></i>
+                        Manage Package
+                    </div>
+                    <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST" class="shrink-0" onsubmit="return confirm('{{ __('Are you sure you want to delete this package?') }}')" onclick="event.stopPropagation()">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-14 h-14 flex items-center justify-center bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all">
+                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @empty
+        <div class="col-span-full py-20 text-center">
+            <div class="w-24 h-24 bg-slate-50 rounded-[3rem] flex items-center justify-center text-slate-200 mx-auto mb-6">
+                <i data-lucide="map" class="w-12 h-12"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-400 uppercase tracking-widest italic">{{ __('No Tour Packages Found') }}</h3>
+            <p class="text-slate-300 mt-2 font-medium">Create your first travel experience to start selling.</p>
+        </div>
+        @endforelse
     </div>
 </div>
 @endsection

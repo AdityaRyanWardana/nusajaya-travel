@@ -73,6 +73,7 @@ class TransportController extends Controller
             'user_id' => auth()->id(),
             'service_name' => $serviceName,
             'service_slug' => $transport->slug,
+            'armada_id' => $transport->id,
             'type' => 'transport',
             'amount' => $price,
             'travel_date' => $request->travel_date,

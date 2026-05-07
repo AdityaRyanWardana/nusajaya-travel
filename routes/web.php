@@ -43,6 +43,8 @@ Route::post('/transport/{id}/book', [TransportController::class, 'book'])->name(
 // Dashboard Route (Admin & Superadmin Only)
 Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/export', [App\Http\Controllers\Admin\DashboardController::class, 'export'])->name('dashboard.export');
+    Route::get('/scheduling', [App\Http\Controllers\Admin\DashboardController::class, 'scheduling'])->name('scheduling');
     Route::get('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
@@ -56,6 +58,7 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('adm
     Route::delete('tours/{tour}/delete-main-image', [App\Http\Controllers\Admin\TourController::class, 'deleteMainImage'])->name('tours.delete-main-image');
 
     Route::resource('promotions', App\Http\Controllers\Admin\PromotionController::class);
+    Route::delete('promotions/{promotion}/delete-image', [App\Http\Controllers\Admin\PromotionController::class, 'deleteImage'])->name('promotions.delete-image');
 
     // User Management (Superadmin Only)
     Route::middleware('role:superadmin')->group(function() {

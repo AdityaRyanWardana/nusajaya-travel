@@ -11,13 +11,21 @@ class Tour extends Model
         'slug',
         'destination',
         'price',
+        'armada_id',
         'duration',
         'image',
         'images',
+        'inclusions',
         'description',
     ];
 
     protected $casts = [
         'images' => 'array',
+        'inclusions' => 'array',
     ];
+
+    public function armada()
+    {
+        return $this->belongsTo(Armada::class);
+    }
 }

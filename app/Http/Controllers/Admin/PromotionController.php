@@ -70,7 +70,7 @@ class PromotionController extends Controller
             'tour_id' => 'nullable|exists:tours,id',
         ]);
 
-        $data = $request->all();
+        $data = $request->except(['image']);
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
@@ -93,5 +93,16 @@ class PromotionController extends Controller
         $promotion->delete();
 
         return redirect()->route('admin.promotions.index')->with('success', 'Promosi berhasil dihapus!');
+    }
+
+    public function deleteImage(Promotion $promotion)
+    {
+        if ($promotion->image) {
+            Storage::disk('public')->delete($promotion->image);
+        }
+
+        $promotion->update(['image' => null]);
+
+        return back()->with('success', 'Foto promosi berhasil dihapus');
     }
 }

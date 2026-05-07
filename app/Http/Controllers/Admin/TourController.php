@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tour;
+use App\Models\Armada;
 
 class TourController extends Controller
 {
@@ -17,7 +18,18 @@ class TourController extends Controller
 
     public function create()
     {
-        return view('admin.tours.create');
+        $availableInclusions = [
+            ['id' => 'guide', 'label' => 'Expert Local Guide', 'icon' => 'user-check'],
+            ['id' => 'transport', 'label' => 'VIP Transport', 'icon' => 'bus'],
+            ['id' => 'dinner', 'label' => 'Gourmet Dinner', 'icon' => 'utensils'],
+            ['id' => 'lunch', 'label' => 'Buffet Lunch', 'icon' => 'utensils-crossed'],
+            ['id' => 'camera', 'label' => 'Digital Memories', 'icon' => 'camera'],
+            ['id' => 'ferry', 'label' => 'Ferry Tickets', 'icon' => 'ship'],
+            ['id' => 'hotel', 'label' => 'Hotel Stay', 'icon' => 'building'],
+            ['id' => 'insurance', 'label' => 'Insurance', 'icon' => 'shield'],
+        ];
+        $armadas = Armada::all();
+        return view('admin.tours.create', compact('availableInclusions', 'armadas'));
     }
 
     public function store(Request $request)
@@ -29,7 +41,9 @@ class TourController extends Controller
             'duration' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'inclusions' => 'nullable|array',
             'description' => 'nullable|string',
+            'armada_id' => 'nullable|exists:armadas,id',
         ]);
 
         $data = $request->all();
@@ -47,6 +61,12 @@ class TourController extends Controller
             $data['images'] = $gallery;
         }
 
+        if ($request->has('inclusions')) {
+            $data['inclusions'] = array_map(function($item) {
+                return json_decode($item, true);
+            }, $request->inclusions);
+        }
+
         Tour::create($data);
 
         return redirect()->route('admin.tours.index')->with('success', 'Paket Tour berhasil ditambahkan!');
@@ -55,7 +75,18 @@ class TourController extends Controller
     public function edit($id)
     {
         $tour = Tour::findOrFail($id);
-        return view('admin.tours.edit', compact('tour'));
+        $availableInclusions = [
+            ['id' => 'guide', 'label' => 'Expert Local Guide', 'icon' => 'user-check'],
+            ['id' => 'transport', 'label' => 'VIP Transport', 'icon' => 'bus'],
+            ['id' => 'dinner', 'label' => 'Gourmet Dinner', 'icon' => 'utensils'],
+            ['id' => 'lunch', 'label' => 'Buffet Lunch', 'icon' => 'utensils-crossed'],
+            ['id' => 'camera', 'label' => 'Digital Memories', 'icon' => 'camera'],
+            ['id' => 'ferry', 'label' => 'Ferry Tickets', 'icon' => 'ship'],
+            ['id' => 'hotel', 'label' => 'Hotel Stay', 'icon' => 'building'],
+            ['id' => 'insurance', 'label' => 'Insurance', 'icon' => 'shield'],
+        ];
+        $armadas = Armada::all();
+        return view('admin.tours.edit', compact('tour', 'availableInclusions', 'armadas'));
     }
 
     public function update(Request $request, $id)
@@ -67,11 +98,13 @@ class TourController extends Controller
             'duration' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'inclusions' => 'nullable|array',
             'description' => 'nullable|string',
+            'armada_id' => 'nullable|exists:armadas,id',
         ]);
 
         $tour = Tour::findOrFail($id);
-        $data = $request->all();
+        $data = $request->except(['image', 'gallery', 'inclusions']);
 
         if ($request->hasFile('image')) {
             if ($tour->image) {
@@ -87,6 +120,12 @@ class TourController extends Controller
                 $galleryPaths[] = $file->store('tours/gallery', 'public');
             }
             $data['images'] = $galleryPaths;
+        }
+
+        if ($request->has('inclusions')) {
+            $data['inclusions'] = array_map(function($item) {
+                return json_decode($item, true);
+            }, $request->inclusions);
         }
 
         $tour->update($data);

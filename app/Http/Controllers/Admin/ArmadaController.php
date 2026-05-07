@@ -90,7 +90,7 @@ class ArmadaController extends Controller
         ]);
 
         $armada = Armada::findOrFail($id);
-        $data = $request->all();
+        $data = $request->except(['image', 'gallery']);
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada

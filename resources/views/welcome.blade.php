@@ -6,15 +6,15 @@
     <!-- Background Slider -->
     <div id="hero-slider" class="absolute inset-0 z-0">
         <!-- Slide 1: Barelang Bridge Sunset -->
-        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-100" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.9), rgba(11, 36, 71, 0.3)), url('{{ asset('images/hero_1.jpg') }}'); background-size: cover; background-position: center;"></div>
+        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-100" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.7), rgba(11, 36, 71, 0.2)), url('{{ asset('images/hero_1.jpg') }}'); background-size: cover; background-position: center;"></div>
         <!-- Slide 2: Harbour Bay Batam with Marriott -->
-        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.9), rgba(11, 36, 71, 0.3)), url('{{ asset('images/hero_2.jpg') }}'); background-size: cover; background-position: center;"></div>
+        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.7), rgba(11, 36, 71, 0.2)), url('{{ asset('images/hero_2.jpg') }}'); background-size: cover; background-position: center;"></div>
         <!-- Slide 3: Welcome to Batam -->
-        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.9), rgba(11, 36, 71, 0.3)), url('{{ asset('images/hero_3.jpg') }}'); background-size: cover; background-position: center;"></div>
+        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.7), rgba(11, 36, 71, 0.2)), url('{{ asset('images/hero_3.jpg') }}'); background-size: cover; background-position: center;"></div>
         <!-- Slide 4: Marriott Hotel Batam -->
-        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.9), rgba(11, 36, 71, 0.3)), url('{{ asset('images/hero_4.png') }}'); background-size: cover; background-position: center;"></div>
+        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.7), rgba(11, 36, 71, 0.2)), url('{{ asset('images/hero_4.png') }}'); background-size: cover; background-position: center;"></div>
         <!-- Slide 5: Radisson Hotel Batam -->
-        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.9), rgba(11, 36, 71, 0.3)), url('{{ asset('images/hero_5.jpg') }}'); background-size: cover; background-position: center;"></div>
+        <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.7), rgba(11, 36, 71, 0.2)), url('{{ asset('images/hero_5.jpg') }}'); background-size: cover; background-position: center;"></div>
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-10 w-full mb-20">
@@ -259,7 +259,7 @@
         <!-- Batam City (Large Vertical) -->
         <a href="{{ route('tours.show', 'batam-city-highlights') }}" class="col-span-2 row-span-2 relative rounded-[3rem] overflow-hidden group">
             <img src="{{ asset('images/batam_city.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
-            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 via-transparent to-transparent"></div>
             <div class="absolute inset-0 bg-brandblue/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
             
             <div class="absolute bottom-10 left-10 right-10">
@@ -287,7 +287,7 @@
         <!-- Maha Vihara (Standard Style) -->
         <a href="{{ route('tours.show', 'maha-vihara') }}" class="col-span-1 row-span-1 relative rounded-[3rem] overflow-hidden group">
             <img src="{{ asset('images/maha_vihara.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
-            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 via-transparent to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
                 <p class="text-[9px] font-black text-skyblue uppercase tracking-widest mb-1 italic">Architecture</p>
                 <h3 class="text-lg font-black text-white uppercase italic leading-none">Maha <br>Vihara</h3>
@@ -297,7 +297,7 @@
         <!-- Barelang Bridge (Square Small) -->
         <a href="{{ route('tours.show', 'barelang-bridge') }}" class="col-span-1 row-span-1 relative rounded-[3rem] overflow-hidden group">
             <img src="{{ asset('images/barelang_bridge.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
-            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
                 <h3 class="text-lg font-black text-white uppercase italic leading-none">Barelang <br>Bridge</h3>
             </div>
@@ -315,14 +315,14 @@
     <!-- Flash Sale Banner / Main Promotion -->
     @if($main_promotion)
     <div class="relative bg-brandblue rounded-[3rem] p-12 overflow-hidden mb-12 group">
-        <div class="absolute top-0 right-0 w-1/2 h-full opacity-20 group-hover:scale-110 transition duration-1000">
+        <div class="absolute top-0 right-0 w-1/2 h-full opacity-50 group-hover:scale-110 transition duration-1000">
             @if($main_promotion->image)
                 <img src="{{ asset('storage/' . $main_promotion->image) }}" class="w-full h-full object-cover">
             @else
                 <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover">
             @endif
         </div>
-        <div class="absolute inset-0 bg-gradient-to-r from-brandblue via-brandblue/80 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-brandblue via-brandblue/40 to-transparent"></div>
         
         <div class="relative z-10 max-w-xl">
             <div class="flex items-center gap-3 mb-6">
@@ -344,10 +344,10 @@
     </div>
     @else
     <div class="relative bg-brandblue rounded-[3rem] p-12 overflow-hidden mb-12 group">
-        <div class="absolute top-0 right-0 w-1/2 h-full opacity-20 group-hover:scale-110 transition duration-1000">
+        <div class="absolute top-0 right-0 w-1/2 h-full opacity-50 group-hover:scale-110 transition duration-1000">
             <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover">
         </div>
-        <div class="absolute inset-0 bg-gradient-to-r from-brandblue via-brandblue/80 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-brandblue via-brandblue/40 to-transparent"></div>
         
         <div class="relative z-10 max-w-xl">
             <div class="flex items-center gap-3 mb-6">
@@ -387,12 +387,12 @@
         @else
             <!-- Default Promos -->
             <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">
-                <div class="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-500 group-hover:text-white transition duration-500">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                <div class="w-14 h-14 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-500 group-hover:text-white transition duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <h4 class="text-lg font-black text-brandblue uppercase mb-2">Registration Bonus</h4>
-                <p class="text-xs text-slate-400 font-medium mb-6">IDR 50k credit for new members.</p>
-                <a href="{{ route('register') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">Register Now <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                <h4 class="text-lg font-black text-brandblue uppercase mb-2">Flash Sale</h4>
+                <p class="text-xs text-slate-400 font-medium mb-6">Get 20% discount on all one-day tours this month.</p>
+                <a href="{{ route('tours.index') }}" class="text-[10px] font-black text-skyblue uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all">View Deals <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
             </div>
 
             <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl group hover:-translate-y-2 transition duration-500">

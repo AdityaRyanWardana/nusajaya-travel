@@ -9,9 +9,11 @@
     <title>Nusajaya Travel - Management Panel ✨</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [x-cloak] { display: none !important; }
         .glass-sidebar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
@@ -47,12 +49,12 @@
         <!-- Sidebar -->
         <aside class="w-72 glass-sidebar flex-shrink-0 hidden md:flex flex-col z-50">
             <div class="p-8">
-                <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 group">
                     <div>
-                        <h1 class="text-lg font-black tracking-tighter text-slate-900 uppercase italic">{{ __('Nusa Jaya Indofast T&T') }}</h1>
+                        <h1 class="text-lg font-black tracking-tighter text-slate-900 uppercase italic group-hover:text-blue-600 transition-colors">{{ __('Nusa Jaya Indofast T&T') }}</h1>
                         <p class="text-[10px] font-bold text-sky-500 uppercase tracking-widest -mt-1">{{ __('Admin Panel System') }}</p>
                     </div>
-                </div>
+                </a>
             </div>
 
             <nav class="mt-8 px-6 space-y-3 flex-1 overflow-y-auto">
@@ -66,6 +68,11 @@
                 <a href="{{ route('admin.bookings.index') }}" class="group flex items-center px-6 py-4 text-sm font-black rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.bookings.*') ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' : 'text-slate-500 hover:bg-blue-50 hover:text-blue-600' }}">
                     <i data-lucide="ticket" class="w-5 h-5 mr-4 transition-transform group-hover:scale-110"></i>
                     {{ __('Booking Requests') }}
+                </a>
+
+                <a href="{{ route('admin.scheduling') }}" class="group flex items-center px-6 py-4 text-sm font-black rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.scheduling') ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' : 'text-slate-500 hover:bg-blue-50 hover:text-blue-600' }}">
+                    <i data-lucide="calendar-days" class="w-5 h-5 mr-4 transition-transform group-hover:scale-110"></i>
+                    {{ __('Fleet Scheduling') }}
                 </a>
 
                 <a href="{{ route('admin.armadas.index') }}" class="group flex items-center px-6 py-4 text-sm font-black rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.armadas.*') ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' : 'text-slate-500 hover:bg-blue-50 hover:text-blue-600' }}">
@@ -168,6 +175,22 @@
                             <i data-lucide="check" class="w-5 h-5"></i>
                         </div>
                         <span class="font-bold text-sm">{{ session('success') }}</span>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="mb-8 p-6 bg-red-500 text-white rounded-[2rem] shadow-lg shadow-red-200 animate-in fade-in slide-in-from-top-4">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                                <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            </div>
+                            <span class="font-black text-sm uppercase tracking-widest">{{ __('Validation Error') }}</span>
+                        </div>
+                        <ul class="space-y-1 ml-12">
+                            @foreach($errors->all() as $error)
+                                <li class="text-xs font-bold opacity-90">• {{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 

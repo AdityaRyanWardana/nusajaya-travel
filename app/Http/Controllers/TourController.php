@@ -40,11 +40,12 @@ class TourController extends Controller
             'user_id' => auth()->id(),
             'service_name' => $tour->title,
             'service_slug' => $tour->slug,
+            'armada_id' => $tour->armada_id,
             'type' => 'tour',
             'amount' => $tour->price,
             'guests' => (int) $request->guests,
             'travel_date' => $request->date,
-            'status' => 'pending',
+            'status' => 'unpaid',
         ]);
 
         return redirect()->route('orders.payment', $booking->id)->with('success', 'Thank you! Please complete your payment for ' . $tour->title);
@@ -76,7 +77,7 @@ class TourController extends Controller
     public function payment($id)
     {
         $order = Booking::where('user_id', auth()->id())->findOrFail($id);
-        if ($order->status !== 'pending') {
+        if (!in_array($order->status, ['unpaid', 'pending'])) {
             return redirect()->route('orders.my');
         }
         return view('orders.payment', compact('order'));
@@ -84,12 +85,25 @@ class TourController extends Controller
 
     public function pay(Request $request, $id)
     {
+        $request->validate([
+            'payment_type' => 'required|string',
+            'payment_proof' => 'required|image|mimes:jpg,jpeg,png|max:3072',
+        ]);
+
         $order = Booking::where('user_id', auth()->id())->findOrFail($id);
         
-        // Simulation of processing payment
-        $order->update(['status' => 'paid']);
+        $data = [
+            'payment_method' => $request->payment_type,
+            'status' => 'pending', // Status menjadi 'pending' (menunggu verifikasi) setelah upload
+        ];
+
+        if ($request->hasFile('payment_proof')) {
+            $data['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
+        }
+
+        $order->update($data);
         
-        return redirect()->route('orders.my')->with('success', 'Payment successful! Your booking is now confirmed.');
+        return redirect()->route('orders.my')->with('success', 'Bukti pembayaran berhasil diunggah! Pesanan Anda akan segera diproses.');
     }
 
     public function cancelOrder($id)

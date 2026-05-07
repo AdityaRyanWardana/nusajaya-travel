@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['user_id', 'service_name', 'service_slug', 'type', 'amount', 'guests', 'travel_date', 'status', 'pickup_point', 'destination', 'pickup_time'])]
+#[Fillable(['user_id', 'service_name', 'service_slug', 'armada_id', 'type', 'amount', 'payment_method', 'payment_proof', 'guests', 'travel_date', 'status', 'pickup_point', 'destination', 'pickup_time'])]
 class Booking extends Model
 {
     protected $casts = [
@@ -15,6 +15,11 @@ class Booking extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function armada()
+    {
+        return $this->belongsTo(Armada::class);
     }
 
     public function getOrderNumberAttribute(): string

@@ -7,16 +7,6 @@
             <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{{ __('Official Curator') }}</span>
             <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6">{{ __('Batam Tour Packages') }}</h1>
             
-            <!-- Category Pills -->
-            <div class="flex flex-wrap justify-center gap-3 mt-10">
-                @php $categories = ['All', 'Batam City Tour', 'PP Barelang', 'Island Tour']; @endphp
-                @foreach($categories as $cat)
-                    <a href="{{ route('tours.index', ['category' => $cat]) }}" 
-                       class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border {{ $selectedCategory == $cat ? 'bg-brandblue text-white border-brandblue shadow-xl shadow-brandblue/20' : 'bg-white text-slate-400 border-slate-100 hover:border-brandblue hover:text-brandblue' }}">
-                        {{ __($cat) }}
-                    </a>
-                @endforeach
-            </div>
         </header>
 
         <!-- Tours Grid -->
