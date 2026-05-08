@@ -4,7 +4,7 @@
 <!-- Premium Hero Section -->
 <header class="relative h-[60vh] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover scale-110 blur-[2px] opacity-40">
+        <img src="{{ asset('images/fleet.png') }}" class="w-full h-full object-cover scale-110 blur-[2px] opacity-40">
         <div class="absolute inset-0 bg-gradient-to-b from-brandblue via-brandblue/80 to-transparent"></div>
     </div>
     <div class="relative z-10 text-center max-w-4xl px-8">
@@ -45,8 +45,8 @@
             
             <div class="relative">
                 <div class="grid grid-cols-2 gap-4">
-                    <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2070&auto=format&fit=crop" class="rounded-[2.5rem] shadow-xl h-80 object-cover mt-12 hover:-translate-y-2 transition duration-500">
-                    <img src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=2070&auto=format&fit=crop" class="rounded-[2.5rem] shadow-xl h-80 object-cover hover:-translate-y-2 transition duration-500">
+                    <img src="{{ asset('images/goldendragon_40seat.jpg') }}" class="rounded-[2.5rem] shadow-xl h-80 object-cover mt-12 hover:-translate-y-2 transition duration-500">
+                    <img src="{{ asset('images/fleet.png') }}" class="rounded-[2.5rem] shadow-xl h-80 object-cover hover:-translate-y-2 transition duration-500">
                 </div>
                 <div class="absolute -bottom-10 -left-10 bg-brandblue p-10 rounded-[2rem] shadow-2xl text-white hidden md:block">
                     <p class="text-5xl font-black text-skyblue mb-2 leading-none">25+</p>
@@ -109,7 +109,7 @@
 <!-- Glassmorphism Location Section -->
 <section class="max-w-7xl mx-auto px-8 pb-32">
     <div class="relative rounded-[4rem] overflow-hidden min-h-[500px] flex items-center group">
-        <img src="https://images.unsplash.com/photo-1542259009477-d625272157b7?q=80&w=2069&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+        <img src="{{ asset('images/fleet.png') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000 opacity-60">
         <div class="absolute inset-0 bg-brandblue/40 backdrop-blur-[2px]"></div>
         
         <div class="relative z-10 p-12 md:p-20 w-full">

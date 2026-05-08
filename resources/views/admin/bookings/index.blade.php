@@ -148,7 +148,7 @@
                                     </form>
                                     @endif
 
-                                    <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Delete this booking permanently?');" class="inline">
+                                    <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Delete this booking permanently?') && ('{{ $booking->status }}' !== 'paid' || confirm('WARNING: This booking is already PAID. Are you absolutely sure you want to delete this paid record?'));" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="w-9 h-9 flex items-center justify-center text-red-400 bg-red-50 hover:bg-red-500 hover:text-white rounded-xl transition-all duration-300 shadow-sm" title="Delete Record">

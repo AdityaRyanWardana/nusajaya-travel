@@ -61,6 +61,11 @@ class DashboardController extends Controller
             ->sum('amount');
         $pendingRevenue = Booking::where('status', 'pending')->sum('amount');
 
+        $rescheduledBookings = Booking::with('user')
+            ->where('reschedule_notified', false)
+            ->latest('rescheduled_at')
+            ->get();
+
         $stats = [
             'total_bookings' => Booking::where('status', '!=', 'unpaid')->count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
@@ -75,6 +80,7 @@ class DashboardController extends Controller
             'chart_labels' => $chartLabels,
             'tour_chart_data' => $tourChartData,
             'transport_chart_data' => $transportChartData,
+            'rescheduled_bookings' => $rescheduledBookings,
         ];
 
         return view('admin.dashboard', compact('stats'));
@@ -155,5 +161,11 @@ class DashboardController extends Controller
         }
 
         return view('admin.scheduling', compact('dates', 'armadas', 'scheduleData', 'selectedDate'));
+    }
+
+    public function markRescheduleAsNoticed(Booking $booking)
+    {
+        $booking->update(['reschedule_notified' => true]);
+        return back()->with('success', 'Rescheduling notification cleared.');
     }
 }

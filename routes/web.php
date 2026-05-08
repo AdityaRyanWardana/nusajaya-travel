@@ -49,6 +49,7 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('adm
     Route::get('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     Route::delete('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::post('/bookings/{booking}/reschedule-noticed', [App\Http\Controllers\Admin\DashboardController::class, 'markRescheduleAsNoticed'])->name('bookings.reschedule-noticed');
     Route::resource('armadas', App\Http\Controllers\Admin\ArmadaController::class);
     Route::delete('armadas/{armada}/delete-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteImage'])->name('armadas.delete-image');
     Route::delete('armadas/{armada}/delete-main-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteMainImage'])->name('armadas.delete-main-image');

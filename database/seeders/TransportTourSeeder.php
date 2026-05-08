@@ -12,7 +12,7 @@ class TransportTourSeeder extends Seeder
         // Data Armada (Transport)
         DB::table('armadas')->insert([
             [
-                'name' => 'Toyota Hiace Premio',
+                'name' => 'Toyota Van Premio',
                 'description' => 'Luxury van with 14 seats, perfect for family or group tours.',
                 'price_per_day' => 1200000,
                 'total_units' => 5,

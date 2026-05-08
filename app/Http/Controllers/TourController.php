@@ -130,7 +130,11 @@ class TourController extends Controller
             return back()->with('error', 'Cancelled orders cannot be rescheduled.');
         }
 
-        $order->update(['travel_date' => $request->new_date]);
+        $order->update([
+            'travel_date' => $request->new_date,
+            'reschedule_notified' => false,
+            'rescheduled_at' => now(),
+        ]);
         return back()->with('success', 'Travel date has been updated successfully.');
     }
 }

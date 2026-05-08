@@ -44,7 +44,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="col-span-2">
                             <label for="name" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Vehicle Name') }}</label>
-                            <input type="text" name="name" id="name" placeholder="{{ __('Example: Toyota Hiace Premio 2024') }}" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700" required>
+                            <input type="text" name="name" id="name" placeholder="{{ __('Example: Toyota Van Premio 2024') }}" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700" required>
                         </div>
 
                         <div>
@@ -53,7 +53,7 @@
                                 <select name="type" id="type" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700 appearance-none cursor-pointer">
                                     <option value="Bus">Bus</option>
                                     <option value="Coaster">Coaster</option>
-                                    <option value="Hiace">Hiace</option>
+                                    <option value="Van">Van</option>
                                     <option value="Private Car">Private Car</option>
                                 </select>
                                 <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">

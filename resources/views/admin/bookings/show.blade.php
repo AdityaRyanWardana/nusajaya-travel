@@ -25,7 +25,7 @@
             </form>
             @endif
             
-            <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Delete this record permanently?');">
+            <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Delete this record permanently?') && ('{{ $booking->status }}' !== 'paid' || confirm('WARNING: This booking is already PAID. Are you absolutely sure you want to delete this paid record?'));">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm">

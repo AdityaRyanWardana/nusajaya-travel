@@ -51,6 +51,69 @@
         setInterval(updateClock, 1000);
     </script>
 
+    <!-- Rescheduling Notifications -->
+    @if(count($stats['rescheduled_bookings']) > 0)
+        <div class="space-y-6 animate-in fade-in slide-in-from-top-6 duration-700">
+            <div class="flex items-center justify-between px-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-2 h-2 rounded-full bg-orange-500 animate-ping"></div>
+                    <h3 class="text-[10px] font-black text-orange-500 uppercase tracking-[0.3em] italic flex items-center gap-3">
+                        Urgent: Customer Rescheduling Requests
+                        <span class="w-20 h-px bg-orange-200"></span>
+                    </h3>
+                </div>
+                <span class="px-4 py-1.5 bg-orange-500 text-white rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-orange-200">
+                    {{ count($stats['rescheduled_bookings']) }} Action Required
+                </span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($stats['rescheduled_bookings'] as $rescheduled)
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-orange-100 shadow-2xl shadow-orange-500/5 relative overflow-hidden group hover:-translate-y-1 transition-all duration-500">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-1000"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-5 mb-8">
+                                <div class="w-14 h-14 bg-orange-500 text-white rounded-[1.2rem] flex items-center justify-center shadow-xl shadow-orange-200 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                                    <i data-lucide="calendar-days" class="w-7 h-7"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-black text-slate-800 uppercase italic leading-tight">{{ $rescheduled->user->name }}</h4>
+                                    <p class="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-1">{{ $rescheduled->order_number }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 bg-slate-50 rounded-[1.5rem] mb-8 border border-slate-100/50">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">New Travel Date</p>
+                                        <p class="text-sm font-black text-orange-600">{{ date('d M Y', strtotime($rescheduled->travel_date)) }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">Updated On</p>
+                                        <p class="text-[10px] font-bold text-slate-500">{{ $rescheduled->rescheduled_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-4">
+                                <a href="{{ route('admin.bookings.show', $rescheduled) }}" class="flex-1 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest text-center hover:bg-orange-500 transition-all duration-500 shadow-lg shadow-slate-900/10">
+                                    Review Booking
+                                </a>
+                                <form action="{{ route('admin.bookings.reschedule-noticed', $rescheduled) }}" method="POST" class="shrink-0">
+                                    @csrf
+                                    <button type="submit" class="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all duration-500 shadow-sm group/btn" title="Mark as Seen">
+                                        <i data-lucide="check-check" class="w-6 h-6 group-hover/btn:scale-110 transition-transform"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     <!-- Quick Stats & Balance Details Row -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <!-- Balance Card (Premium) -->

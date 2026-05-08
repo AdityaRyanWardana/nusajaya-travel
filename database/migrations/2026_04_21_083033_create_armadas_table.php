@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('type'); // Bus, Hiace, Elf, etc.
+            $table->string('type'); // Bus, Van, Elf, etc.
             $table->integer('capacity');
             $table->decimal('price_per_day', 15, 2);
             $table->string('image')->nullable();

@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['user_id', 'service_name', 'service_slug', 'armada_id', 'type', 'amount', 'payment_method', 'payment_proof', 'guests', 'travel_date', 'status', 'pickup_point', 'destination', 'pickup_time'])]
+#[Fillable(['user_id', 'service_name', 'service_slug', 'armada_id', 'type', 'amount', 'payment_method', 'payment_proof', 'guests', 'travel_date', 'status', 'pickup_point', 'destination', 'pickup_time', 'reschedule_notified', 'rescheduled_at'])]
 class Booking extends Model
 {
     protected $casts = [
         'travel_date' => 'date',
+        'rescheduled_at' => 'datetime',
     ];
 
     public function user()

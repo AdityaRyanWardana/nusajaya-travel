@@ -54,7 +54,7 @@
                                 <select name="type" id="type" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700 appearance-none cursor-pointer">
                                     <option value="Bus" {{ $armada->type == 'Bus' ? 'selected' : '' }}>Bus</option>
                                     <option value="Coaster" {{ $armada->type == 'Coaster' ? 'selected' : '' }}>Coaster</option>
-                                    <option value="Hiace" {{ $armada->type == 'Hiace' ? 'selected' : '' }}>Hiace</option>
+                                    <option value="Van" {{ $armada->type == 'Van' ? 'selected' : '' }}>Van</option>
                                     <option value="Private Car" {{ $armada->type == 'Private Car' ? 'selected' : '' }}>Private Car</option>
                                 </select>
                                 <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
