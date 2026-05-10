@@ -5,13 +5,13 @@
     <div class="max-w-7xl mx-auto">
         <!-- Premium Header & Availability -->
         <div class="mb-20 grid lg:grid-cols-2 gap-12 items-end">
-            <div>
+            <div class="reveal-left">
                 <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{{ __('Fleet Services') }}</span>
                 <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6 leading-[0.9]">{{ __('Premium Fleet Solutions') }}</h1>
                 <p class="text-sm text-slate-500 font-medium max-w-lg leading-relaxed">{{ __('From luxury VIP buses to executive shuttles, our fleet is ready to guarantee your travel comfort in Batam.') }}</p>
             </div>
             
-            <form action="{{ route('transport.index') }}" method="GET" class="bg-white p-4 rounded-[2.5rem] shadow-2xl shadow-brandblue/5 border border-slate-50 flex flex-col sm:flex-row items-center gap-4">
+            <form action="{{ route('transport.index') }}" method="GET" class="bg-white p-4 rounded-[2.5rem] shadow-2xl shadow-brandblue/5 border border-slate-50 flex flex-col sm:flex-row items-center gap-4 reveal-right">
                 <div class="flex-1 flex items-center gap-4 px-6 w-full sm:w-auto">
                     <svg class="w-5 h-5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <div class="flex flex-col">
@@ -26,7 +26,7 @@
         <!-- Fleet Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             @foreach($transports as $transport)
-                <div class="group relative bg-white rounded-[3rem] overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-brandblue/5 transition-all duration-700">
+                <div class="group relative bg-white rounded-[3rem] overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-brandblue/5 transition-all duration-700 reveal">
                     <!-- Whole Card Link -->
                     <a href="{{ route('transport.show', $transport->slug) }}" class="absolute inset-0 z-20" aria-label="View {{ $transport->name }} details"></a>
                     
@@ -90,7 +90,7 @@
         </div>
 
         <!-- Trust Features -->
-        <div class="grid md:grid-cols-3 gap-12 mt-32">
+        <div class="grid md:grid-cols-3 gap-12 mt-32 reveal-zoom">
             <div class="p-10 bg-white rounded-[2.5rem] border border-slate-50 group hover:border-skyblue transition-all">
                 <div class="w-12 h-12 bg-skyblue/10 text-skyblue rounded-2xl flex items-center justify-center mb-6 group-hover:bg-skyblue group-hover:text-white transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.813.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>

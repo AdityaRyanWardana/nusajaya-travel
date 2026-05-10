@@ -14,7 +14,12 @@ class UserController extends Controller
 
     public function calendar()
     {
-        return view('user.calendar');
+        $bookings = \App\Models\Booking::where('user_id', Auth::id())
+            ->where('status', '!=', 'cancelled')
+            ->orderBy('travel_date')
+            ->get();
+            
+        return view('user.calendar', compact('bookings'));
     }
 
     public function preferences()

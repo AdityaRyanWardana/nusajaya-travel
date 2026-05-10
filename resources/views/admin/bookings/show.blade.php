@@ -75,7 +75,60 @@
                 </div>
             </div>
 
-            {{-- Trip & Service Details --}}
+            {{-- Customer Biodata --}}
+            @if($booking->customer_details)
+            <div class="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="absolute -top-24 -left-24 w-64 h-64 bg-emerald-50/50 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
+                
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-3 relative z-10">
+                    <span class="w-8 h-px bg-slate-100"></span> {{ __('Booking Biodata') }}
+                </h4>
+
+                <div class="grid md:grid-cols-2 gap-8 relative z-10">
+                    <div class="space-y-4">
+                        <div class="px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-4">{{ __('Participants / Guests') }}</p>
+                            @if(isset($booking->customer_details['names']) && is_array($booking->customer_details['names']))
+                                <div class="grid gap-4">
+                                    @foreach($booking->customer_details['names'] as $index => $participant)
+                                        <div class="flex items-start gap-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-[10px] font-black flex items-center justify-center shrink-0 mt-1">{{ $index + 1 }}</span>
+                                            <div class="space-y-1">
+                                                @if(is_array($participant))
+                                                    <p class="text-sm font-black text-slate-800 italic uppercase tracking-tighter">
+                                                        <span class="text-blue-500 mr-1">{{ $participant['salutation'] ?? 'Mr' }}.</span> 
+                                                        {{ $participant['name'] ?? 'No Name' }}
+                                                    </p>
+                                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                                        <i data-lucide="credit-card" class="w-3 h-3"></i>
+                                                        ID: {{ $participant['identity'] ?? '-' }}
+                                                    </p>
+                                                @else
+                                                    <p class="text-sm font-black text-slate-800 italic uppercase tracking-tighter">{{ $participant }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-sm font-black text-slate-800 italic uppercase tracking-tighter">{{ $booking->customer_details['name'] ?? $booking->user->name }}</p>
+                            @endif
+                        </div>
+                        <div class="px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">{{ __('WhatsApp / Phone') }}</p>
+                            <p class="text-sm font-black text-slate-800">{{ $booking->customer_details['phone'] ?? $booking->user->phone ?? '-' }}</p>
+                        </div>
+                    </div>
+                    <div class="h-full">
+                        <div class="px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 h-full">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">{{ __('Special Notes') }}</p>
+                            <p class="text-xs font-medium text-slate-600 leading-relaxed">{{ $booking->customer_details['notes'] ?: __('No special notes provided.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm relative group overflow-hidden">
                 <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-50/30 rounded-full blur-3xl"></div>
                 

@@ -3,16 +3,15 @@
 @section('content')
 <main class="flex-1 bg-lightbg px-8 py-16 pb-24">
     <div class="max-w-7xl mx-auto">
-        <header class="mb-16 text-center">
+        <header class="mb-16 text-center reveal-zoom">
             <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{{ __('Official Curator') }}</span>
             <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6">{{ __('Batam Tour Packages') }}</h1>
-            
         </header>
 
         <!-- Tours Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             @forelse($tours as $tour)
-                <div class="group relative bg-white rounded-[3rem] overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-brandblue/5 transition-all duration-700">
+                <div class="group relative bg-white rounded-[3rem] overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-brandblue/5 transition-all duration-700 reveal">
                     <!-- Whole Card Link -->
                     <a href="{{ route('tours.show', $tour->slug) }}" class="absolute inset-0 z-20" aria-label="View {{ $tour->title }} details"></a>
                     

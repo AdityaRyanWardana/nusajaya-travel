@@ -15,12 +15,14 @@ class DashboardController extends Controller
     public function index()
     {
         // Monthly Growth Calculation
-        $currentMonthBookings = Booking::where('status', '!=', 'unpaid')
+        $currentMonthBookings = Booking::where('type', 'tour')
+            ->where('status', '!=', 'unpaid')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();
             
-        $lastMonthBookings = Booking::where('status', '!=', 'unpaid')
+        $lastMonthBookings = Booking::where('type', 'tour')
+            ->where('status', '!=', 'unpaid')
             ->whereMonth('created_at', now()->subMonth()->month)
             ->whereYear('created_at', now()->subMonth()->year)
             ->count();
@@ -32,10 +34,9 @@ class DashboardController extends Controller
             $growth = 100;
         }
 
-        // Chart Data (Last 6 Months)
+        // Chart Data (Last 6 Months - Tours Only)
         $chartLabels = [];
         $tourChartData = [];
-        $transportChartData = [];
         
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
@@ -46,29 +47,32 @@ class DashboardController extends Controller
                 ->whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
-                
-            $transportChartData[] = Booking::where('status', '!=', 'unpaid')
-                ->where('type', 'transport')
-                ->whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
-                ->count();
         }
 
-        // Revenue & Balance Stats
-        $totalRevenue = Booking::where('status', 'paid')->sum('amount');
-        $lastMonthRevenue = Booking::where('status', 'paid')
+        // Revenue & Balance Stats (Tours Only)
+        $totalRevenue = Booking::where('type', 'tour')->where('status', 'paid')->sum('amount');
+        $lastMonthRevenue = Booking::where('type', 'tour')
+            ->where('status', 'paid')
             ->whereMonth('created_at', now()->subMonth()->month)
             ->sum('amount');
-        $pendingRevenue = Booking::where('status', 'pending')->sum('amount');
+        $pendingRevenue = Booking::where('type', 'tour')->where('status', 'pending')->sum('amount');
 
         $rescheduledBookings = Booking::with('user')
+            ->where('type', 'tour')
             ->where('reschedule_notified', false)
             ->latest('rescheduled_at')
             ->get();
 
+        $recentBookings = Booking::with('user')
+            ->where('type', 'tour')
+            ->where('status', '!=', 'unpaid')
+            ->latest()
+            ->take(5)
+            ->get();
+
         $stats = [
-            'total_bookings' => Booking::where('status', '!=', 'unpaid')->count(),
-            'pending_bookings' => Booking::where('status', 'pending')->count(),
+            'total_bookings' => Booking::where('type', 'tour')->where('status', '!=', 'unpaid')->count(),
+            'pending_bookings' => Booking::where('type', 'tour')->where('status', 'pending')->count(),
             'total_armada' => Armada::sum('total_units'),
             'available_armada' => Armada::sum('total_units') - Armada::sum('maintenance_units'),
             'maintenance_armada' => Armada::sum('maintenance_units'),
@@ -79,8 +83,8 @@ class DashboardController extends Controller
             'pending_revenue' => $pendingRevenue,
             'chart_labels' => $chartLabels,
             'tour_chart_data' => $tourChartData,
-            'transport_chart_data' => $transportChartData,
             'rescheduled_bookings' => $rescheduledBookings,
+            'recent_bookings' => $recentBookings,
         ];
 
         return view('admin.dashboard', compact('stats'));
@@ -139,28 +143,37 @@ class DashboardController extends Controller
             $dates[] = now()->addDays($i)->format('Y-m-d');
         }
 
+        $tours = Tour::all();
         $armadas = Armada::all();
-        $scheduleData = [];
+        
+        $tourSchedule = [];
+        $fleetSchedule = [];
 
         foreach ($dates as $date) {
-            $dailyStats = [];
-            foreach ($armadas as $armada) {
-                $bookedCount = Booking::where('armada_id', $armada->id)
-                    ->whereDate('travel_date', $date)
-                    ->whereIn('status', ['pending', 'paid', 'completed'])
-                    ->count();
-
-                $dailyStats[$armada->id] = [
-                    'booked' => $bookedCount,
-                    'ready' => max(0, $armada->total_units - $armada->maintenance_units - $bookedCount),
-                    'maintenance' => $armada->maintenance_units,
-                    'total' => $armada->total_units,
+            // Tour Schedule Data
+            $tourDaily = [];
+            foreach ($tours as $tour) {
+                $tourDaily[$tour->id] = [
+                    'booked' => Booking::where('type', 'tour')->where('service_slug', $tour->slug)->whereDate('travel_date', $date)->whereIn('status', ['pending', 'paid', 'completed'])->count()
                 ];
             }
-            $scheduleData[$date] = $dailyStats;
+            $tourSchedule[$date] = $tourDaily;
+
+            // Fleet Schedule Data
+            $fleetDaily = [];
+            foreach ($armadas as $armada) {
+                $bookedCount = Booking::where('armada_id', $armada->id)->whereDate('travel_date', $date)->whereIn('status', ['pending', 'paid', 'completed'])->count();
+                $fleetDaily[$armada->id] = [
+                    'booked' => $bookedCount,
+                    'ready' => max(0, $armada->total_units - $armada->maintenance_units - $bookedCount),
+                    'total' => $armada->total_units,
+                    'maintenance' => $armada->maintenance_units,
+                ];
+            }
+            $fleetSchedule[$date] = $fleetDaily;
         }
 
-        return view('admin.scheduling', compact('dates', 'armadas', 'scheduleData', 'selectedDate'));
+        return view('admin.scheduling', compact('dates', 'tours', 'armadas', 'tourSchedule', 'fleetSchedule', 'selectedDate'));
     }
 
     public function markRescheduleAsNoticed(Booking $booking)

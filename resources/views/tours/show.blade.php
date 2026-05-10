@@ -6,11 +6,17 @@
         @php
             $allImages = [];
             if ($tour->image) {
-                $allImages[] = Str::startsWith($tour->image, 'http') ? $tour->image : asset('storage/' . $tour->image);
+                $allImages[] = $tour->image_url;
             }
             if ($tour->images) {
                 foreach($tour->images as $img) {
-                    $allImages[] = Str::startsWith($img, 'http') ? $img : asset('storage/' . $img);
+                    if (Str::startsWith($img, 'http')) {
+                        $allImages[] = $img;
+                    } elseif (Str::startsWith($img, 'images/')) {
+                        $allImages[] = asset($img);
+                    } else {
+                        $allImages[] = asset('storage/' . $img);
+                    }
                 }
             }
             if (empty($allImages)) {
@@ -131,17 +137,32 @@
                     </div>
 
                     @auth
-                    <form action="{{ route('tours.book', $tour->id) }}" method="POST" class="space-y-8">
+                    <form action="{{ route('tours.book', $tour->id) }}" method="POST" class="space-y-8" 
+                          x-data="{ 
+                            guests: 1,
+                            participants: [{ salutation: 'Mr', name: '{{ auth()->user()->name }}', identity: '' }],
+                            updateParticipants() {
+                                const count = parseInt(this.guests);
+                                if (this.participants.length < count) {
+                                    while (this.participants.length < count) {
+                                        this.participants.push({ salutation: 'Mr', name: '', identity: '' });
+                                    }
+                                } else {
+                                    this.participants = this.participants.slice(0, count);
+                                }
+                            }
+                          }">
                         @csrf
                         <div class="space-y-3">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Select Date') }}</label>
                             <input type="date" name="date" required 
                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none">
                         </div>
+
                         <div class="space-y-3">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Total Guests') }}</label>
                             <div class="relative">
-                                <select name="guests" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer">
+                                <select name="guests" x-model="guests" @change="updateParticipants()" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer">
                                     @for($i=1; $i<=10; $i++) 
                                         <option value="{{ $i }}" class="text-brandblue">{{ $i }} {{ $i > 1 ? __('Persons') : __('Person') }}</option> 
                                     @endfor
@@ -151,6 +172,75 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="space-y-8">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Participants Biodata') }}</label>
+                            <div class="space-y-10">
+                                <template x-for="(participant, index) in participants" :key="index">
+                                    <div class="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500" :style="{ animationDelay: (index * 100) + 'ms' }">
+                                        <div class="flex items-center justify-between px-2">
+                                            <span class="text-[10px] font-black text-skyblue uppercase tracking-[0.3em]" x-text="'Guest ' + (index + 1) + (index === 0 ? ' (Leader)' : '')"></span>
+                                            <div class="flex gap-2">
+                                                <template x-for="sal in ['Mr', 'Ms', 'Mrs']">
+                                                    <button type="button" @click="participants[index].salutation = sal" 
+                                                            :class="participants[index].salutation === sal ? 'bg-skyblue text-white' : 'bg-white/5 text-white/40 hover:bg-white/10'"
+                                                            class="px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all" x-text="sal"></button>
+                                                </template>
+                                            </div>
+                                            <input type="hidden" :name="'participants[' + index + '][salutation]'" x-model="participants[index].salutation">
+                                        </div>
+
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <div class="space-y-3">
+                                                <label class="block text-[9px] font-black text-white/30 uppercase tracking-widest ml-2">{{ __('Full Name') }}</label>
+                                                <input type="text" :name="'participants[' + index + '][name]'" required x-model="participants[index].name"
+                                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none" 
+                                                       placeholder="As shown in Passport/ID">
+                                            </div>
+                                            <div class="space-y-3">
+                                                <label class="block text-[9px] font-black text-white/30 uppercase tracking-widest ml-2">{{ __('Passport / ID Number') }}</label>
+                                                <input type="text" :name="'participants[' + index + '][identity]'" required x-model="participants[index].identity"
+                                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none" 
+                                                       placeholder="Passport / KTP / NIK">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Pickup Point') }}</label>
+                            <div class="relative">
+                                <select name="pickup_point" required 
+                                        class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer">
+                                    <option value="" class="text-brandblue" disabled selected>{{ __('Select Terminal / Location') }}</option>
+                                    <option value="Batam Centre Ferry Terminal" class="text-brandblue">Batam Centre Ferry Terminal</option>
+                                    <option value="Harbour Bay Ferry Terminal" class="text-brandblue">Harbour Bay Ferry Terminal</option>
+                                    <option value="Sekupang Ferry Terminal" class="text-brandblue">Sekupang Ferry Terminal</option>
+                                    <option value="Waterfront City Ferry Terminal" class="text-brandblue">Waterfront City Ferry Terminal</option>
+                                    <option value="Nongsapura Ferry Terminal" class="text-brandblue">Nongsapura Ferry Terminal</option>
+                                    <option value="Telaga Punggur Ferry Terminal" class="text-brandblue">Telaga Punggur Ferry Terminal</option>
+                                    <option value="Other / Hotel (Specify in Notes)" class="text-brandblue">{{ __('Other / Hotel (Specify in Notes)') }}</option>
+                                </select>
+                                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-skyblue"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Contact Number (WhatsApp)') }}</label>
+                            <input type="tel" name="customer_phone" required value="{{ auth()->user()->phone ?? '' }}"
+                                   class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none" placeholder="+62...">
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Special Notes (Optional)') }}</label>
+                            <textarea name="notes" rows="3"
+                                      class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none resize-none" placeholder="{{ __('Allergy, hotel pickup details, etc...') }}"></textarea>
+                        </div>
+
                         <button type="submit" class="w-full py-6 bg-gradient-to-r from-skyblue to-blue-400 hover:from-white hover:to-white hover:text-brandblue text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all duration-700 shadow-xl shadow-skyblue/20 group relative overflow-hidden">
                             <span class="relative z-10">{{ __('Book Experience') }}</span>
                             <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>

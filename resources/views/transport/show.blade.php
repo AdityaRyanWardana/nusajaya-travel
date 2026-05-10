@@ -91,6 +91,10 @@
                 duration: 'one_day',
                 pickup: '',
                 loadingLocation: false,
+                participants: [],
+                updateParticipants() {
+                    // No longer needed for transport
+                },
                 detectLocation() {
                     this.loadingLocation = true;
                     if (navigator.geolocation) {
@@ -217,7 +221,7 @@
                                     </button>
                                 </div>
                             </div>
-                                                       <!-- Pickup Selection -->
+                            <!-- Pickup Selection -->
                             <div class="relative" x-data="{ open: false }">
                                 <button type="button" @click="open = !open" x-show="locType === 'preset'" 
                                     class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-left focus:ring-2 focus:ring-skyblue transition outline-none flex items-center justify-between group">
@@ -328,6 +332,24 @@
                                     <span class="text-[8px] font-bold text-white/30 uppercase mt-1">17:00-20:00</span>
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-white/10">
+                        <input type="hidden" name="guests" value="1">
+
+
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('WhatsApp Number') }}</label>
+                            <input type="tel" name="customer_phone" required value="{{ auth()->user()->phone ?? '' }}"
+                                   class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none" placeholder="+62...">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Special Notes (Optional)') }}</label>
+                            <textarea name="notes" rows="3"
+                                      class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none resize-none" placeholder="{{ __('Baggage info, flight number, etc...') }}"></textarea>
                         </div>
 
                         <div class="space-y-2">

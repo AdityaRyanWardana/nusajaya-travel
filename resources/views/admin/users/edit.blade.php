@@ -7,8 +7,8 @@
             <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
             {{ __('Back to List') }}
         </a>
-        <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">{{ __('Edit User') }}</h2>
-        <p class="text-slate-400 font-medium mt-2 italic text-lg">{{ __('Update profile and permissions for') }} {{ $user->name }}.</p>
+        <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">{{ __('Edit User') }}</h2>
+        <p class="text-slate-400 dark:text-slate-400 font-medium mt-2 italic text-lg">{{ __('Update profile and permissions for') }} {{ $user->name }}.</p>
     </div>
 
     <form action="{{ route('admin.users.update', $user) }}" method="POST" class="bg-white rounded-[3rem] border border-slate-100 shadow-sm p-12 space-y-10">
@@ -56,14 +56,24 @@
                     <!-- Password -->
                     <div class="space-y-4">
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('New Password') }}</label>
-                        <input type="password" name="password" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••">
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                                <i data-lucide="lock" class="w-5 h-5"></i>
+                            </div>
+                            <input type="password" name="password" class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••">
+                        </div>
                         @error('password') <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Confirm Password -->
                     <div class="space-y-4">
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Confirm New Password') }}</label>
-                        <input type="password" name="password_confirmation" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••">
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            </div>
+                            <input type="password" name="password_confirmation" class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••">
+                        </div>
                     </div>
                 </div>
             </div>

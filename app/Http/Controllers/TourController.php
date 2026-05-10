@@ -34,6 +34,18 @@ class TourController extends Controller
 
     public function book(Request $request, $id)
     {
+        $request->validate([
+            'date' => 'required|date',
+            'guests' => 'required|integer|min:1',
+            'pickup_point' => 'required|string',
+            'participants' => 'required|array',
+            'participants.*.salutation' => 'required|string',
+            'participants.*.name' => 'required|string|max:255',
+            'participants.*.identity' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'notes' => 'nullable|string',
+        ]);
+
         $tour = Tour::findOrFail($id);
 
         $booking = Booking::create([
@@ -42,9 +54,15 @@ class TourController extends Controller
             'service_slug' => $tour->slug,
             'armada_id' => $tour->armada_id,
             'type' => 'tour',
-            'amount' => $tour->price,
+            'amount' => $tour->price * (int) $request->guests,
             'guests' => (int) $request->guests,
+            'customer_details' => [
+                'names' => $request->participants, 
+                'phone' => $request->customer_phone,
+                'notes' => $request->notes,
+            ],
             'travel_date' => $request->date,
+            'pickup_point' => $request->pickup_point,
             'status' => 'unpaid',
         ]);
 

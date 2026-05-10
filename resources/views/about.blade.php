@@ -15,10 +15,10 @@
 </header>
 
 <!-- Story & Vision -->
-<section class="relative z-20 -mt-20">
+<section class="relative z-20 -mt-20 reveal">
     <div class="max-w-7xl mx-auto px-8">
         <div class="bg-white rounded-[3rem] p-12 md:p-20 shadow-2xl border border-slate-50 grid md:grid-cols-2 gap-20">
-            <div>
+            <div class="reveal-left">
                 <h2 class="text-4xl font-black text-brandblue mb-10 leading-none uppercase">Our Journey <br>& Legacy</h2>
                 <div class="space-y-8 text-slate-500 font-medium leading-relaxed text-lg">
                     <p>
@@ -43,7 +43,7 @@
                 </div>
             </div>
             
-            <div class="relative">
+            <div class="relative reveal-right">
                 <div class="grid grid-cols-2 gap-4">
                     <img src="{{ asset('images/goldendragon_40seat.jpg') }}" class="rounded-[2.5rem] shadow-xl h-80 object-cover mt-12 hover:-translate-y-2 transition duration-500">
                     <img src="{{ asset('images/fleet.png') }}" class="rounded-[2.5rem] shadow-xl h-80 object-cover hover:-translate-y-2 transition duration-500">
@@ -68,7 +68,7 @@
             <p class="text-slate-400 font-medium text-sm max-w-sm mb-2">We don't just sell tours; we curate moments that last a lifetime through our core values.</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-12">
+        <div class="grid md:grid-cols-3 gap-12 reveal-zoom">
             <!-- Value Card -->
             <div class="group relative p-12 bg-lightbg rounded-[3rem] overflow-hidden hover:shadow-2xl transition duration-500">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-skyblue/5 rounded-bl-[4rem] group-hover:bg-skyblue/10 transition"></div>
@@ -107,7 +107,7 @@
 </section>
 
 <!-- Glassmorphism Location Section -->
-<section class="max-w-7xl mx-auto px-8 pb-32">
+<section class="max-w-7xl mx-auto px-8 pb-32 reveal">
     <div class="relative rounded-[4rem] overflow-hidden min-h-[500px] flex items-center group">
         <img src="{{ asset('images/fleet.png') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000 opacity-60">
         <div class="absolute inset-0 bg-brandblue/40 backdrop-blur-[2px]"></div>

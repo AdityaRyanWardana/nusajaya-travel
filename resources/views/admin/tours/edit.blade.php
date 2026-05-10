@@ -105,7 +105,7 @@
                                 $isChecked = false;
                                 if ($tour->inclusions) {
                                     foreach($tour->inclusions as $tourInc) {
-                                        if (is_array($tourInc) && $tourInc['id'] === $inclusion['id']) {
+                                        if (is_array($tourInc) && isset($tourInc['id']) && $tourInc['id'] === $inclusion['id']) {
                                             $isChecked = true;
                                             break;
                                         }
@@ -157,7 +157,7 @@
 
                         {{-- Existing Image --}}
                         <div x-show="!coverPreview && '{{ $tour->image }}'" class="relative group aspect-video rounded-3xl overflow-hidden border border-slate-100 shadow-sm">
-                            <img src="{{ Str::startsWith($tour->image, 'http') ? $tour->image : asset('storage/' . $tour->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="{{ $tour->image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                                 <button type="button" onclick="if(confirm('{{ __('Delete cover?') }}')) { document.getElementById('delete-main-image').submit(); }" class="w-12 h-12 bg-red-500 text-white rounded-2xl flex items-center justify-center hover:bg-red-600 transition-all">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
@@ -202,7 +202,17 @@
                             <div class="grid grid-cols-2 gap-4">
                                 @foreach($tour->images as $img)
                                     <div class="relative group aspect-square rounded-2xl overflow-hidden border border-slate-50 shadow-sm">
-                                        <img src="{{ Str::startsWith($img, 'http') ? $img : asset('storage/' . $img) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                    @php
+                                        $gallerySrc = $img;
+                                        if (!Str::startsWith($gallerySrc, 'http')) {
+                                            if (Str::startsWith($gallerySrc, 'images/')) {
+                                                $gallerySrc = asset($gallerySrc);
+                                            } else {
+                                                $gallerySrc = asset('storage/' . $gallerySrc);
+                                            }
+                                        }
+                                    @endphp
+                                    <img src="{{ $gallerySrc }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                                             <button type="button" onclick="if(confirm('{{ __('Delete photo?') }}')) { document.getElementById('delete-image-{{ $loop->index }}').submit(); }" class="w-10 h-10 bg-red-500 text-white rounded-xl flex items-center justify-center hover:bg-red-600 transition-all">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>

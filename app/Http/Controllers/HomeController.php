@@ -23,6 +23,13 @@ class HomeController extends Controller
 
         $main_promotion = $promotions->first();
         $grid_promotions = $promotions->skip(1)->take(3);
+
+        $top_destinations = \App\Models\Tour::whereIn('slug', [
+            'batam-city-highlights',
+            'ranoh-island',
+            'maha-vihara',
+            'barelang-bridge'
+        ])->get()->keyBy('slug');
         
         // If no promotions in DB, we'll keep the defaults in blade or handle it there.
         $destinations = [
@@ -84,6 +91,6 @@ class HomeController extends Controller
             ],
         ];
 
-        return view('welcome', compact('destinations', 'services', 'main_promotion', 'grid_promotions'));
+        return view('welcome', compact('destinations', 'services', 'main_promotion', 'grid_promotions', 'top_destinations'));
     }
 }

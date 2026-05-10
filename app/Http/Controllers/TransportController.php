@@ -49,8 +49,23 @@ class TransportController extends Controller
             'category' => 'required|string',
             'pickup_point' => 'nullable|string',
             'duration' => 'nullable|string',
-            'pickup_time' => 'required|string'
+            'pickup_time' => 'required|string',
+            'guests' => 'nullable|integer|min:1',
+            'participants' => 'nullable|array',
+            'customer_phone' => 'required|string|max:20',
+            'notes' => 'nullable|string',
         ]);
+
+        $participants = $request->participants;
+        if (!$participants || count($participants) === 0) {
+            $participants = [
+                [
+                    'salutation' => 'Mr',
+                    'name' => auth()->user()->name,
+                    'identity' => 'Account Holder'
+                ]
+            ];
+        }
 
         $transport = Armada::findOrFail($id);
         
@@ -76,10 +91,16 @@ class TransportController extends Controller
             'armada_id' => $transport->id,
             'type' => 'transport',
             'amount' => $price,
+            'guests' => $request->guests ?? 1,
             'travel_date' => $request->travel_date,
             'pickup_point' => $request->pickup_point,
             'destination' => $request->destination ?? $request->category,
             'pickup_time' => $request->pickup_time,
+            'customer_details' => [
+                'names' => $participants,
+                'phone' => $request->customer_phone,
+                'notes' => $request->notes,
+            ],
             'status' => 'pending'
         ]);
 

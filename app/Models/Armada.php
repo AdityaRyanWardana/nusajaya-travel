@@ -38,4 +38,21 @@ class Armada extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        if (\Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+
+        if (\Str::startsWith($this->image, 'images/')) {
+            return asset($this->image);
+        }
+
+        return asset('storage/' . $this->image);
+    }
 }

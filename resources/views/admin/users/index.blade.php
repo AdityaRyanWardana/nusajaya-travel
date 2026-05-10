@@ -4,8 +4,8 @@
 <div class="space-y-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">{{ __('Manage Users') }}</h2>
-            <p class="text-slate-400 font-medium mt-2 italic text-lg">{{ __('Create and manage administrative accounts and customers.') }}</p>
+            <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">{{ __('Manage Users') }}</h2>
+            <p class="text-slate-400 dark:text-slate-400 font-medium mt-2 italic text-lg">{{ __('Create and manage administrative accounts and customers.') }}</p>
         </div>
         <a href="{{ route('admin.users.create') }}" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-blue-100 flex items-center group">
             <i data-lucide="user-plus" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></i>
@@ -38,8 +38,8 @@
                                     @endif
                                 </div>
                                 <div>
-                                    <p class="text-sm font-black text-slate-800">{{ $user->name }}</p>
-                                    <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ $user->email }}</p>
+                                    <p class="text-sm font-black text-slate-800 dark:text-white">{{ $user->name }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">{{ $user->email }}</p>
                                 </div>
                             </div>
                         </td>

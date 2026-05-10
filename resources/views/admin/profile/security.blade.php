@@ -3,8 +3,8 @@
 @section('content')
 <div class="max-w-4xl space-y-8">
     <div>
-        <h2 class="text-4xl font-black text-slate-800 tracking-tight italic uppercase">{{ __('Security Settings') }}</h2>
-        <p class="text-slate-400 font-medium mt-2 italic text-lg">{{ __('Update your password and manage account security protocols.') }}</p>
+        <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">{{ __('Security Settings') }}</h2>
+        <p class="text-slate-400 dark:text-slate-400 font-medium mt-2 italic text-lg">{{ __('Update your password and manage account security protocols.') }}</p>
     </div>
 
     @if($errors->any())
@@ -23,28 +23,43 @@
         
         <div class="flex items-center space-x-4">
             <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center">
-                <i data-lucide="shield-lock" class="w-5 h-5"></i>
+                <i data-lucide="lock" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-lg font-black text-slate-800 uppercase italic">{{ __('Change Password') }}</h3>
+            <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">{{ __('Change Password') }}</h3>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
             <!-- Current Password -->
             <div class="md:col-span-2 space-y-4">
                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Current Password') }}</label>
-                <input type="password" name="current_password" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-red-500 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-400 group-focus-within:text-red-500 transition-colors">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <input type="password" name="current_password" class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-red-500 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
+                </div>
             </div>
 
             <!-- New Password -->
             <div class="space-y-4">
                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('New Password') }}</label>
-                <input type="password" name="password" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                        <i data-lucide="key-round" class="w-5 h-5"></i>
+                    </div>
+                    <input type="password" name="password" class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
+                </div>
             </div>
 
             <!-- Confirm New Password -->
             <div class="space-y-4">
                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{{ __('Confirm New Password') }}</label>
-                <input type="password" name="password_confirmation" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <input type="password" name="password_confirmation" class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all outline-none" placeholder="••••••••" required>
+                </div>
             </div>
         </div>
 
@@ -66,7 +81,7 @@
             <div class="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center">
                 <i data-lucide="monitor" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-lg font-black text-slate-800 uppercase italic">{{ __('Active Sessions') }}</h3>
+            <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">{{ __('Active Sessions') }}</h3>
         </div>
         
         <div class="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100/50 opacity-60">

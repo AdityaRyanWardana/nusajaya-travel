@@ -179,7 +179,7 @@
 </header>
 
 <!-- Premium Services Section -->
-<section class="max-w-7xl mx-auto px-8 py-32 pb-48">
+<section class="max-w-7xl mx-auto px-8 py-32 pb-48 reveal">
     <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
         <div class="max-w-xl">
             <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Our Expertise</span>
@@ -195,7 +195,7 @@
 
     <div class="grid lg:grid-cols-3 gap-10">
         <!-- Transport Booking -->
-        <a href="{{ route('transport.index') }}" class="group relative bg-white rounded-[4rem] p-12 border border-slate-100 shadow-2xl shadow-brandblue/5 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden">
+        <a href="{{ route('transport.index') }}" class="group relative bg-white rounded-[4rem] p-12 border border-slate-100 shadow-2xl shadow-brandblue/5 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden reveal-left">
             <div class="absolute top-0 right-0 w-32 h-32 bg-brandblue/5 rounded-bl-[4rem] -mr-10 -mt-10 group-hover:scale-150 group-hover:bg-brandblue transition-all duration-700"></div>
             
             <div class="w-16 h-16 bg-brandblue rounded-3xl flex items-center justify-center text-white mb-10 group-hover:rotate-12 transition-all shadow-xl shadow-brandblue/20">
@@ -214,7 +214,7 @@
         </a>
 
         <!-- Tour Packages -->
-        <a href="{{ route('tours.index') }}" class="group relative bg-brandblue rounded-[4rem] p-12 shadow-2xl shadow-brandblue/30 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden text-white">
+        <a href="{{ route('tours.index') }}" class="group relative bg-brandblue rounded-[4rem] p-12 shadow-2xl shadow-brandblue/30 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden text-white reveal">
             <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
             
             <div class="w-16 h-16 bg-skyblue rounded-3xl flex items-center justify-center text-white mb-10 group-hover:-rotate-12 transition-all shadow-xl shadow-skyblue/40">
@@ -233,7 +233,7 @@
         </a>
 
         <!-- Private Car (Soon) -->
-        <div class="group relative bg-slate-50/50 rounded-[4rem] p-12 border border-dashed border-slate-200 flex flex-col opacity-80 overflow-hidden">
+        <div class="group relative bg-slate-50/50 rounded-[4rem] p-12 border border-dashed border-slate-200 flex flex-col opacity-80 overflow-hidden reveal-right">
             <div class="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 mb-10 grayscale">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             </div>
@@ -249,7 +249,7 @@
 </section>
 
 <!-- Bento Destinations Section Variation -->
-<section class="max-w-7xl mx-auto px-8 pb-32">
+<section class="max-w-7xl mx-auto px-8 pb-32 reveal">
     <div class="flex flex-col items-center text-center mb-16">
         <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4">Discover Batam</span>
         <h2 class="text-5xl font-black text-brandblue uppercase italic">Top Destinations</h2>
@@ -257,7 +257,8 @@
     
     <div class="grid grid-cols-4 grid-rows-2 gap-6 h-[700px]">
         <!-- Batam City (Large Vertical) -->
-        <a href="{{ route('tours.show', 'batam-city-highlights') }}" class="col-span-2 row-span-2 relative rounded-[3rem] overflow-hidden group">
+        @php $batamCity = $top_destinations['batam-city-highlights'] ?? null; @endphp
+        <a href="{{ route('tours.show', 'batam-city-highlights') }}" class="col-span-2 row-span-2 relative rounded-[3rem] overflow-hidden group reveal-zoom">
             <img src="{{ asset('images/batam_city.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 via-transparent to-transparent"></div>
             <div class="absolute inset-0 bg-brandblue/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
@@ -265,12 +266,15 @@
             <div class="absolute bottom-10 left-10 right-10">
                 <span class="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-4">Main Gate</span>
                 <h3 class="text-4xl font-black text-white mb-4 uppercase leading-none">Batam City <br><span class="text-skyblue">Experience</span></h3>
-                <p class="text-sm text-white/70 font-medium line-clamp-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">Discover the industrial heartbeat and shopping paradise of the Riau Islands.</p>
+                <p class="text-sm text-white/70 font-medium line-clamp-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">
+                    {{ $batamCity ? $batamCity->description : 'Discover the industrial heartbeat and shopping paradise of the Riau Islands.' }}
+                </p>
             </div>
         </a>
         
         <!-- Ranoh Island (Wide Top) -->
-        <a href="{{ route('tours.show', 'ranoh-island') }}" class="col-span-2 row-span-1 relative rounded-[3rem] overflow-hidden group">
+        @php $ranoh = $top_destinations['ranoh-island'] ?? null; @endphp
+        <a href="{{ route('tours.show', 'ranoh-island') }}" class="col-span-2 row-span-1 relative rounded-[3rem] overflow-hidden group reveal-zoom">
             <img src="{{ asset('images/ranoh_island.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-r from-brandblue/80 via-transparent to-transparent"></div>
             <div class="absolute top-8 right-8">
@@ -280,33 +284,43 @@
             </div>
             <div class="absolute inset-y-0 left-10 flex flex-col justify-center max-w-xs">
                 <h3 class="text-3xl font-black text-white mb-2 uppercase italic">Ranoh Island</h3>
-                <p class="text-xs text-white/80 font-medium tracking-tight">Tropical paradise with crystal clear water.</p>
+                <p class="text-xs text-white/80 font-medium tracking-tight line-clamp-2 group-hover:line-clamp-none transition-all">
+                    {{ $ranoh ? $ranoh->description : 'Tropical paradise with crystal clear water.' }}
+                </p>
             </div>
         </a>
         
         <!-- Maha Vihara (Standard Style) -->
+        @php $mahaVihara = $top_destinations['maha-vihara'] ?? null; @endphp
         <a href="{{ route('tours.show', 'maha-vihara') }}" class="col-span-1 row-span-1 relative rounded-[3rem] overflow-hidden group">
             <img src="{{ asset('images/maha_vihara.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 via-transparent to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
                 <p class="text-[9px] font-black text-skyblue uppercase tracking-widest mb-1 italic">Architecture</p>
-                <h3 class="text-lg font-black text-white uppercase italic leading-none">Maha <br>Vihara</h3>
+                <h3 class="text-lg font-black text-white uppercase italic leading-none mb-2">Maha <br>Vihara</h3>
+                <p class="text-[10px] text-white/60 font-medium line-clamp-2 opacity-0 group-hover:opacity-100 transition duration-500">
+                    {{ $mahaVihara ? $mahaVihara->description : 'Visit one of the largest Buddhist temples in Southeast Asia.' }}
+                </p>
             </div>
         </a>
         
         <!-- Barelang Bridge (Square Small) -->
+        @php $barelang = $top_destinations['barelang-bridge'] ?? null; @endphp
         <a href="{{ route('tours.show', 'barelang-bridge') }}" class="col-span-1 row-span-1 relative rounded-[3rem] overflow-hidden group">
             <img src="{{ asset('images/barelang_bridge.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
-                <h3 class="text-lg font-black text-white uppercase italic leading-none">Barelang <br>Bridge</h3>
+                <h3 class="text-lg font-black text-white uppercase italic leading-none mb-2">Barelang <br>Bridge</h3>
+                <p class="text-[10px] text-white/60 font-medium line-clamp-2 opacity-0 group-hover:opacity-100 transition duration-500">
+                    {{ $barelang ? $barelang->description : 'The iconic landmark connecting the islands of Batam.' }}
+                </p>
             </div>
         </a>
     </div>
 </section>
 
 <!-- Modern Promotions Section Variation -->
-<section class="max-w-7xl mx-auto px-8 pb-32">
+<section class="max-w-7xl mx-auto px-8 pb-32 reveal">
     <div class="text-center mb-16">
         <span class="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Seasonal Offers</span>
         <h2 class="text-4xl font-black text-brandblue uppercase italic">Travel More, Spend Less</h2>
@@ -417,7 +431,7 @@
 </section>
 
 <!-- Trusted Partner Section -->
-<section class="max-w-7xl mx-auto px-8 py-20 relative">
+<section class="max-w-7xl mx-auto px-8 py-20 relative reveal">
     <div class="bg-white rounded-3xl p-12 grid md:grid-cols-2 gap-12 items-center shadow-lg border border-slate-100">
         <div class="relative">
             <img src="{{ asset('images/fleet.png') }}" class="rounded-2xl shadow-md w-full h-[300px] object-cover">
