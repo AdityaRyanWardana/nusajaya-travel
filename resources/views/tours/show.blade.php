@@ -139,6 +139,7 @@
                     @auth
                     <form action="{{ route('tours.book', $tour->id) }}" method="POST" class="space-y-8" 
                           x-data="{ 
+                            step: 1,
                             guests: 1,
                             participants: [{ salutation: 'Mr', name: '{{ auth()->user()->name }}', identity: '' }],
                             updateParticipants() {
@@ -150,34 +151,68 @@
                                 } else {
                                     this.participants = this.participants.slice(0, count);
                                 }
-                            }
+                            },
+                            nextStep() { 
+                                if(this.step === 1) {
+                                    // Basic validation for Step 1
+                                    const dateInput = document.querySelector('input[name=date]');
+                                    if(!dateInput.value) {
+                                        alert('Please select a date');
+                                        return;
+                                    }
+                                }
+                                if(this.step < 3) this.step++ 
+                            },
+                            prevStep() { if(this.step > 1) this.step-- }
                           }">
                         @csrf
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Select Date') }}</label>
-                            <input type="date" name="date" required 
-                                   class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none">
+                        
+                        <!-- Step Progress Indicator -->
+                        <div class="flex items-center justify-between mb-12 px-2">
+                            <div class="flex items-center gap-3">
+                                <div :class="step >= 1 ? 'bg-skyblue' : 'bg-white/10 text-white/40'" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-500">1</div>
+                                <div class="w-8 h-[2px]" :class="step >= 2 ? 'bg-skyblue' : 'bg-white/10'"></div>
+                                <div :class="step >= 2 ? 'bg-skyblue' : 'bg-white/10 text-white/40'" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-500">2</div>
+                                <div class="w-8 h-[2px]" :class="step >= 3 ? 'bg-skyblue' : 'bg-white/10'"></div>
+                                <div :class="step >= 3 ? 'bg-skyblue' : 'bg-white/10 text-white/40'" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-500">3</div>
+                            </div>
+                            <span class="text-[10px] font-black text-skyblue uppercase tracking-widest" x-text="step === 1 ? 'Trip Setup' : (step === 2 ? 'Guest Info' : 'Logistics')"></span>
                         </div>
 
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Total Guests') }}</label>
-                            <div class="relative">
-                                <select name="guests" x-model="guests" @change="updateParticipants()" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer">
-                                    @for($i=1; $i<=10; $i++) 
-                                        <option value="{{ $i }}" class="text-brandblue">{{ $i }} {{ $i > 1 ? __('Persons') : __('Person') }}</option> 
-                                    @endfor
-                                </select>
-                                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-skyblue"></i>
+                        <!-- Step 1: Trip Configuration -->
+                        <div x-show="step === 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-x-8" x-transition:enter-end="opacity-100 translate-x-0" class="space-y-8">
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Select Date') }}</label>
+                                <input type="date" name="date" required 
+                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white">
+                            </div>
+
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Total Guests') }}</label>
+                                <div class="relative">
+                                    <select name="guests" x-model="guests" @change="updateParticipants()" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer text-white">
+                                        @for($i=1; $i<=10; $i++) 
+                                            <option value="{{ $i }}" class="text-brandblue">{{ $i }} {{ $i > 1 ? __('Persons') : __('Person') }}</option> 
+                                        @endfor
+                                    </select>
+                                    <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <i data-lucide="chevron-down" class="w-4 h-4 text-skyblue"></i>
+                                    </div>
                                 </div>
                             </div>
+
+                            <button type="button" @click="nextStep()" class="w-full py-6 bg-white/10 hover:bg-white/20 text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all duration-300 flex items-center justify-center gap-3 group">
+                                {{ __('Next Step') }}
+                                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
                         </div>
 
-                        <div class="space-y-8">
+                        <!-- Step 2: Participants Biodata -->
+                        <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-x-8" x-transition:enter-end="opacity-100 translate-x-0" class="space-y-8">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Participants Biodata') }}</label>
-                            <div class="space-y-10">
+                            <div class="space-y-6 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
                                 <template x-for="(participant, index) in participants" :key="index">
-                                    <div class="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500" :style="{ animationDelay: (index * 100) + 'ms' }">
+                                    <div class="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] space-y-6 mb-4">
                                         <div class="flex items-center justify-between px-2">
                                             <span class="text-[10px] font-black text-skyblue uppercase tracking-[0.3em]" x-text="'Guest ' + (index + 1) + (index === 0 ? ' (Leader)' : '')"></span>
                                             <div class="flex gap-2">
@@ -190,61 +225,79 @@
                                             <input type="hidden" :name="'participants[' + index + '][salutation]'" x-model="participants[index].salutation">
                                         </div>
 
-                                        <div class="grid md:grid-cols-2 gap-6">
+                                        <div class="space-y-4">
                                             <div class="space-y-3">
                                                 <label class="block text-[9px] font-black text-white/30 uppercase tracking-widest ml-2">{{ __('Full Name') }}</label>
                                                 <input type="text" :name="'participants[' + index + '][name]'" required x-model="participants[index].name"
-                                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none" 
+                                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white" 
                                                        placeholder="As shown in Passport/ID">
                                             </div>
                                             <div class="space-y-3">
                                                 <label class="block text-[9px] font-black text-white/30 uppercase tracking-widest ml-2">{{ __('Passport / ID Number') }}</label>
                                                 <input type="text" :name="'participants[' + index + '][identity]'" required x-model="participants[index].identity"
-                                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none" 
+                                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white" 
                                                        placeholder="Passport / KTP / NIK">
                                             </div>
                                         </div>
                                     </div>
                                 </template>
                             </div>
-                        </div>
 
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Pickup Point') }}</label>
-                            <div class="relative">
-                                <select name="pickup_point" required 
-                                        class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer">
-                                    <option value="" class="text-brandblue" disabled selected>{{ __('Select Terminal / Location') }}</option>
-                                    <option value="Batam Centre Ferry Terminal" class="text-brandblue">Batam Centre Ferry Terminal</option>
-                                    <option value="Harbour Bay Ferry Terminal" class="text-brandblue">Harbour Bay Ferry Terminal</option>
-                                    <option value="Sekupang Ferry Terminal" class="text-brandblue">Sekupang Ferry Terminal</option>
-                                    <option value="Waterfront City Ferry Terminal" class="text-brandblue">Waterfront City Ferry Terminal</option>
-                                    <option value="Nongsapura Ferry Terminal" class="text-brandblue">Nongsapura Ferry Terminal</option>
-                                    <option value="Telaga Punggur Ferry Terminal" class="text-brandblue">Telaga Punggur Ferry Terminal</option>
-                                    <option value="Other / Hotel (Specify in Notes)" class="text-brandblue">{{ __('Other / Hotel (Specify in Notes)') }}</option>
-                                </select>
-                                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                    <i data-lucide="map-pin" class="w-4 h-4 text-skyblue"></i>
-                                </div>
+                            <div class="flex gap-4">
+                                <button type="button" @click="prevStep()" class="flex-1 py-6 bg-white/5 hover:bg-white/10 text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all">
+                                    {{ __('Back') }}
+                                </button>
+                                <button type="button" @click="nextStep()" class="flex-[2] py-6 bg-white text-brandblue hover:bg-skyblue hover:text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all flex items-center justify-center gap-3">
+                                    {{ __('Continue') }}
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Contact Number (WhatsApp)') }}</label>
-                            <input type="tel" name="customer_phone" required value="{{ auth()->user()->phone ?? '' }}"
-                                   class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none" placeholder="+62...">
-                        </div>
+                        <!-- Step 3: Logistics & Contact -->
+                        <div x-show="step === 3" x-cloak x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-x-8" x-transition:enter-end="opacity-100 translate-x-0" class="space-y-8">
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Pickup Point') }}</label>
+                                <div class="relative">
+                                    <select name="pickup_point" required 
+                                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer text-white">
+                                        <option value="" class="text-brandblue" disabled selected>{{ __('Select Terminal / Location') }}</option>
+                                        <option value="Batam Centre Ferry Terminal" class="text-brandblue">Batam Centre Ferry Terminal</option>
+                                        <option value="Harbour Bay Ferry Terminal" class="text-brandblue">Harbour Bay Ferry Terminal</option>
+                                        <option value="Sekupang Ferry Terminal" class="text-brandblue">Sekupang Ferry Terminal</option>
+                                        <option value="Waterfront City Ferry Terminal" class="text-brandblue">Waterfront City Ferry Terminal</option>
+                                        <option value="Nongsapura Ferry Terminal" class="text-brandblue">Nongsapura Ferry Terminal</option>
+                                        <option value="Telaga Punggur Ferry Terminal" class="text-brandblue">Telaga Punggur Ferry Terminal</option>
+                                        <option value="Other / Hotel (Specify in Notes)" class="text-brandblue">{{ __('Other / Hotel (Specify in Notes)') }}</option>
+                                    </select>
+                                    <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <i data-lucide="map-pin" class="w-4 h-4 text-skyblue"></i>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Special Notes (Optional)') }}</label>
-                            <textarea name="notes" rows="3"
-                                      class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none resize-none" placeholder="{{ __('Allergy, hotel pickup details, etc...') }}"></textarea>
-                        </div>
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Contact Number (WhatsApp)') }}</label>
+                                <input type="tel" name="customer_phone" required value="{{ auth()->user()->phone ?? '' }}"
+                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white" placeholder="+62...">
+                            </div>
 
-                        <button type="submit" class="w-full py-6 bg-gradient-to-r from-skyblue to-blue-400 hover:from-white hover:to-white hover:text-brandblue text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all duration-700 shadow-xl shadow-skyblue/20 group relative overflow-hidden">
-                            <span class="relative z-10">{{ __('Book Experience') }}</span>
-                            <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-                        </button>
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Special Notes (Optional)') }}</label>
+                                <textarea name="notes" rows="3"
+                                          class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none resize-none text-white" placeholder="{{ __('Allergy, hotel pickup details, etc...') }}"></textarea>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <button type="button" @click="prevStep()" class="flex-1 py-6 bg-white/5 hover:bg-white/10 text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all">
+                                    {{ __('Back') }}
+                                </button>
+                                <button type="submit" class="flex-[2] py-6 bg-gradient-to-r from-skyblue to-blue-400 hover:from-white hover:to-white hover:text-brandblue text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.4em] transition-all duration-700 shadow-xl shadow-skyblue/20 group relative overflow-hidden">
+                                    <span class="relative z-10">{{ __('Book Experience') }}</span>
+                                    <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                                </button>
+                            </div>
+                        </div>
                     </form>
                     @else
                     <div class="space-y-8">
