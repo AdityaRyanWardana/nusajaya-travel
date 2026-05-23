@@ -5,36 +5,36 @@
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
-            <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">Dashboard ✨</h2>
-            <p class="text-slate-500 dark:text-slate-400 font-medium mt-2 italic text-lg">Analysis & Performance Overview</p>
+            <h2 class="text-4xl font-black text-[#0B2447]  tracking-tight italic uppercase">Dashboard ✨</h2>
+            <p class="text-slate-500  font-medium mt-2 italic text-lg">Analysis & Performance Overview</p>
         </div>
         
         <div class="flex flex-wrap items-center gap-4 no-print">
             <div class="relative group">
-                <button class="px-6 py-4 bg-white text-slate-700 dark:text-slate-200 font-black rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 flex items-center gap-3">
+                <button class="px-6 py-4 bg-white text-slate-700  font-black rounded-2xl border border-slate-100  shadow-sm hover:shadow-xl transition-all duration-300 flex items-center gap-3">
                     <i data-lucide="download" class="w-5 h-5"></i>
                     {{ __('Export Report') }}
                     <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform"></i>
                 </button>
                 <div class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-slate-50 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                    <a href="{{ route('admin.dashboard.export', ['type' => 'csv']) }}" class="flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                    <a href="{{ route('admin.dashboard.export', ['type' => 'csv']) }}" class="flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-sky-500 transition-colors">
                         <i data-lucide="file-spreadsheet" class="w-4 h-4 mr-3 text-emerald-500"></i>
                         Excel (.CSV)
                     </a>
-                    <button onclick="window.print()" class="w-full flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                    <button onclick="window.print()" class="w-full flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-sky-500 transition-colors">
                         <i data-lucide="file-text" class="w-4 h-4 mr-3 text-red-500"></i>
                         PDF (Print)
                     </button>
                 </div>
             </div>
             
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center space-x-4">
-                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100  flex items-center space-x-4">
+                <div class="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center text-sky-500">
                     <i data-lucide="calendar" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <p class="text-[8px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-none mb-1">{{ __('Real-time') }}</p>
-                    <div id="real-time-clock" class="text-xs font-black text-slate-800 dark:text-white">00:00:00</div>
+                    <p class="text-[8px] font-black text-slate-500  uppercase tracking-widest leading-none mb-1">{{ __('Real-time') }}</p>
+                    <div id="real-time-clock" class="text-xs font-black text-[#0B2447] ">00:00:00</div>
                 </div>
             </div>
         </div>
@@ -78,8 +78,8 @@
                                     <i data-lucide="calendar-days" class="w-7 h-7"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-base font-black text-slate-800 dark:text-white uppercase italic leading-tight">{{ $rescheduled->user->name }}</h4>
-                                    <p class="text-[10px] font-bold text-slate-300 dark:text-slate-500 uppercase tracking-widest mt-1">{{ $rescheduled->order_number }}</p>
+                                    <h4 class="text-base font-black text-[#0B2447]  uppercase italic leading-tight">{{ $rescheduled->user->name }}</h4>
+                                    <p class="text-[10px] font-bold text-slate-300  uppercase tracking-widest mt-1">{{ $rescheduled->order_number }}</p>
                                 </div>
                             </div>
                             
@@ -100,12 +100,14 @@
                                 <a href="{{ route('admin.bookings.show', $rescheduled) }}" class="flex-1 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest text-center hover:bg-orange-500 transition-all duration-500 shadow-lg shadow-slate-900/10">
                                     Review Booking
                                 </a>
+                                @if(auth()->user()->role !== 'superadmin')
                                 <form action="{{ route('admin.bookings.reschedule-noticed', $rescheduled) }}" method="POST" class="shrink-0">
                                     @csrf
                                     <button type="submit" class="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all duration-500 shadow-sm group/btn" title="Mark as Seen">
                                         <i data-lucide="check-check" class="w-6 h-6 group-hover/btn:scale-110 transition-transform"></i>
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -117,13 +119,13 @@
     <!-- Quick Stats & Balance Details Row -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <!-- Balance Card (Premium) -->
-        <div class="lg:col-span-1 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 rounded-[3rem] shadow-2xl shadow-blue-200 relative overflow-hidden group min-h-[350px]">
+        <div class="lg:col-span-1 bg-gradient-to-br from-sky-500 to-sky-800 p-8 rounded-[3rem] shadow-2xl shadow-blue-200 relative overflow-hidden group min-h-[350px] animate-fade-in-up">
             <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
             <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent"></div>
             
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <p class="text-blue-100 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Current Balance</p>
+                    <p class="text-sky-100 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Current Balance</p>
                     <h3 class="text-5xl font-black text-white tracking-tighter italic">
                         <span class="text-xl align-top mr-1 opacity-60">IDR</span>{{ number_format($stats['total_revenue'], 0, ',', '.') }}
                     </h3>
@@ -131,7 +133,7 @@
                 
                 <div class="space-y-4">
                     <div class="p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
-                        <p class="text-[8px] font-black text-blue-100 uppercase tracking-widest mb-1">Last Month</p>
+                        <p class="text-[8px] font-black text-sky-100 uppercase tracking-widest mb-1">Last Month</p>
                         <p class="text-lg font-black text-white italic">IDR {{ number_format($stats['last_month_revenue'], 0, ',', '.') }}</p>
                     </div>
                     <div class="flex gap-3">
@@ -149,16 +151,16 @@
         </div>
 
         <!-- Charts Section -->
-        <div class="lg:col-span-2 bg-white p-8 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm relative group">
+        <div class="lg:col-span-2 bg-white dark:bg-[#0F2038] p-8 rounded-[3rem] border border-slate-100 dark:border-[#1E3A5F] shadow-sm relative group animate-fade-in-up animation-delay-100">
             <div class="flex items-center justify-between mb-8">
                 <div>
-                    <h3 class="text-xl font-black text-slate-800 dark:text-white uppercase italic tracking-tight">Booking Trends</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">Monthly Tour Package Requests</p>
+                    <h3 class="text-xl font-black text-[#0B2447] dark:text-white uppercase italic tracking-tight">Booking Trends</h3>
+                    <p class="text-slate-500 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest mt-1">Monthly Tour Package Requests</p>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-blue-600"></span>
-                        <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Tour Packages</span>
+                        <span class="w-3 h-3 rounded-full bg-sky-500"></span>
+                        <span class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">Tour Packages</span>
                     </div>
                 </div>
             </div>
@@ -170,31 +172,31 @@
 
         <!-- Quick Stats Sidebar -->
         <div class="lg:col-span-1 space-y-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center gap-6 group hover:shadow-xl transition-all cursor-pointer" onclick="window.location.href='{{ route('admin.bookings.index') }}'">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
+            <div class="bg-white dark:bg-[#0F2038] p-6 rounded-3xl border border-slate-100 dark:border-[#1E3A5F] shadow-sm flex items-center gap-6 group hover:shadow-xl transition-all cursor-pointer animate-fade-in-up animation-delay-200" onclick="window.location.href='{{ route('admin.bookings.index') }}'">
+                <div class="w-14 h-14 bg-sky-50 rounded-2xl flex items-center justify-center text-sky-500 group-hover:bg-sky-500 group-hover:text-white transition-all">
                     <i data-lucide="ticket" class="w-7 h-7"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Total Orders</p>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white">{{ $stats['total_bookings'] }}</h4>
+                    <p class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">Total Orders</p>
+                    <h4 class="text-2xl font-black text-[#0B2447] dark:text-white">{{ $stats['total_bookings'] }}</h4>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center gap-6 group hover:shadow-xl transition-all cursor-pointer" onclick="window.location.href='{{ route('admin.bookings.index', ['status' => 'pending']) }}'">
+            <div class="bg-white dark:bg-[#0F2038] p-6 rounded-3xl border border-slate-100 dark:border-[#1E3A5F] shadow-sm flex items-center gap-6 group hover:shadow-xl transition-all cursor-pointer animate-fade-in-up animation-delay-300" onclick="window.location.href='{{ route('admin.bookings.index', ['status' => 'pending']) }}'">
                 <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-all">
                     <i data-lucide="clock" class="w-7 h-7"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Waiting List</p>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white">{{ $stats['pending_bookings'] }}</h4>
+                    <p class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">Waiting List</p>
+                    <h4 class="text-2xl font-black text-[#0B2447] dark:text-white">{{ $stats['pending_bookings'] }}</h4>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center gap-6 group hover:shadow-xl transition-all cursor-pointer" onclick="window.location.href='{{ route('admin.armadas.index') }}'">
+            <div class="bg-white dark:bg-[#0F2038] p-6 rounded-3xl border border-slate-100 dark:border-[#1E3A5F] shadow-sm flex items-center gap-6 group hover:shadow-xl transition-all cursor-pointer animate-fade-in-up animation-delay-400" onclick="window.location.href='{{ route('admin.armadas.index') }}'">
                 <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white transition-all">
                     <i data-lucide="bus" class="w-7 h-7"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Active Fleets</p>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white">{{ $stats['available_armada'] }}</h4>
+                    <p class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">Active Fleets</p>
+                    <h4 class="text-2xl font-black text-[#0B2447] dark:text-white">{{ $stats['available_armada'] }}</h4>
                 </div>
             </div>
         </div>
@@ -202,37 +204,37 @@
 
     <!-- Recent Activity & Detailed Stats -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 bg-white rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div class="p-10 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
-                <h3 class="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tighter">{{ __('Recent Activity') }}</h3>
-                <a href="{{ route('admin.bookings.index') }}" class="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-widest">See More</a>
+        <div class="lg:col-span-2 bg-white dark:bg-[#0F2038] rounded-[3rem] border border-slate-100 dark:border-[#1E3A5F] shadow-sm overflow-hidden animate-fade-in-up animation-delay-200">
+            <div class="p-10 border-b border-slate-50 dark:border-[#1E3A5F] flex items-center justify-between">
+                <h3 class="text-2xl font-black text-[#0B2447] dark:text-white italic uppercase tracking-tighter">{{ __('Recent Activity') }}</h3>
+                <a href="{{ route('admin.bookings.index') }}" class="text-sky-500 dark:text-[#38BDF8] text-xs font-black uppercase tracking-widest">See More</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
-                        <tr class="bg-slate-50/50 dark:bg-slate-800/50">
-                            <th class="px-10 py-6 text-left text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">Customer</th>
-                            <th class="px-6 py-6 text-left text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">Service</th>
-                            <th class="px-10 py-6 text-right text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">Status</th>
+                        <tr class="bg-slate-50/50 dark:bg-[#152C4C]/30">
+                            <th class="px-10 py-6 text-left text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-[0.2em]">Customer</th>
+                            <th class="px-6 py-6 text-left text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-[0.2em]">Service</th>
+                            <th class="px-10 py-6 text-right text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-[0.2em]">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                    <tbody class="divide-y divide-slate-50 dark:divide-[#1E3A5F]">
                         @forelse($stats['recent_bookings'] as $booking)
-                        <tr class="hover:bg-slate-50/30 transition-colors cursor-pointer group" onclick="window.location.href='{{ route('admin.bookings.show', $booking) }}'">
+                        <tr class="hover:bg-slate-50/30 dark:hover:bg-[#152C4C]/20 transition-colors cursor-pointer group" onclick="window.location.href='{{ route('admin.bookings.show', $booking) }}'">
                             <td class="px-10 py-6">
-                                <p class="text-sm font-black text-slate-800 dark:text-white">{{ $booking->user->name }}</p>
+                                <p class="text-sm font-black text-[#0B2447] dark:text-white">{{ $booking->user->name }}</p>
                                 <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 italic">{{ $booking->order_number }}</p>
                             </td>
-                            <td class="px-6 py-6 text-sm font-bold text-slate-600 dark:text-slate-400">{{ $booking->service_name }}</td>
+                            <td class="px-6 py-6 text-sm font-bold text-slate-600 dark:text-slate-300">{{ $booking->service_name }}</td>
                             <td class="px-10 py-6 text-right">
-                                <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest {{ $booking->status === 'paid' ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600' }}">
+                                <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest {{ $booking->status === 'paid' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400' : 'bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400' }}">
                                     {{ $booking->status }}
                                 </span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="px-10 py-12 text-center text-slate-500 dark:text-slate-400 font-bold italic">No recent tour bookings.</td>
+                            <td colspan="3" class="px-10 py-12 text-center text-slate-500  font-bold italic">No recent tour bookings.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -240,37 +242,37 @@
             </div>
         </div>
 
-        <div class="bg-[#0B2447] rounded-[3rem] p-10 text-white relative overflow-hidden group shadow-2xl">
+        <div class="bg-white dark:bg-[#0F2038] rounded-[3rem] p-10 text-[#0B2447] dark:text-white relative overflow-hidden group shadow-xl border border-slate-100 dark:border-[#1E3A5F] animate-fade-in-up animation-delay-300">
             <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-skyblue/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
             <h4 class="text-xl font-black italic uppercase tracking-tighter mb-8">System Analysis</h4>
             <div class="space-y-10">
                 <div>
                     <div class="flex justify-between mb-4">
-                        <span class="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Package Popularity</span>
+                        <span class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-[0.2em]">Package Popularity</span>
                         <span class="text-xs font-black text-skyblue">85%</span>
                     </div>
-                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                    <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
                         <div class="bg-skyblue h-full rounded-full" style="width: 85%"></div>
                     </div>
                 </div>
                 <div>
                     <div class="flex justify-between mb-4">
-                        <span class="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Customer Satisfaction</span>
+                        <span class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-[0.2em]">Customer Satisfaction</span>
                         <span class="text-xs font-black text-emerald-400">98%</span>
                     </div>
-                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                    <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
                         <div class="bg-emerald-400 h-full rounded-full" style="width: 98%"></div>
                     </div>
                 </div>
                 
-                <div class="pt-8 border-t border-white/5 grid grid-cols-2 gap-4">
-                    <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                        <p class="text-[8px] font-black text-white/40 uppercase mb-1">Active Tours</p>
-                        <p class="text-xl font-black text-white italic">{{ $stats['total_tours'] }}</p>
+                <div class="pt-8 border-t border-slate-100 dark:border-[#1E3A5F] grid grid-cols-2 gap-4">
+                    <div class="bg-slate-50 dark:bg-[#1A365D] p-4 rounded-2xl border border-slate-100 dark:border-[#1E3A5F]">
+                        <p class="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase mb-1">Active Tours</p>
+                        <p class="text-xl font-black text-[#0B2447] dark:text-white italic">{{ $stats['total_tours'] }}</p>
                     </div>
-                    <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                        <p class="text-[8px] font-black text-white/40 uppercase mb-1">Database</p>
-                        <p class="text-xl font-black text-white italic">Stable</p>
+                    <div class="bg-slate-50 dark:bg-[#1A365D] p-4 rounded-2xl border border-slate-100 dark:border-[#1E3A5F]">
+                        <p class="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase mb-1">Database</p>
+                        <p class="text-xl font-black text-[#0B2447] dark:text-white italic">Stable</p>
                     </div>
                 </div>
             </div>
@@ -293,14 +295,14 @@
                 {
                     label: 'Tour Bookings',
                     data: @json($stats['tour_chart_data']),
-                    borderColor: '#2563eb',
+                    borderColor: '#38BDF8',
                     backgroundColor: 'rgba(37, 99, 235, 0.1)',
                     fill: true,
                     tension: 0.4,
                     borderWidth: 4,
                     pointRadius: 0,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#2563eb'
+                    pointBackgroundColor: '#38BDF8'
                 }
             ]
         },

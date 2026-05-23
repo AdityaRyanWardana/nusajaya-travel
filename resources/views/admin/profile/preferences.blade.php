@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-4xl space-y-8">
+<div class="max-w-5xl space-y-8 animate-fade-in-up">
     <div>
         <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">{{ __('System Preferences') }}</h2>
         <p class="text-slate-400 dark:text-slate-400 font-medium mt-2 italic text-lg">{{ __('Customize your dashboard experience and notification settings.') }}</p>

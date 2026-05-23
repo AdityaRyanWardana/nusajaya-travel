@@ -178,6 +178,10 @@ class DashboardController extends Controller
 
     public function markRescheduleAsNoticed(Booking $booking)
     {
+        if (auth()->user()->role === 'superadmin') {
+            abort(403, 'Superadmin has Audit Only access and cannot modify bookings.');
+        }
+
         $booking->update(['reschedule_notified' => true]);
         return back()->with('success', 'Rescheduling notification cleared.');
     }

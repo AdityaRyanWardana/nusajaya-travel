@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-8 animate-fade-in-up">
     {{-- Header --}}
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>

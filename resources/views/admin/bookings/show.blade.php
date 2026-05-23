@@ -15,6 +15,7 @@
             </div>
         </div>
 
+        @if(auth()->user()->role !== 'superadmin')
         <div class="flex items-center gap-3">
             @if($booking->status == 'pending')
             <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST">
@@ -33,6 +34,7 @@
                 </button>
             </form>
         </div>
+        @endif
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -312,21 +314,32 @@
             </div>
 
             {{-- Action History --}}
-            <div class="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">{{ __('Booking Actions') }}</h4>
+            @if(auth()->user()->role !== 'superadmin')
+            <div class="bg-white dark:bg-slate-900 rounded-[3rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm">
+                <h4 class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6">{{ __('Booking Actions') }}</h4>
                 <div class="space-y-3">
                     <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="paid">
-                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 hover:bg-emerald-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Set as Paid') }}</button>
+                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Set as Paid') }}</button>
                     </form>
                     <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="cancelled">
-                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-amber-600 bg-amber-50 hover:bg-amber-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Cancel Booking') }}</button>
+                        <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Cancel Booking') }}</button>
                     </form>
                 </div>
             </div>
+            @else
+            <div class="bg-sky-50/50 dark:bg-sky-950/20 rounded-[3rem] p-8 border border-sky-100 dark:border-sky-900/50 shadow-sm">
+                <h4 class="text-[10px] font-black text-sky-500 dark:text-sky-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> {{ __('Audit Mode Active') }}
+                </h4>
+                <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 leading-relaxed italic">
+                    {{ __('As a Superadmin, your access to bookings and transaction logs is strictly "Audit Only" according to system access control protocols. No changes can be processed.') }}
+                </p>
+            </div>
+            @endif
 
         </div>
     </div>

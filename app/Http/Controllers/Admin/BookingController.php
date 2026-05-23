@@ -27,6 +27,10 @@ class BookingController extends Controller
 
     public function updateStatus(Request $request, Booking $booking)
     {
+        if (auth()->user()->role === 'superadmin') {
+            abort(403, 'Superadmin has Audit Only access and cannot modify bookings.');
+        }
+
         $request->validate([
             'status' => 'required|in:pending,paid,cancelled'
         ]);
@@ -38,6 +42,10 @@ class BookingController extends Controller
 
     public function destroy(Booking $booking)
     {
+        if (auth()->user()->role === 'superadmin') {
+            abort(403, 'Superadmin has Audit Only access and cannot modify bookings.');
+        }
+
         $booking->delete();
         return redirect()->route('admin.bookings.index')->with('success', 'Booking deleted successfully.');
     }

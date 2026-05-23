@@ -125,6 +125,7 @@
                                     {{ $booking->status }}
                                 </span>
 
+                                @if(auth()->user()->role !== 'superadmin')
                                 <div class="flex items-center gap-1">
                                     @if($booking->status == 'pending')
                                     <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST" class="inline">
@@ -156,6 +157,7 @@
                                         </button>
                                     </form>
                                 </div>
+                                @endif
                             </div>
 
                         </div>
