@@ -136,7 +136,7 @@
                     <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Promotions') }}</span>
                 </a>
 
-                @if(in_array(auth()->user()->role, ['superadmin', 'admin']))
+                @if(auth()->user()->role === 'superadmin')
                 <div class="h-px bg-slate-50 dark:bg-[#1A365D] my-6 mx-6"></div>
                 <p x-show="!sidebarCollapsed" x-transition.opacity class="text-[10px] font-black text-slate-400  uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap">{{ __('Administration') }}</p>
                 <a href="{{ route('admin.users.index') }}" 

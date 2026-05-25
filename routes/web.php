@@ -61,8 +61,7 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('adm
     Route::resource('promotions', App\Http\Controllers\Admin\PromotionController::class);
     Route::delete('promotions/{promotion}/delete-image', [App\Http\Controllers\Admin\PromotionController::class, 'deleteImage'])->name('promotions.delete-image');
 
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->only(['index', 'show']);
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['index', 'show'])->middleware('role:superadmin');
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->middleware('role:superadmin');
 
     // Profile & Settings (All Admins)
     Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
