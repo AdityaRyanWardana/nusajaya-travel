@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<header class="relative min-h-[600px] flex items-center overflow-hidden">
+<header class="relative min-h-[700px] md:min-h-[600px] flex flex-col md:flex-row items-center justify-center pt-32 pb-16 md:pt-0 md:pb-0 overflow-hidden">
     <!-- Background Slider -->
     <div id="hero-slider" class="absolute inset-0 z-0">
         <!-- Slide 1: Barelang Bridge Sunset -->
@@ -17,7 +17,7 @@
         <div class="slider-item absolute inset-0 transition-opacity duration-1000 opacity-0" style="background: linear-gradient(to right, rgba(11, 36, 71, 0.7), rgba(11, 36, 71, 0.2)), url('{{ asset('images/hero_5.jpg') }}'); background-size: cover; background-position: center;"></div>
     </div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-10 w-full mb-20">
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 w-full mb-8 md:mb-20">
         <div class="max-w-2xl">
             <!-- New Badge -->
             <div class="inline-flex items-center gap-2 px-4 py-2 bg-skyblue/20 backdrop-blur-md rounded-full border border-skyblue/30 mb-6 animate-fade-in-down">
@@ -25,18 +25,18 @@
                 <span class="text-[10px] font-black text-skyblue uppercase tracking-[0.3em]">Established Since 1995</span>
             </div>
 
-            <h1 class="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-8 tracking-tighter italic animate-fade-up">
+            <h1 class="text-5xl md:text-8xl font-black text-white leading-[0.9] mb-8 tracking-tighter italic animate-fade-up">
                 Explore <span class="text-skyblue not-italic">Batam</span> 
-                <span class="text-white/60 font-normal text-4xl md:text-5xl block mt-4 not-italic tracking-normal">
+                <span class="text-white/60 font-normal text-3xl md:text-5xl block mt-4 not-italic tracking-normal">
                     Discover <span id="typewriter" class="text-white font-black border-r-4 border-skyblue pr-2"></span>
                 </span>
             </h1>
-            <p class="text-lg text-white/70 font-medium leading-relaxed max-w-lg mb-10 animate-fade-up delay-200">
+            <p class="text-base md:text-lg text-white/70 font-medium leading-relaxed max-w-lg mb-10 animate-fade-up delay-200">
                 Premium transport and curated tour experiences. Trusted for over 25 years in providing the best hospitality in the Riau Islands.
             </p>
             
             <div class="flex gap-4 animate-fade-up delay-300">
-                <a href="{{ route('tours.index') }}" class="px-8 py-4 bg-skyblue hover:bg-white hover:text-brandblue text-brandblue font-black rounded-2xl transition-all duration-500 shadow-xl shadow-skyblue/20 group">
+                <a href="{{ route('tours.index') }}" class="px-6 md:px-8 py-3 md:py-4 bg-skyblue hover:bg-white hover:text-brandblue text-brandblue font-black rounded-2xl transition-all duration-500 shadow-xl shadow-skyblue/20 group text-sm md:text-base">
                     Start Your Trip
                 </a>
             </div>
@@ -44,7 +44,7 @@
     </div>
     
     <!-- Floating Search Box -->
-    <div class="absolute bottom-10 right-10 md:right-32 z-20 w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6">
+    <div class="relative md:absolute md:bottom-10 md:right-32 z-20 w-[90%] md:w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 mt-4 md:mt-0">
         <div class="flex gap-2 mb-6">
             <a href="{{ route('transport.index') }}" class="flex-1 py-1.5 text-xs font-bold text-white bg-brandblue rounded-full text-center block">Vehicles</a>
             <a href="{{ route('tours.index') }}" class="flex-1 py-1.5 text-xs font-bold text-slate-500 bg-slate-100 rounded-full hover:bg-slate-200 text-center block">Tour Packages</a>

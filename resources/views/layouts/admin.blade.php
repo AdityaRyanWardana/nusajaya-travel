@@ -44,8 +44,10 @@
     <div class="flex h-screen overflow-hidden relative" 
          x-data="{ 
             sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true',
-            mobileMenuOpen: false
+            mobileMenuOpen: false,
+            isMobile: window.innerWidth < 768
          }"
+         @resize.window="isMobile = window.innerWidth < 768"
          x-init="$watch('sidebarCollapsed', value => localStorage.setItem('sidebarCollapsed', value))">
         
         <!-- Mobile Backdrop -->
@@ -62,7 +64,7 @@
         
         <!-- Sidebar -->
         <aside :class="[
-                   sidebarCollapsed ? 'md:w-24' : 'md:w-72',
+                   sidebarCollapsed && !isMobile ? 'md:w-24' : 'md:w-72',
                    mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
                ]"                class="glass-sidebar bg-white dark:bg-[#0B2447] border-r border-slate-100 dark:border-[#1A365D] flex-shrink-0 fixed md:relative inset-y-0 left-0 w-72 flex flex-col z-50 transition-all duration-500 shadow-2xl md:shadow-none">
             
@@ -71,20 +73,25 @@
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center group">
                     <div class="relative flex items-center justify-center">
                         <!-- Expanded Logo -->
-                        <div x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-x-2" class="flex items-center gap-4 px-8">
-                            <div class="w-11 h-11 bg-[#38BDF8] rounded-[0.9rem] flex items-center justify-center text-white shadow-xl shadow-sky-400/20 group-hover:scale-105 transition-transform duration-300 shrink-0">
-                                <i data-lucide="compass" class="w-6 h-6"></i>
+                        <div x-show="!sidebarCollapsed || isMobile" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-x-2" class="flex items-center gap-4 px-8">
+                            <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-lg shadow-sky-400/20 group-hover:scale-105 transition-transform duration-300 shrink-0 overflow-hidden border border-slate-100 dark:border-[#1E3A5F]">
+                                <img src="{{ asset('images/logo.png') }}" alt="Nusa Jaya Logo" class="w-full h-full object-cover">
                             </div>
-                            <div class="flex flex-col whitespace-nowrap">
-                                <h1 class="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase italic leading-none">{{ __('Nusa Jaya') }}</h1>
-                                <p class="text-[9px] font-extrabold text-sky-500 dark:text-[#38BDF8] uppercase tracking-widest mt-1.5">{{ __('Indofast T&T') }}</p>
+                            <div class="flex flex-col whitespace-nowrap justify-center py-1">
+                                <h1 class="text-[17px] font-black tracking-tight text-[#0B2447] dark:text-white uppercase leading-none">
+                                    {{ __('Nusa Jaya') }}
+                                </h1>
+                                <div class="flex items-center gap-2 mt-1.5">
+                                    <div class="h-[2px] w-4 bg-sky-500 rounded-full"></div>
+                                    <p class="text-[9px] font-black text-sky-500 dark:text-sky-400 uppercase tracking-[0.25em] leading-none">{{ __('Indofast T&T') }}</p>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Minimized Logo (N) -->
-                        <div x-show="sidebarCollapsed" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-50" class="flex items-center justify-center">
-                            <div class="w-12 h-12 bg-[#38BDF8] rounded-2xl flex items-center justify-center text-white font-black italic text-xl shadow-xl shadow-sky-400/20 group-hover:scale-110 transition-all duration-300">
-                                <span>N</span>
+                        <div x-show="sidebarCollapsed && !isMobile" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-50" class="flex items-center justify-center">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg shadow-sky-400/20 group-hover:scale-110 transition-all duration-300 overflow-hidden border border-slate-100 dark:border-[#1E3A5F]">
+                                <img src="{{ asset('images/logo.png') }}" alt="Nusa Jaya Logo" class="w-full h-full object-cover">
                             </div>
                         </div>
                     </div>
@@ -92,58 +99,58 @@
             </div>
 
             <nav class="mt-4 px-4 space-y-1.5 flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
-                <p x-show="!sidebarCollapsed" x-transition.opacity class="text-[10px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap mt-4">{{ __('General Navigation') }}</p>
+                <p x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="text-[10px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap mt-4">{{ __('General Navigation') }}</p>
                 
                 <a href="{{ route('admin.dashboard') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.dashboard') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Dashboard' : ''">
-                    <i data-lucide="layout-grid" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Dashboard') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Dashboard' : ''">
+                    <i data-lucide="layout-grid" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Dashboard') }}</span>
                 </a>
 
                 <a href="{{ route('admin.bookings.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.bookings.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Bookings' : ''">
-                    <i data-lucide="ticket" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Bookings') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Bookings' : ''">
+                    <i data-lucide="ticket" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Bookings') }}</span>
                 </a>
 
                 <a href="{{ route('admin.scheduling') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.scheduling') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Scheduling' : ''">
-                    <i data-lucide="calendar-days" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Scheduling') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Scheduling' : ''">
+                    <i data-lucide="calendar-days" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Scheduling') }}</span>
                 </a>
 
                 <a href="{{ route('admin.armadas.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.armadas.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Fleets' : ''">
-                    <i data-lucide="bus" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Fleets') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Fleets' : ''">
+                    <i data-lucide="bus" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Fleets') }}</span>
                 </a>
 
                 <a href="{{ route('admin.tours.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.tours.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Tours' : ''">
-                    <i data-lucide="map" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Tours') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Tours' : ''">
+                    <i data-lucide="map" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Tours') }}</span>
                 </a>
 
                 <a href="{{ route('admin.promotions.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.promotions.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Promotions' : ''">
-                    <i data-lucide="megaphone" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Promotions') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Promotions' : ''">
+                    <i data-lucide="megaphone" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Promotions') }}</span>
                 </a>
 
                 @if(auth()->user()->role === 'superadmin')
                 <div class="h-px bg-slate-50 dark:bg-[#1A365D] my-6 mx-6"></div>
-                <p x-show="!sidebarCollapsed" x-transition.opacity class="text-[10px] font-black text-slate-400  uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap">{{ __('Administration') }}</p>
+                <p x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="text-[10px] font-black text-slate-400  uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap">{{ __('Administration') }}</p>
                 <a href="{{ route('admin.users.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.users.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed ? 'Users' : ''">
-                    <i data-lucide="users" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity class="whitespace-nowrap">{{ __('Manage Users') }}</span>
+                   :title="sidebarCollapsed && !isMobile ? 'Users' : ''">
+                    <i data-lucide="users" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Manage Users') }}</span>
                 </a>
                 @endif
             </nav>
@@ -155,7 +162,7 @@
             <header class="h-24 bg-white dark:bg-[#0B2447] border-b border-slate-100 dark:border-[#1A365D] flex items-center justify-between px-10 z-40 sticky top-0 transition-colors duration-500">
                 <div class="flex items-center gap-8">
                     <!-- Improved Toggle Button -->
-                    <button @click="if(window.innerWidth < 768) { mobileMenuOpen = !mobileMenuOpen } else { sidebarCollapsed = !sidebarCollapsed }" 
+                    <button @click="if(isMobile) { mobileMenuOpen = !mobileMenuOpen } else { sidebarCollapsed = !sidebarCollapsed }" 
                             class="w-12 h-12 bg-white dark:bg-[#0F2038] rounded-2xl flex items-center justify-center text-slate-400 dark:text-slate-300 hover:text-sky-500 transition-all duration-300 shadow-sm border border-slate-100 dark:border-[#1E3A5F] group">
                         <i data-lucide="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     </button>
@@ -224,15 +231,15 @@
                                     </div>
                                 </a>
                             </div>
-                            <a href="{{ route('admin.bookings.index') }}" class="block p-4 text-center text-[10px] font-black text-sky-500  uppercase tracking-[0.2em] bg-slate-50  hover:bg-[#38BDF8] hover:text-white transition-all">
+                            <a href="{{ route('admin.notifications') }}" class="block p-4 text-center text-[10px] font-black text-sky-500  uppercase tracking-[0.2em] bg-slate-50  hover:bg-[#38BDF8] hover:text-white transition-all">
                                 {{ __('View All Notifications') }}
                             </a>
                         </div>
                     </div>
 
                     <!-- User Profile Dropdown -->
-                    <div class="relative group">
-                        <button class="flex items-center gap-4 focus:outline-none">
+                    <div class="relative" x-data="{ userMenuOpen: false }">
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center gap-4 focus:outline-none group">
                             <div class="text-right hidden sm:block">
                                 <p class="text-[11px] font-black text-slate-900 dark:text-white leading-none uppercase tracking-tight">{{ Auth::user()->name }}</p>
                                 <p class="text-[9px] font-bold text-slate-400  uppercase tracking-widest mt-1">{{ Auth::user()->role }}</p>
@@ -249,7 +256,16 @@
                         </button>
 
                         <!-- Dropdown Menu -->
-                        <div class="absolute right-0 mt-2 w-64 bg-white rounded-3xl shadow-2xl shadow-slate-200  border border-slate-50  py-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                        <div x-show="userMenuOpen"
+                             @click.away="userMenuOpen = false"
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 translate-y-2"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 translate-y-2"
+                             class="absolute right-0 mt-2 w-64 bg-white rounded-3xl shadow-2xl shadow-slate-200  border border-slate-50  py-4 z-50"
+                             x-cloak>
                             <div class="px-6 py-3 border-b border-slate-50  mb-2">
                                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ __('Account Settings') }}</p>
                             </div>

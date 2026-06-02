@@ -176,6 +176,55 @@ class DashboardController extends Controller
         return view('admin.scheduling', compact('dates', 'tours', 'armadas', 'tourSchedule', 'fleetSchedule', 'selectedDate'));
     }
 
+    public function notifications()
+    {
+        // Mocking some rich notifications since there's no DB table for it yet.
+        $notifications = [
+            [
+                'id' => 1,
+                'type' => 'booking',
+                'title' => 'New Booking: Batam City Tour',
+                'description' => 'A new booking has been made by John Doe for 4 people on the Batam City Tour package. Please review the customer details and assign an armada if needed.',
+                'time' => '2 minutes ago',
+                'icon' => 'shopping-cart',
+                'color' => 'sky',
+                'link' => route('admin.bookings.index')
+            ],
+            [
+                'id' => 2,
+                'type' => 'reschedule',
+                'title' => 'Reschedule Request: VIP Bus',
+                'description' => 'Customer Jane Smith has requested to reschedule their VIP Bus booking from Oct 12 to Oct 15. Check fleet availability for the new dates.',
+                'time' => '1 hour ago',
+                'icon' => 'refresh-cw',
+                'color' => 'amber',
+                'link' => route('admin.scheduling')
+            ],
+            [
+                'id' => 3,
+                'type' => 'payment',
+                'title' => 'Payment Confirmed: #BOK-9921',
+                'description' => 'Payment of Rp 2,500,000 for booking #BOK-9921 has been successfully verified by the payment gateway. The booking status is now Paid.',
+                'time' => '5 hours ago',
+                'icon' => 'check-circle',
+                'color' => 'emerald',
+                'link' => route('admin.bookings.index')
+            ],
+            [
+                'id' => 4,
+                'type' => 'system',
+                'title' => 'System Maintenance Scheduled',
+                'description' => 'A routine server maintenance is scheduled for tonight at 02:00 AM. The application might be briefly unavailable for 15 minutes.',
+                'time' => '1 day ago',
+                'icon' => 'server',
+                'color' => 'indigo',
+                'link' => '#'
+            ]
+        ];
+
+        return view('admin.notifications', compact('notifications'));
+    }
+
     public function markRescheduleAsNoticed(Booking $booking)
     {
         if (auth()->user()->role === 'superadmin') {

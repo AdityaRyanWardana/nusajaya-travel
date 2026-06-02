@@ -10,18 +10,27 @@
         </div>
         
         <div class="flex flex-wrap items-center gap-4 no-print">
-            <div class="relative group">
-                <button class="px-6 py-4 bg-white text-slate-700  font-black rounded-2xl border border-slate-100  shadow-sm hover:shadow-xl transition-all duration-300 flex items-center gap-3">
+            <div class="relative" x-data="{ exportOpen: false }">
+                <button @click="exportOpen = !exportOpen" class="px-6 py-4 bg-white text-slate-700  font-black rounded-2xl border border-slate-100  shadow-sm hover:shadow-xl transition-all duration-300 flex items-center gap-3 group">
                     <i data-lucide="download" class="w-5 h-5"></i>
                     {{ __('Export Report') }}
                     <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform"></i>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-slate-50 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                <div x-show="exportOpen" 
+                     @click.away="exportOpen = false"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 translate-y-2"
+                     class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-slate-50 py-2 z-50"
+                     x-cloak>
                     <a href="{{ route('admin.dashboard.export', ['type' => 'csv']) }}" class="flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-sky-500 transition-colors">
                         <i data-lucide="file-spreadsheet" class="w-4 h-4 mr-3 text-emerald-500"></i>
                         Excel (.CSV)
                     </a>
-                    <button onclick="window.print()" class="w-full flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-sky-500 transition-colors">
+                    <button @click="exportOpen = false; window.print()" class="w-full flex items-center px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-sky-500 transition-colors">
                         <i data-lucide="file-text" class="w-4 h-4 mr-3 text-red-500"></i>
                         PDF (Print)
                     </button>

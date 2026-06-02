@@ -43,6 +43,7 @@ Route::post('/transport/{id}/book', [TransportController::class, 'book'])->name(
 // Dashboard Route (Admin & Superadmin Only)
 Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [App\Http\Controllers\Admin\DashboardController::class, 'notifications'])->name('notifications');
     Route::get('/dashboard/export', [App\Http\Controllers\Admin\DashboardController::class, 'export'])->name('dashboard.export');
     Route::get('/scheduling', [App\Http\Controllers\Admin\DashboardController::class, 'scheduling'])->name('scheduling');
     Route::get('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');

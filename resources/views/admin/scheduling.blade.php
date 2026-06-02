@@ -82,10 +82,11 @@
                                     <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm shrink-0">
                                         <i data-lucide="map" class="w-6 h-6"></i>
                                     </div>
-                                    <div class="overflow-hidden">
-                                        <h4 class="text-xs font-black text-slate-800 dark:text-white leading-tight truncate">{{ $tour->name }}</h4>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            <span class="text-[8px] font-black text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest">{{ $tour->badge ?? 'Reg' }}</span>
+                                    <div class="overflow-hidden flex-1">
+                                        <h4 class="text-sm font-black text-slate-800 dark:text-white leading-tight truncate" title="{{ $tour->title }}">{{ $tour->title }}</h4>
+                                        <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-0.5 truncate">{{ $tour->destination }} • {{ $tour->duration }}</p>
+                                        <div class="flex items-center gap-2 mt-1.5">
+                                            <span class="text-[9px] font-black text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest">{{ $tour->badge ?? 'Reg' }}</span>
                                         </div>
                                     </div>
                                 </div>

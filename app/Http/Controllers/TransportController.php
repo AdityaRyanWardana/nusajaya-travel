@@ -13,7 +13,7 @@ class TransportController extends Controller
         $selectedDate = $request->query('date', now()->format('Y-m-d'));
         
         // Ambil data armada dari database
-        $armadas = Armada::all();
+        $armadas = Armada::orderBy('price_barelang', 'asc')->get();
         
         // Cek ketersediaan berdasarkan booking
         $bookingCounts = Booking::where('type', 'transport')
