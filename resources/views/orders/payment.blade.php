@@ -176,6 +176,12 @@
                 paymentType.value = result.payment_type || 'midtrans';
                 form.appendChild(paymentType);
                 
+                let midtransOrderId = document.createElement('input');
+                midtransOrderId.type = 'hidden';
+                midtransOrderId.name = 'midtrans_order_id';
+                midtransOrderId.value = result.order_id;
+                form.appendChild(midtransOrderId);
+
                 let status = document.createElement('input');
                 status.type = 'hidden';
                 status.name = 'status';

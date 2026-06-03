@@ -149,18 +149,31 @@ class TourController extends Controller
         $request->validate([
             'payment_type' => 'required|string',
             'status' => 'required|string',
+            'midtrans_order_id' => 'required|string',
         ]);
 
         $order = Booking::where('user_id', auth()->id())->findOrFail($id);
         
-        $data = [
-            'payment_method' => $request->payment_type,
-            'status' => $request->status, // usually 'paid' from frontend callback
-        ];
+        // Verifikasi langsung ke Midtrans API (Bypass Webhook InfinityFree)
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
 
-        $order->update($data);
-        
-        return redirect()->route('orders.my')->with('success', 'Pembayaran berhasil dikonfirmasi! Pesanan Anda akan segera diproses.');
+        try {
+            $status = \Midtrans\Transaction::status($request->midtrans_order_id);
+            
+            if ($status->transaction_status == 'settlement' || $status->transaction_status == 'capture') {
+                $order->update([
+                    'payment_method' => $request->payment_type,
+                    'status' => 'paid',
+                ]);
+                return redirect()->route('orders.my')->with('success', 'Pembayaran berhasil dikonfirmasi! Pesanan Anda akan segera diproses.');
+            } else {
+                return redirect()->route('orders.my')->with('error', 'Status pembayaran belum lunas di sistem Midtrans (Status: ' . $status->transaction_status . ').');
+            }
+        } catch (\Exception $e) {
+            \Log::error('Midtrans Status Check Error: ' . $e->getMessage());
+            return redirect()->route('orders.my')->with('error', 'Gagal memverifikasi pembayaran dengan Midtrans. Silakan hubungi admin.');
+        }
     }
 
     public function cancelOrder($id)
