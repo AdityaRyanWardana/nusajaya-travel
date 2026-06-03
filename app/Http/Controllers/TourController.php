@@ -35,7 +35,7 @@ class TourController extends Controller
     public function book(Request $request, $id)
     {
         $request->validate([
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
             'guests' => 'required|integer|min:1',
             'pickup_point' => 'required|string',
             'participants' => 'required|array',
@@ -45,6 +45,18 @@ class TourController extends Controller
             'customer_phone' => 'required|string|max:20',
             'notes' => 'nullable|string',
         ]);
+
+        $travelDate = \Carbon\Carbon::parse($request->date)->startOfDay();
+        $today = \Carbon\Carbon::today();
+
+        if ($travelDate->isSameDay($today)) {
+            $timeStr = \Carbon\Carbon::now()->format('H:i');
+            
+            // For tours, assume departure is morning (08:00 cutoff)
+            if ($timeStr > '08:00') {
+                return back()->withErrors(['date' => 'Batas waktu pemesanan Tour untuk hari ini (08:00 pagi) sudah lewat. Silakan pilih tanggal besok atau seterusnya.'])->withInput();
+            }
+        }
 
         $tour = Tour::findOrFail($id);
 
@@ -77,12 +89,14 @@ class TourController extends Controller
 
     public function resetOrders()
     {
-        // Truncate table and reset sequence for SQLite
-        if (\DB::getDriverName() === 'sqlite') {
+        $driver = \DB::getDriverName();
+        if ($driver === 'sqlite') {
             \DB::statement('PRAGMA foreign_keys = OFF;');
             Booking::truncate(); // Laravel truncate on sqlite does 'delete from table'
             \DB::table('sqlite_sequence')->where('name', 'bookings')->delete();
             \DB::statement('PRAGMA foreign_keys = ON;');
+        } elseif ($driver === 'pgsql') {
+            \DB::statement('TRUNCATE TABLE bookings RESTART IDENTITY CASCADE;');
         } else {
             \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             Booking::truncate();
@@ -98,30 +112,55 @@ class TourController extends Controller
         if (!in_array($order->status, ['unpaid', 'pending'])) {
             return redirect()->route('orders.my');
         }
-        return view('orders.payment', compact('order'));
+
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->id . '-' . time(),
+                'gross_amount' => $order->amount,
+            ],
+            'customer_details' => [
+                'first_name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+            ],
+        ];
+
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+        } catch (\Exception $e) {
+            $snapToken = null;
+            // Optionally log the error or return with error
+            \Log::error('Midtrans Error: ' . $e->getMessage());
+        }
+
+        return view('orders.payment', compact('order', 'snapToken'));
     }
 
     public function pay(Request $request, $id)
     {
         $request->validate([
             'payment_type' => 'required|string',
-            'payment_proof' => 'required|image|mimes:jpg,jpeg,png|max:3072',
+            'status' => 'required|string',
         ]);
 
         $order = Booking::where('user_id', auth()->id())->findOrFail($id);
         
         $data = [
             'payment_method' => $request->payment_type,
-            'status' => 'pending', // Status menjadi 'pending' (menunggu verifikasi) setelah upload
+            'status' => $request->status, // usually 'paid' from frontend callback
         ];
-
-        if ($request->hasFile('payment_proof')) {
-            $data['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
-        }
 
         $order->update($data);
         
-        return redirect()->route('orders.my')->with('success', 'Bukti pembayaran berhasil diunggah! Pesanan Anda akan segera diproses.');
+        return redirect()->route('orders.my')->with('success', 'Pembayaran berhasil dikonfirmasi! Pesanan Anda akan segera diproses.');
     }
 
     public function cancelOrder($id)

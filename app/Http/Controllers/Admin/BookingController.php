@@ -12,8 +12,6 @@ class BookingController extends Controller
     public function index()
     {
         $bookings = Booking::with('user')
-            ->where('type', 'tour')
-            ->where('status', '!=', 'unpaid')
             ->latest()
             ->paginate(15);
         return view('admin.bookings.index', compact('bookings'));

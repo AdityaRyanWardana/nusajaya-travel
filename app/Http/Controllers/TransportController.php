@@ -45,7 +45,7 @@ class TransportController extends Controller
     public function book(Request $request, $id)
     {
         $request->validate([
-            'travel_date' => 'required|date',
+            'travel_date' => 'required|date|after_or_equal:today',
             'category' => 'required|string',
             'pickup_point' => 'nullable|string',
             'duration' => 'nullable|string',
@@ -55,6 +55,25 @@ class TransportController extends Controller
             'customer_phone' => 'required|string|max:20',
             'notes' => 'nullable|string',
         ]);
+
+        $travelDate = \Carbon\Carbon::parse($request->travel_date)->startOfDay();
+        $today = \Carbon\Carbon::today();
+
+        if ($travelDate->isSameDay($today)) {
+            $timeStr = \Carbon\Carbon::now()->format('H:i');
+
+            if (str_contains($request->pickup_time, 'Morning') && $timeStr > '11:00') {
+                return back()->withErrors(['pickup_time' => 'Sesi Morning (08:00-11:00) sudah lewat untuk hari ini. Silakan pilih sesi lain atau pesan untuk besok.'])->withInput();
+            }
+
+            if (str_contains($request->pickup_time, 'Afternoon') && $timeStr > '15:00') {
+                return back()->withErrors(['pickup_time' => 'Sesi Afternoon (12:00-15:00) sudah lewat untuk hari ini. Silakan pesan untuk besok.'])->withInput();
+            }
+
+            if (str_contains($request->pickup_time, 'Evening') && $timeStr > '20:00') {
+                return back()->withErrors(['pickup_time' => 'Sesi Evening (17:00-20:00) sudah lewat untuk hari ini. Silakan pesan untuk besok.'])->withInput();
+            }
+        }
 
         $participants = $request->participants;
         if (!$participants || count($participants) === 0) {

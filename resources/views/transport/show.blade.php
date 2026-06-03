@@ -332,6 +332,9 @@
                                     <span class="text-[8px] font-bold text-white/30 uppercase mt-1">17:00-20:00</span>
                                 </label>
                             </div>
+                            @error('pickup_time')
+                                <p class="text-xs text-red-400 font-bold mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="space-y-4 pt-4 border-t border-white/10">
@@ -354,7 +357,10 @@
 
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Travel Date</label>
-                            <input type="date" name="travel_date" required class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none cursor-pointer">
+                            <input type="date" name="travel_date" required min="{{ date('Y-m-d') }}" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none cursor-pointer">
+                            @error('travel_date')
+                                <p class="text-xs text-red-400 font-bold mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         @auth

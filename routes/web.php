@@ -6,12 +6,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentCallbackController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes — PT Nusa Jaya Indofast T&T
 |--------------------------------------------------------------------------
 */
+
+// Midtrans Webhook (Server to Server Notification)
+Route::post('/midtrans/callback', [PaymentCallbackController::class, 'receive'])->name('midtrans.callback');
 
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');

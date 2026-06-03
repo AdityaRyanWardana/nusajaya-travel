@@ -44,7 +44,7 @@
         @endphp
 
         <div class="relative group">
-            <a href="{{ route('admin.bookings.show', $booking) }}" class="block bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl dark:hover:shadow-black/50 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
+            <div onclick="window.location='{{ route('admin.bookings.show', $booking) }}'" class="block cursor-pointer bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl dark:hover:shadow-black/50 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
                 <div class="flex flex-col md:flex-row">
 
                     {{-- Left Accent Bar --}}
@@ -119,7 +119,7 @@
                             <div class="hidden lg:block w-px h-16 bg-slate-100 dark:bg-slate-800 shrink-0"></div>
 
                             {{-- Status & Actions --}}
-                            <div class="flex flex-col items-center gap-4 shrink-0 relative z-10" onclick="event.preventDefault(); event.stopPropagation();">
+                            <div class="flex flex-col items-center gap-4 shrink-0 relative z-10" onclick="event.stopPropagation();">
                                 <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest {{ $statusColor['bg'] }} {{ $statusColor['text'] }} border {{ $statusColor['border'] }}">
                                     <span class="w-1.5 h-1.5 rounded-full {{ $statusColor['dot'] }}"></span>
                                     {{ $booking->status }}
@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
 
         @empty

@@ -183,8 +183,11 @@
                         <div x-show="step === 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-x-8" x-transition:enter-end="opacity-100 translate-x-0" class="space-y-8">
                             <div class="space-y-3">
                                 <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Select Date') }}</label>
-                                <input type="date" name="date" required 
+                                <input type="date" name="date" required min="{{ date('Y-m-d') }}"
                                        class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white">
+                                @error('date')
+                                    <p class="text-xs text-red-400 font-bold mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="space-y-3">

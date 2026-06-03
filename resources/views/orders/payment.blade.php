@@ -123,162 +123,80 @@
 
         <!-- Payment Options (Right) -->
         <div class="md:col-span-3">
-            <div class="bg-white rounded-3xl p-10 border border-slate-100 shadow-2xl overflow-hidden relative">
-                <div x-show="step === 'select'" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0">
-                    <h3 class="text-xs font-black text-brandblue uppercase tracking-widest mb-10">Select Payment Method</h3>
-                    
-                    <div class="space-y-4 mb-10">
-                        <!-- Virtual Account -->
-                        <label class="flex items-center justify-between p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300" 
-                               :class="method === 'va' ? 'border-skyblue bg-skyblue/5' : 'border-slate-50 hover:border-slate-200'">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_type" value="va" x-model="method" class="sr-only">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm transition group-hover:scale-110">
-                                    <svg class="w-5 h-5 text-brandblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-black text-brandblue uppercase tracking-widest">Virtual Account</p>
-                                    <p class="text-[10px] text-slate-400 font-medium">BCA, Mandiri, BNI, BRI</p>
-                                </div>
-                            </div>
-                            <div :class="method === 'va' ? 'text-skyblue' : 'text-slate-200'">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            </div>
-                        </label>
-
-                        <!-- E-Wallet -->
-                        <label class="flex items-center justify-between p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300" 
-                               :class="method === 'wallet' ? 'border-skyblue bg-skyblue/5' : 'border-slate-50 hover:border-slate-200'">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_type" value="wallet" x-model="method" class="sr-only">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm transition group-hover:scale-110">
-                                    <svg class="w-5 h-5 text-brandblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-black text-brandblue uppercase tracking-widest">E-Wallet</p>
-                                    <p class="text-[10px] text-slate-400 font-medium">OVO, GoPay, Dana, LinkAja</p>
-                                </div>
-                            </div>
-                            <div :class="method === 'wallet' ? 'text-skyblue' : 'text-slate-200'">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            </div>
-                        </label>
-
-                        <!-- QRIS -->
-                        <label class="flex items-center justify-between p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300" 
-                               :class="method === 'qris' ? 'border-skyblue bg-skyblue/5' : 'border-slate-50 hover:border-slate-200'">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_type" value="qris" x-model="method" class="sr-only">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm transition group-hover:scale-110">
-                                    <svg class="w-5 h-5 text-brandblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-black text-brandblue uppercase tracking-widest">QRIS</p>
-                                    <p class="text-[10px] text-slate-400 font-medium">Scan using any payment app</p>
-                                </div>
-                            </div>
-                            <div :class="method === 'qris' ? 'text-skyblue' : 'text-slate-200'">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            </div>
-                        </label>
+            <div class="bg-white rounded-3xl p-10 border border-slate-100 shadow-2xl overflow-hidden relative text-center">
+                <div class="mb-8">
+                    <div class="w-20 h-20 bg-brandblue/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-brandblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-
-                    <button @click="step = 'generate'" type="button" class="w-full py-5 bg-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] shadow-2xl shadow-brandblue/30 hover:bg-slate-800 transition transform hover:-translate-y-1">
-                        Continue Payment
-                    </button>
+                    <h3 class="text-2xl font-black text-brandblue mb-2">Complete Your Payment</h3>
+                    <p class="text-slate-500 font-medium text-sm">Click the button below to proceed with the payment securely via Midtrans.</p>
                 </div>
 
-                <!-- Generated Payment Info -->
-                <div x-show="step === 'generate'" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0">
-                    <button @click="step = 'select'" type="button" class="mb-8 flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brandblue transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                        Change Method
-                    </button>
-
-                    <h3 class="text-xs font-black text-brandblue uppercase tracking-widest mb-8">Payment Instructions</h3>
-                    
-                    <!-- VA Details -->
-                    <div x-show="method === 'va'" class="space-y-6">
-                        <div class="bg-slate-50 p-6 rounded-2xl text-center">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">Virtual Account Number</p>
-                            <p class="text-3xl font-black text-brandblue tracking-widest italic">8473 0000 00{{ $order->id }}</p>
-                            <p class="text-[10px] text-skyblue font-bold mt-2 uppercase">BCA Virtual Account</p>
-                        </div>
-                        <ul class="text-[10px] space-y-3 text-slate-500 font-medium">
-                            <li class="flex gap-3">
-                                <span class="w-5 h-5 rounded-full bg-brandblue text-white flex items-center justify-center shrink-0">1</span>
-                                <span>Select <span class="font-bold text-brandblue">Transfer > Virtual Account</span> menu on your ATM or M-Banking.</span>
-                            </li>
-                            <li class="flex gap-3">
-                                <span class="w-5 h-5 rounded-full bg-brandblue text-white flex items-center justify-center shrink-0">2</span>
-                                <span>Enter the virtual account number shown above.</span>
-                            </li>
-                            <li class="flex gap-3">
-                                <span class="w-5 h-5 rounded-full bg-brandblue text-white flex items-center justify-center shrink-0">3</span>
-                                <span>Check the payment amount and confirm the transaction.</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- E-Wallet Details -->
-                    <div x-show="method === 'wallet'" class="space-y-6">
-                        <div class="bg-slate-50 p-6 rounded-2xl text-center">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 italic">Confirm in App</p>
-                            <div class="flex justify-center gap-4 mb-4">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg" class="h-6 grayscale opacity-50">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" class="h-6 grayscale opacity-50">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" class="h-6 grayscale opacity-50">
-                            </div>
-                            <p class="text-xs font-bold text-brandblue">A payment notification will be sent to your registered phone number.</p>
-                        </div>
-                        <p class="text-[10px] text-center text-slate-400 font-medium leading-relaxed italic">Make sure you have enough balance in your digital wallet to complete this transaction.</p>
-                    </div>
-
-                    <!-- QRIS Details -->
-                    <div x-show="method === 'qris'" class="space-y-6 text-center">
-                        <div class="bg-white p-4 inline-block rounded-3xl shadow-xl border border-slate-100">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" class="w-48 h-48 opacity-80 mix-blend-multiply">
-                        </div>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">Scan QR with your payment app</p>
-                    </div>
-
-                    <form action="{{ route('orders.pay', $order->id) }}" method="POST" enctype="multipart/form-data" class="mt-10 space-y-8">
-                        @csrf
-                        <input type="hidden" name="payment_type" :value="method">
-                        
-                        <!-- Proof Upload Section -->
-                        <div class="bg-slate-50 p-8 rounded-[2rem] border-2 border-dashed border-slate-200 hover:border-skyblue transition-colors group relative" 
-                             x-data="{ preview: null }">
-                            <input type="file" name="payment_proof" id="payment_proof" class="absolute inset-0 opacity-0 cursor-pointer z-10" 
-                                   @change="const file = $event.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => { preview = e.target.result }; reader.readAsDataURL(file); }">
-                            
-                            <div class="text-center" x-show="!preview">
-                                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-slate-400 mx-auto mb-4 group-hover:text-skyblue group-hover:scale-110 transition-all">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                </div>
-                                <p class="text-xs font-black text-brandblue uppercase tracking-widest">{{ __('Upload Payment Proof') }}</p>
-                                <p class="text-[10px] text-slate-400 font-medium mt-1">PNG, JPG or JPEG (Max. 3MB)</p>
-                            </div>
-
-                            <div class="relative" x-show="preview" x-cloak>
-                                <img :src="preview" class="w-full max-h-64 object-contain rounded-xl shadow-lg">
-                                <div class="absolute top-2 right-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[8px] font-black text-brandblue uppercase tracking-widest shadow-sm">
-                                    Photo Selected
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full py-5 bg-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] shadow-2xl shadow-brandblue/30 hover:bg-slate-800 transition transform hover:-translate-y-1">
-                            Submit Payment Proof
-                        </button>
-                    </form>
+                @if($snapToken)
+                <button id="pay-button" type="button" class="w-full py-5 bg-brandblue text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] shadow-2xl shadow-brandblue/30 hover:bg-slate-800 transition transform hover:-translate-y-1">
+                    Pay Now
+                </button>
+                @else
+                <div class="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-bold">
+                    Failed to get payment token. Please try again or contact support.
                 </div>
+                @endif
 
                 <p class="text-center mt-6 text-[10px] text-slate-400 font-medium italic">
-                    By clicking the button above, you agree to our <a href="#" class="underline">Terms & Conditions</a>.
+                    By proceeding, you agree to our <a href="#" class="underline">Terms & Conditions</a>.
                 </p>
             </div>
         </div>
     </div>
 </section>
+
+@if($snapToken)
+<script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script type="text/javascript">
+    document.getElementById('pay-button').onclick = function () {
+        // SnapToken acquired from previous step
+        snap.pay('{{ $snapToken }}', {
+            // Optional
+            onSuccess: function(result){
+                /* You may add your own js here, this is just example */
+                // Update order status via ajax or form submission
+                let form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('orders.pay', $order->id) }}';
+                
+                let csrf = document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = '_token';
+                csrf.value = '{{ csrf_token() }}';
+                form.appendChild(csrf);
+
+                let paymentType = document.createElement('input');
+                paymentType.type = 'hidden';
+                paymentType.name = 'payment_type';
+                paymentType.value = result.payment_type || 'midtrans';
+                form.appendChild(paymentType);
+                
+                let status = document.createElement('input');
+                status.type = 'hidden';
+                status.name = 'status';
+                status.value = 'paid';
+                form.appendChild(status);
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+            // Optional
+            onPending: function(result){
+                /* You may add your own js here, this is just example */
+                window.location.href = '{{ route('orders.my') }}';
+            },
+            // Optional
+            onError: function(result){
+                /* You may add your own js here, this is just example */
+                alert("Payment failed!");
+            }
+        });
+    };
+</script>
+@endif
 @endsection

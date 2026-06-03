@@ -44,6 +44,9 @@
                         <div class="flex items-center gap-2 text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Ready
                         </div>
+                        <div class="flex items-center gap-2 text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Partially Booked
+                        </div>
                         <div class="flex items-center gap-2 text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest">
                             <span class="w-2 h-2 rounded-full bg-red-500"></span> Full
                         </div>
@@ -153,12 +156,30 @@
                             @foreach($dates as $date)
                                 @php
                                     $data = $fleetSchedule[$date][$armada->id];
-                                    $statusClass = $data['ready'] > 0 ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/50' : 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/50';
+                                    $isFull = $data['ready'] <= 0;
+                                    $hasBooked = $data['booked'] > 0;
+                                    $statusClass = $isFull 
+                                        ? 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/50' 
+                                        : ($hasBooked 
+                                            ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/50' 
+                                            : 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/50');
                                 @endphp
-                                <td class="p-3 border-b border-slate-100 dark:border-slate-800">
+                                <td class="p-2 border-b border-slate-100 dark:border-slate-800">
                                     <div class="flex flex-col items-center gap-2">
-                                        <div class="w-full px-3 py-3 rounded-2xl border {{ $statusClass }} text-center transition-all hover:scale-105 group/cell relative">
-                                            <p class="text-[10px] font-black leading-none">{{ $data['ready'] }} Ready</p>
+                                        <div class="w-full px-2 py-2.5 rounded-2xl border {{ $statusClass }} text-center transition-all hover:scale-105 group/cell relative">
+                                            @if($isFull)
+                                                <p class="text-[10px] font-black uppercase leading-none">Full</p>
+                                                <div class="mt-1.5 pt-1.5 border-t border-red-200/50 dark:border-red-800/50">
+                                                    <p class="text-[8px] font-bold opacity-80 leading-none">{{ $data['booked'] }} Booked</p>
+                                                </div>
+                                            @else
+                                                <p class="text-[11px] font-black leading-none">{{ $data['ready'] }} Ready</p>
+                                                @if($hasBooked)
+                                                    <div class="mt-1.5 pt-1.5 border-t border-blue-200/50 dark:border-blue-800/50">
+                                                        <p class="text-[9px] font-black opacity-90 leading-none">{{ $data['booked'] }} Booked</p>
+                                                    </div>
+                                                @endif
+                                            @endif
                                             
                                             <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-32 bg-slate-900 dark:bg-slate-800 text-white p-3 rounded-2xl text-[9px] opacity-0 invisible group-hover/cell:opacity-100 group-hover/cell:visible transition-all z-50 pointer-events-none shadow-2xl">
                                                 <div class="space-y-1">
