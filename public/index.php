@@ -14,6 +14,18 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
+$dirs = [
+    __DIR__.'/../storage/framework/views',
+    __DIR__.'/../storage/framework/cache',
+    __DIR__.'/../storage/framework/sessions',
+    __DIR__.'/../bootstrap/cache'
+];
+foreach ($dirs as $dir) {
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0777, true);
+    }
+}
+
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 

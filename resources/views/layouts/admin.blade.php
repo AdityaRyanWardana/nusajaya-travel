@@ -178,7 +178,9 @@
                         <button @click="notificationsOpen = !notificationsOpen" 
                                 class="w-10 h-10 bg-slate-50 dark:bg-[#0F2038] rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300 hover:text-sky-500 hover:bg-sky-50 dark:hover:bg-[#1A365D] transition-all relative">
                             <i data-lucide="bell" class="w-5 h-5"></i>
+                            @if(!session('notifications_read'))
                             <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 border-2 border-white  rounded-full animate-pulse"></span>
+                            @endif
                         </button>
 
                         <!-- Notifications Dropdown -->
@@ -191,9 +193,12 @@
                              x-cloak>
                             <div class="p-6 bg-slate-50/50  border-b border-slate-50  flex items-center justify-between">
                                 <h4 class="text-xs font-black text-slate-900  uppercase tracking-widest">{{ __('Notifications') }}</h4>
+                                @if(!session('notifications_read'))
                                 <span class="text-[9px] font-black bg-[#38BDF8] text-white px-2 py-0.5 rounded-full">3 New</span>
+                                @endif
                             </div>
                             <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
+                                @if(!session('notifications_read'))
                                 {{-- Sample Notifications with Links --}}
                                 <a href="{{ route('admin.bookings.index') }}" class="block p-4 hover:bg-slate-50  transition-all cursor-pointer border-b border-slate-50  group">
                                     <div class="flex gap-4">
@@ -230,6 +235,11 @@
                                         </div>
                                     </div>
                                 </a>
+                                @else
+                                <div class="p-8 text-center">
+                                    <p class="text-xs text-slate-400">{{ __('No new notifications') }}</p>
+                                </div>
+                                @endif
                             </div>
                             <a href="{{ route('admin.notifications') }}" class="block p-4 text-center text-[10px] font-black text-sky-500  uppercase tracking-[0.2em] bg-slate-50  hover:bg-[#38BDF8] hover:text-white transition-all">
                                 {{ __('View All Notifications') }}

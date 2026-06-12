@@ -13,10 +13,15 @@
             </h1>
             <p class="text-slate-500 dark:text-slate-400 font-medium mt-2">{{ __('View your recent system alerts and updates') }}</p>
         </div>
-        <button class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F2038] dark:hover:bg-[#1A365D] text-slate-700 dark:text-slate-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
-            <i data-lucide="check-check" class="w-4 h-4"></i>
-            {{ __('Mark all as read') }}
-        </button>
+        @if(!session('notifications_read') && count($notifications) > 0)
+        <form action="{{ route('admin.notifications.markAllRead') }}" method="POST">
+            @csrf
+            <button type="submit" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F2038] dark:hover:bg-[#1A365D] text-slate-700 dark:text-slate-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                <i data-lucide="check-check" class="w-4 h-4"></i>
+                {{ __('Mark all as read') }}
+            </button>
+        </form>
+        @endif
     </div>
 
     <!-- Notifications List -->

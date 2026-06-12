@@ -178,8 +178,11 @@ class DashboardController extends Controller
 
     public function notifications()
     {
-        // Mocking some rich notifications since there's no DB table for it yet.
-        $notifications = [
+        if (session('notifications_read')) {
+            $notifications = [];
+        } else {
+            // Mocking some rich notifications since there's no DB table for it yet.
+            $notifications = [
             [
                 'id' => 1,
                 'type' => 'booking',
@@ -221,8 +224,15 @@ class DashboardController extends Controller
                 'link' => '#'
             ]
         ];
+        }
 
         return view('admin.notifications', compact('notifications'));
+    }
+
+    public function markNotificationsRead()
+    {
+        session(['notifications_read' => true]);
+        return back()->with('success', 'All notifications have been marked as read.');
     }
 
     public function markRescheduleAsNoticed(Booking $booking)
