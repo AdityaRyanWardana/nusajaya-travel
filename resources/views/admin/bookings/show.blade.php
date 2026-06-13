@@ -26,7 +26,10 @@
             </form>
             @endif
             
-            <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Delete this record permanently?') && ('{{ $booking->status }}' !== 'paid' || confirm('WARNING: This booking is already PAID. Are you absolutely sure you want to delete this paid record?'));">
+            <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST"
+                  data-confirm="{{ $booking->status === 'paid' ? 'WARNING: This booking is PAID. Delete it permanently?' : 'Delete this booking permanently? This cannot be undone.' }}"
+                  data-confirm-title="Delete Booking"
+                  data-confirm-ok="Yes, Delete">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
@@ -327,7 +330,11 @@
                         </form>
                         @endif
 
-                        <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        <form action="{{ route('admin.bookings.updateStatus', $booking) }}" method="POST"
+                              data-confirm="Are you sure you want to cancel this booking? This action cannot be undone."
+                              data-confirm-type="warning"
+                              data-confirm-title="Cancel Booking"
+                              data-confirm-ok="Yes, Cancel Booking">
                             @csrf @method('PATCH')
                             <input type="hidden" name="status" value="cancelled">
                             <button type="submit" class="w-full py-4 text-xs font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-500 hover:text-white rounded-2xl transition-all duration-300">{{ __('Cancel Booking') }}</button>

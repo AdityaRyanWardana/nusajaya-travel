@@ -14,17 +14,20 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Monthly Growth Calculation
-        $currentMonthBookings = Booking::where('type', 'tour')
-            ->where('status', '!=', 'unpaid')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
+        // Fix: use clone/copy to avoid Carbon mutation bug
+        $now        = now();
+        $thisMonth  = $now->copy()->startOfMonth();
+        $lastMonth  = $now->copy()->subMonth();
+
+        // Monthly Growth Calculation (all types)
+        $currentMonthBookings = Booking::where('status', '!=', 'unpaid')
+            ->whereMonth('created_at', $thisMonth->month)
+            ->whereYear('created_at', $thisMonth->year)
             ->count();
-            
-        $lastMonthBookings = Booking::where('type', 'tour')
-            ->where('status', '!=', 'unpaid')
-            ->whereMonth('created_at', now()->subMonth()->month)
-            ->whereYear('created_at', now()->subMonth()->year)
+
+        $lastMonthBookings = Booking::where('status', '!=', 'unpaid')
+            ->whereMonth('created_at', $lastMonth->month)
+            ->whereYear('created_at', $lastMonth->year)
             ->count();
 
         $growth = 0;
@@ -34,57 +37,63 @@ class DashboardController extends Controller
             $growth = 100;
         }
 
-        // Chart Data (Last 6 Months - Tours Only)
-        $chartLabels = [];
+        // Chart Data (Last 6 Months - All booking types)
+        $chartLabels  = [];
         $tourChartData = [];
-        
+
         for ($i = 5; $i >= 0; $i--) {
-            $month = now()->subMonths($i);
+            $month = now()->copy()->subMonths($i);
             $chartLabels[] = $month->format('M');
-            
+
             $tourChartData[] = Booking::where('status', '!=', 'unpaid')
-                ->where('type', 'tour')
                 ->whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
         }
 
-        // Revenue & Balance Stats (Tours Only)
-        $totalRevenue = Booking::where('type', 'tour')->where('status', 'paid')->sum('amount');
-        $lastMonthRevenue = Booking::where('type', 'tour')
-            ->where('status', 'paid')
-            ->whereMonth('created_at', now()->subMonth()->month)
+        // Revenue & Balance Stats (All types)
+        $totalRevenue    = Booking::where('status', 'paid')->sum('amount');
+        $lastMonthRevenue = Booking::where('status', 'paid')
+            ->whereMonth('created_at', $lastMonth->month)
+            ->whereYear('created_at', $lastMonth->year)
             ->sum('amount');
-        $pendingRevenue = Booking::where('type', 'tour')->where('status', 'pending')->sum('amount');
+        $pendingRevenue  = Booking::where('status', 'pending')->sum('amount');
+
+        // Real notifications from DB (latest pending + recent paid)
+        $notifBookings = Booking::with('user')
+            ->where('status', '!=', 'unpaid')
+            ->latest()
+            ->take(3)
+            ->get();
 
         $rescheduledBookings = Booking::with('user')
-            ->where('type', 'tour')
             ->where('reschedule_notified', false)
+            ->whereNotNull('rescheduled_at')
             ->latest('rescheduled_at')
             ->get();
 
         $recentBookings = Booking::with('user')
-            ->where('type', 'tour')
             ->where('status', '!=', 'unpaid')
             ->latest()
             ->take(5)
             ->get();
 
         $stats = [
-            'total_bookings' => Booking::where('type', 'tour')->where('status', '!=', 'unpaid')->count(),
-            'pending_bookings' => Booking::where('type', 'tour')->where('status', 'pending')->count(),
-            'total_armada' => Armada::sum('total_units'),
-            'available_armada' => Armada::sum('total_units') - Armada::sum('maintenance_units'),
-            'maintenance_armada' => Armada::sum('maintenance_units'),
-            'total_tours' => Tour::count(),
-            'booking_growth' => round($growth, 1),
-            'total_revenue' => $totalRevenue,
-            'last_month_revenue' => $lastMonthRevenue,
-            'pending_revenue' => $pendingRevenue,
-            'chart_labels' => $chartLabels,
-            'tour_chart_data' => $tourChartData,
-            'rescheduled_bookings' => $rescheduledBookings,
-            'recent_bookings' => $recentBookings,
+            'total_bookings'      => Booking::where('status', '!=', 'unpaid')->count(),
+            'pending_bookings'    => Booking::where('status', 'pending')->count(),
+            'total_armada'        => Armada::sum('total_units'),
+            'available_armada'    => Armada::sum('total_units') - Armada::sum('maintenance_units'),
+            'maintenance_armada'  => Armada::sum('maintenance_units'),
+            'total_tours'         => Tour::count(),
+            'booking_growth'      => round($growth, 1),
+            'total_revenue'       => $totalRevenue,
+            'last_month_revenue'  => $lastMonthRevenue,
+            'pending_revenue'     => $pendingRevenue,
+            'chart_labels'        => $chartLabels,
+            'tour_chart_data'     => $tourChartData,
+            'rescheduled_bookings'=> $rescheduledBookings,
+            'recent_bookings'     => $recentBookings,
+            'notif_bookings'      => $notifBookings,
         ];
 
         return view('admin.dashboard', compact('stats'));

@@ -130,7 +130,11 @@
                         
                         <div class="flex gap-4 pt-4">
                             <a href="tel:+62778457168" class="flex-1 bg-white text-brandblue py-4 rounded-2xl font-black text-xs uppercase text-center hover:bg-skyblue hover:text-white transition shadow-xl">Call Head Office</a>
-                            <a href="mailto:reservation@nusajaya168.com" class="flex-1 bg-skyblue text-white py-4 rounded-2xl font-black text-xs uppercase text-center hover:bg-white hover:text-brandblue transition shadow-xl">Send Inquiry</a>
+                            @php
+                                $mailSubject = rawurlencode('New Tour Booking Inquiry');
+                                $mailBody = rawurlencode("Hello Nusajaya Travel Team,\n\nI would like to inquire about booking a tour.\n\n--- Booking Details ---\nName: [Your Name]\nPhone/WhatsApp: [Your Phone Number]\nTour Destination: [Destination Name]\nPlanned Date: [Date]\nNumber of Participants: [Number]\nSpecial Requests: [Any special requests]\n\nThank you.");
+                            @endphp
+                            <a href="mailto:transportation@nusajaya168.com?subject={{ $mailSubject }}&body={{ $mailBody }}" class="flex-1 bg-skyblue text-white py-4 rounded-2xl font-black text-xs uppercase text-center hover:bg-white hover:text-brandblue transition shadow-xl">Send Inquiry</a>
                         </div>
                     </div>
                 </div>

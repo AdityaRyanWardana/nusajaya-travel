@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 @php
     App::setLocale(auth()->user()->language ?? 'en');
+    // Real notifications from DB
+    $realNotifs = \App\Models\Booking::with('user')
+        ->where('status', '!=', 'unpaid')
+        ->latest()
+        ->take(5)
+        ->get();
+    $pendingCount = \App\Models\Booking::where('status', 'pending')->count();
 @endphp
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark' : '' }}">
 <head>
@@ -123,10 +130,17 @@
                 </a>
 
                 <a href="{{ route('admin.armadas.index') }}" 
-                   class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.armadas.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
+                   class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.armadas.*') && !request()->routeIs('admin.maintenance.board') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
                    :title="sidebarCollapsed && !isMobile ? 'Fleets' : ''">
                     <i data-lucide="bus" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
                     <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Fleets') }}</span>
+                </a>
+
+                <a href="{{ route('admin.maintenance.board') }}" 
+                   class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.maintenance.board') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
+                   :title="sidebarCollapsed && !isMobile ? 'Maintenance' : ''">
+                    <i data-lucide="wrench" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Maintenance') }}</span>
                 </a>
 
                 <a href="{{ route('admin.tours.index') }}" 
@@ -178,7 +192,7 @@
                         <button @click="notificationsOpen = !notificationsOpen" 
                                 class="w-10 h-10 bg-slate-50 dark:bg-[#0F2038] rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300 hover:text-sky-500 hover:bg-sky-50 dark:hover:bg-[#1A365D] transition-all relative">
                             <i data-lucide="bell" class="w-5 h-5"></i>
-                            @if(!session('notifications_read'))
+                            @if($pendingCount > 0)
                             <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 border-2 border-white  rounded-full animate-pulse"></span>
                             @endif
                         </button>
@@ -193,53 +207,29 @@
                              x-cloak>
                             <div class="p-6 bg-slate-50/50  border-b border-slate-50  flex items-center justify-between">
                                 <h4 class="text-xs font-black text-slate-900  uppercase tracking-widest">{{ __('Notifications') }}</h4>
-                                @if(!session('notifications_read'))
-                                <span class="text-[9px] font-black bg-[#38BDF8] text-white px-2 py-0.5 rounded-full">3 New</span>
+                                @if($pendingCount > 0)
+                                <span class="text-[9px] font-black bg-[#38BDF8] text-white px-2 py-0.5 rounded-full">{{ $pendingCount }} Pending</span>
                                 @endif
                             </div>
                             <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
-                                @if(!session('notifications_read'))
-                                {{-- Sample Notifications with Links --}}
-                                <a href="{{ route('admin.bookings.index') }}" class="block p-4 hover:bg-slate-50  transition-all cursor-pointer border-b border-slate-50  group">
+                                @forelse($realNotifs as $notif)
+                                <a href="{{ route('admin.bookings.show', $notif) }}" class="block p-4 hover:bg-slate-50 transition-all cursor-pointer border-b border-slate-50 group">
                                     <div class="flex gap-4">
-                                        <div class="w-10 h-10 bg-sky-50  text-sky-500  rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform
+                                            {{ $notif->status === 'paid' ? 'bg-emerald-50 text-emerald-600' : ($notif->status === 'pending' ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-500') }}">
+                                            <i data-lucide="{{ $notif->status === 'paid' ? 'check-circle' : ($notif->status === 'pending' ? 'clock' : 'x-circle') }}" class="w-5 h-5"></i>
                                         </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-slate-800 ">{{ __('New Booking: Batam City Tour') }}</p>
-                                            <p class="text-[9px] text-slate-400 mt-0.5">2 minutes ago</p>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-[11px] font-bold text-slate-800 leading-tight">{{ $notif->user->name }} — {{ Str::limit($notif->service_name, 28) }}</p>
+                                            <p class="text-[10px] text-slate-400 mt-0.5 uppercase tracking-wide font-bold">{{ $notif->status }} · {{ $notif->created_at->diffForHumans() }}</p>
                                         </div>
                                     </div>
                                 </a>
-                                
-                                <a href="{{ route('admin.scheduling') }}" class="block p-4 hover:bg-slate-50  transition-all cursor-pointer border-b border-slate-50  group">
-                                    <div class="flex gap-4">
-                                        <div class="w-10 h-10 bg-amber-50  text-amber-600  rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-slate-800 ">{{ __('Reschedule Request: VIP Bus') }}</p>
-                                            <p class="text-[9px] text-slate-400 mt-0.5">1 hour ago</p>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <a href="{{ route('admin.bookings.index') }}" class="block p-4 hover:bg-slate-50  transition-all cursor-pointer group">
-                                    <div class="flex gap-4">
-                                        <div class="w-10 h-10 bg-emerald-50  text-emerald-600  rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                            <i data-lucide="check-circle" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-slate-800 ">{{ __('Payment Confirmed: #BOK-9921') }}</p>
-                                            <p class="text-[9px] text-slate-400 mt-0.5">5 hours ago</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @else
+                                @empty
                                 <div class="p-8 text-center">
-                                    <p class="text-xs text-slate-400">{{ __('No new notifications') }}</p>
+                                    <p class="text-xs text-slate-400">{{ __('No bookings yet') }}</p>
                                 </div>
-                                @endif
+                                @endforelse
                             </div>
                             <a href="{{ route('admin.notifications') }}" class="block p-4 text-center text-[10px] font-black text-sky-500  uppercase tracking-[0.2em] bg-slate-50  hover:bg-[#38BDF8] hover:text-white transition-all">
                                 {{ __('View All Notifications') }}
@@ -339,6 +329,143 @@
 
     <script>
         lucide.createIcons();
+    </script>
+
+    {{-- ============================================================ --}}
+    {{-- GLOBAL CUSTOM CONFIRM MODAL (replaces browser confirm dialog) --}}
+    {{-- ============================================================ --}}
+    <div id="customConfirmOverlay"
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-slate-900/70 backdrop-blur-md hidden"
+         style="transition: opacity 0.25s ease;">
+        <div id="customConfirmBox"
+             class="bg-white dark:bg-[#0F2038] w-full max-w-md rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-[#1E3A5F] overflow-hidden transform transition-all duration-300 scale-95 opacity-0">
+
+            {{-- Top accent bar --}}
+            <div id="confirmAccentBar" class="h-1.5 w-full bg-red-500"></div>
+
+            <div class="p-10">
+                {{-- Icon --}}
+                <div class="flex items-start gap-6 mb-8">
+                    <div id="confirmIconWrap"
+                         class="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-lg bg-red-50">
+                        <i id="confirmIcon" data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>
+                    </div>
+                    <div>
+                        <h3 id="confirmTitle"
+                            class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight italic leading-tight mb-2">
+                            Confirm Action
+                        </h3>
+                        <p id="confirmMessage"
+                           class="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                            Are you sure you want to proceed?
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex items-center gap-4">
+                    <button id="confirmCancelBtn"
+                            class="flex-1 py-4 bg-slate-50 dark:bg-[#152C4C] text-slate-500 dark:text-slate-300 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-[#1A365D] transition-all duration-300">
+                        Cancel
+                    </button>
+                    <button id="confirmOkBtn"
+                            class="flex-1 py-4 bg-red-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all duration-300 shadow-xl shadow-red-500/20">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    /**
+     * Global custom confirm modal.
+     * Usage:
+     *   customConfirm('Message here', function() { formEl.submit(); })
+     *   customConfirm('Message', callback, { type: 'danger'|'warning', title: '...', okText: '...' })
+     */
+    window.customConfirm = function(message, onConfirm, opts = {}) {
+        const type    = opts.type    || 'danger';
+        const title   = opts.title   || (type === 'danger' ? 'Delete Confirmation' : 'Are You Sure?');
+        const okText  = opts.okText  || (type === 'danger' ? 'Yes, Delete' : 'Yes, Proceed');
+        const okClass = type === 'danger'
+            ? 'bg-red-500 hover:bg-red-600 shadow-red-500/20'
+            : 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/20';
+        const iconColor = type === 'danger' ? 'text-red-500' : 'text-amber-500';
+        const iconBg    = type === 'danger' ? 'bg-red-50'    : 'bg-amber-50';
+        const barColor  = type === 'danger' ? 'bg-red-500'   : 'bg-amber-500';
+        const iconName  = type === 'danger' ? 'trash-2'      : 'alert-triangle';
+
+        const overlay = document.getElementById('customConfirmOverlay');
+        const box     = document.getElementById('customConfirmBox');
+
+        // Set content
+        document.getElementById('confirmTitle').textContent   = title;
+        document.getElementById('confirmMessage').textContent = message;
+        document.getElementById('confirmOkBtn').textContent   = okText;
+        document.getElementById('confirmAccentBar').className = 'h-1.5 w-full ' + barColor;
+        document.getElementById('confirmOkBtn').className     = 'flex-1 py-4 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl ' + okClass;
+
+        const iconWrap = document.getElementById('confirmIconWrap');
+        iconWrap.className = 'w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-lg ' + iconBg;
+
+        const iconEl = document.getElementById('confirmIcon');
+        iconEl.setAttribute('data-lucide', iconName);
+        iconEl.className = 'w-8 h-8 ' + iconColor;
+        lucide.createIcons({ nodes: [iconEl] });
+
+        // Show overlay
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            box.classList.remove('scale-95', 'opacity-0');
+            box.classList.add('scale-100', 'opacity-100');
+        });
+
+        function close() {
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.classList.add('hidden'), 250);
+        }
+
+        // Cleanup previous listeners
+        const okBtn     = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+        const newOk     = okBtn.cloneNode(true);
+        const newCancel = cancelBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOk, okBtn);
+        cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+
+        // Re-set text after clone
+        newOk.textContent     = okText;
+        newCancel.textContent = 'Cancel';
+        newOk.className       = 'flex-1 py-4 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl ' + okClass;
+        newCancel.className   = 'flex-1 py-4 bg-slate-50 dark:bg-[#152C4C] text-slate-500 dark:text-slate-300 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-[#1A365D] transition-all duration-300';
+
+        newOk.addEventListener('click', () => { close(); if (onConfirm) onConfirm(); });
+        newCancel.addEventListener('click', close);
+        overlay.addEventListener('click', function handler(e) {
+            if (e.target === overlay) { close(); overlay.removeEventListener('click', handler); }
+        });
+    };
+
+    /**
+     * Helper: attach customConfirm to a form submit via data attribute.
+     * Add data-confirm="message" to any <form> element.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form[data-confirm]').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const msg  = form.getAttribute('data-confirm');
+                const type = form.getAttribute('data-confirm-type') || 'danger';
+                const title = form.getAttribute('data-confirm-title') || undefined;
+                const okText = form.getAttribute('data-confirm-ok') || undefined;
+                customConfirm(msg, function() { form.submit(); }, { type, title, okText });
+            });
+        });
+    });
     </script>
 </body>
 </html>

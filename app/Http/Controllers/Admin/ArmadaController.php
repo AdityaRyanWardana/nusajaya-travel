@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Armada;
+use App\Models\ArmadaMaintenance;
 
 class ArmadaController extends Controller
 {
@@ -169,5 +170,56 @@ class ArmadaController extends Controller
         ]);
 
         return back()->with('success', 'Foto utama berhasil dihapus');
+    }
+
+    public function maintenanceList()
+    {
+        $activeMaintenances = \App\Models\ArmadaMaintenance::with('armada')
+                                ->where('status', 'active')
+                                ->orderBy('expected_finish_date', 'asc')
+                                ->get();
+                                
+        $completedMaintenances = \App\Models\ArmadaMaintenance::with('armada')
+                                ->where('status', 'completed')
+                                ->orderBy('updated_at', 'desc')
+                                ->limit(10) // show last 10 completed for history
+                                ->get();
+
+        return view('admin.armadas.maintenance', compact('activeMaintenances', 'completedMaintenances'));
+    }
+
+    public function storeMaintenance(Request $request, Armada $armada)
+    {
+        $request->validate([
+            'vehicle_name' => 'required|string|max:255',
+            'expected_finish_date' => 'required|date',
+        ]);
+
+        if ($armada->maintenance_units >= $armada->total_units) {
+            return back()->with('error', 'Semua unit sudah dalam maintenance.');
+        }
+
+        ArmadaMaintenance::create([
+            'armada_id' => $armada->id,
+            'vehicle_name' => $request->vehicle_name,
+            'expected_finish_date' => $request->expected_finish_date,
+            'status' => 'active'
+        ]);
+
+        $armada->increment('maintenance_units');
+
+        return back()->with('success', 'Unit berhasil ditambahkan ke daftar maintenance.');
+    }
+
+    public function completeMaintenance(Request $request, Armada $armada, ArmadaMaintenance $maintenance)
+    {
+        if ($maintenance->status === 'active') {
+            $maintenance->update(['status' => 'completed']);
+            if ($armada->maintenance_units > 0) {
+                $armada->decrement('maintenance_units');
+            }
+        }
+
+        return back()->with('success', 'Maintenance unit telah diselesaikan.');
     }
 }

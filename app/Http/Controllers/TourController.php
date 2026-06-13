@@ -83,25 +83,26 @@ class TourController extends Controller
 
     public function myOrders()
     {
-        $orders = Booking::where('user_id', auth()->id())->latest()->get();
+        $orders = Booking::where('user_id', auth()->id())
+            ->where('is_hidden_from_user', false)
+            ->latest()
+            ->get();
         return view('orders.index', compact('orders'));
     }
 
     public function resetOrders()
     {
-        $driver = \DB::getDriverName();
-        if ($driver === 'sqlite') {
-            \DB::statement('PRAGMA foreign_keys = OFF;');
-            Booking::truncate(); // Laravel truncate on sqlite does 'delete from table'
-            \DB::table('sqlite_sequence')->where('name', 'bookings')->delete();
-            \DB::statement('PRAGMA foreign_keys = ON;');
-        } elseif ($driver === 'pgsql') {
-            \DB::statement('TRUNCATE TABLE bookings RESTART IDENTITY CASCADE;');
-        } else {
-            \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-            Booking::truncate();
-            \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        }
+        $userId = auth()->id();
+
+        // 1. Hard delete unpaid and cancelled bookings to save space
+        Booking::where('user_id', $userId)
+            ->whereIn('status', ['unpaid', 'cancelled'])
+            ->delete();
+
+        // 2. Hide paid and pending bookings to keep admin records and revenue intact
+        Booking::where('user_id', $userId)
+            ->whereNotIn('status', ['unpaid', 'cancelled'])
+            ->update(['is_hidden_from_user' => true]);
         
         return redirect()->route('orders.my')->with('success', 'Your order history and booking codes have been successfully reset.');
     }
@@ -206,5 +207,17 @@ class TourController extends Controller
             'rescheduled_at' => now(),
         ]);
         return back()->with('success', 'Travel date has been updated successfully.');
+    }
+
+    /**
+     * Check the current payment status of an order (used for AJAX polling).
+     */
+    public function checkStatus($id)
+    {
+        $order = Booking::where('user_id', auth()->id())->findOrFail($id);
+        return response()->json([
+            'status' => $order->status,
+            'order_id' => $order->id,
+        ]);
     }
 }

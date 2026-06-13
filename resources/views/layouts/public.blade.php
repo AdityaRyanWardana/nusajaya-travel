@@ -77,7 +77,7 @@
             </a>
 
             <!-- Desktop Links -->
-            <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-500">
+            <div class="hidden md:flex gap-8 text-base font-semibold text-slate-500">
                 <a href="{{ url('/') }}" class="hover:text-brandblue transition {{ request()->is('/') ? 'text-brandblue border-b-2 border-brandblue pb-1' : '' }}">{{ __('Home') }}</a>
                 <a href="{{ route('tours.index') }}" class="hover:text-brandblue transition {{ request()->is('tours*') ? 'text-brandblue border-b-2 border-brandblue pb-1' : '' }}">{{ __('Tours') }}</a>
                 <a href="{{ route('transport.index') }}" class="hover:text-brandblue transition {{ request()->is('transport*') ? 'text-brandblue border-b-2 border-brandblue pb-1' : '' }}">{{ __('Transport') }}</a>
@@ -92,7 +92,7 @@
                         <div class="flex items-center gap-4" x-data="{ open: false }">
                             <div class="hidden lg:block text-right">
                                 <p class="text-xs font-bold text-brandblue leading-tight">{{ auth()->user()->name }}</p>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ auth()->user()->role }}</p>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{{ auth()->user()->role }}</p>
                             </div>
                             
                             <!-- Dropdown Trigger -->
@@ -121,7 +121,7 @@
                                     
                                     <div class="px-4 py-3 border-b border-slate-50 mb-2">
                                         <p class="text-xs font-bold text-brandblue">{{ auth()->user()->name }}</p>
-                                        <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email }}</p>
+                                        <p class="text-xs text-slate-400 truncate">{{ auth()->user()->email }}</p>
                                     </div>
 
                                     @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
@@ -200,10 +200,10 @@
              class="md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 shadow-xl z-[60]">
             
             <div class="px-6 py-4 flex flex-col space-y-4">
-                <a href="{{ url('/') }}" class="text-sm font-bold {{ request()->is('/') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('Home') }}</a>
-                <a href="{{ route('tours.index') }}" class="text-sm font-bold {{ request()->is('tours*') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('Tours') }}</a>
-                <a href="{{ route('transport.index') }}" class="text-sm font-bold {{ request()->is('transport*') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('Transport') }}</a>
-                <a href="{{ route('about') }}" class="text-sm font-bold {{ request()->is('about*') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('About') }}</a>
+                <a href="{{ url('/') }}" class="text-base font-bold {{ request()->is('/') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('Home') }}</a>
+                <a href="{{ route('tours.index') }}" class="text-base font-bold {{ request()->is('tours*') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('Tours') }}</a>
+                <a href="{{ route('transport.index') }}" class="text-base font-bold {{ request()->is('transport*') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('Transport') }}</a>
+                <a href="{{ route('about') }}" class="text-base font-bold {{ request()->is('about*') ? 'text-brandblue' : 'text-slate-500' }}">{{ __('About') }}</a>
                 
                 <hr class="border-slate-100">
                 
@@ -229,8 +229,8 @@
                     </div>
                 @else
                     <div class="flex gap-3 pt-2 pb-2">
-                        <a href="{{ route('login') }}" class="flex-1 text-sm font-bold text-brandblue border border-brandblue text-center py-2 rounded-lg hover:bg-brandblue hover:text-white transition">{{ __('Login') }}</a>
-                        <a href="{{ route('register') }}" class="flex-1 text-sm font-bold bg-brandblue text-white border border-brandblue text-center py-2 rounded-lg hover:bg-slate-800 transition">{{ __('Sign Up') }}</a>
+                        <a href="{{ route('login') }}" class="flex-1 text-base font-bold text-brandblue border border-brandblue text-center py-2 rounded-lg hover:bg-brandblue hover:text-white transition">{{ __('Login') }}</a>
+                        <a href="{{ route('register') }}" class="flex-1 text-base font-bold bg-brandblue text-white border border-brandblue text-center py-2 rounded-lg hover:bg-slate-800 transition">{{ __('Sign Up') }}</a>
                     </div>
                 @endauth
             </div>
@@ -262,6 +262,103 @@
 
             revealElements.forEach(el => revealObserver.observe(el));
         });
+    </script>
+    {{-- ============================================================ --}}
+    {{-- GLOBAL CUSTOM CONFIRM MODAL --}}
+    {{-- ============================================================ --}}
+    <div id="customConfirmOverlay"
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-slate-900/70 backdrop-blur-md hidden"
+         style="transition: opacity 0.25s ease;">
+        <div id="customConfirmBox"
+             class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden transform transition-all duration-300 scale-95 opacity-0">
+            <div id="confirmAccentBar" class="h-1.5 w-full bg-red-500"></div>
+            <div class="p-10">
+                <div class="flex items-start gap-6 mb-8">
+                    <div id="confirmIconWrap" class="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-lg bg-red-50">
+                        <i id="confirmIcon" data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>
+                    </div>
+                    <div>
+                        <h3 id="confirmTitle" class="text-xl font-black text-slate-900 uppercase tracking-tight italic leading-tight mb-2">Confirm Action</h3>
+                        <p id="confirmMessage" class="text-sm text-slate-500 font-medium leading-relaxed">Are you sure you want to proceed?</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="confirmCancelBtn" class="flex-1 py-4 bg-slate-50 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all duration-300">Cancel</button>
+                    <button id="confirmOkBtn" class="flex-1 py-4 bg-red-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all duration-300 shadow-xl shadow-red-500/20">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    window.customConfirm = function(message, onConfirm, opts = {}) {
+        const type    = opts.type    || 'danger';
+        const title   = opts.title   || (type === 'danger' ? 'Delete Confirmation' : 'Are You Sure?');
+        const okText  = opts.okText  || (type === 'danger' ? 'Yes, Delete' : 'Yes, Proceed');
+        const okClass = type === 'danger' ? 'bg-red-500 hover:bg-red-600 shadow-red-500/20' : 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/20';
+        const iconColor = type === 'danger' ? 'text-red-500' : 'text-amber-500';
+        const iconBg    = type === 'danger' ? 'bg-red-50'    : 'bg-amber-50';
+        const barColor  = type === 'danger' ? 'bg-red-500'   : 'bg-amber-500';
+        const iconName  = type === 'danger' ? 'trash-2'      : 'alert-triangle';
+
+        const overlay = document.getElementById('customConfirmOverlay');
+        const box     = document.getElementById('customConfirmBox');
+
+        document.getElementById('confirmTitle').textContent   = title;
+        document.getElementById('confirmMessage').textContent = message;
+        document.getElementById('confirmAccentBar').className = 'h-1.5 w-full ' + barColor;
+
+        const iconWrap = document.getElementById('confirmIconWrap');
+        iconWrap.className = 'w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-lg ' + iconBg;
+        const iconEl = document.getElementById('confirmIcon');
+        iconEl.setAttribute('data-lucide', iconName);
+        iconEl.className = 'w-8 h-8 ' + iconColor;
+        lucide.createIcons({ nodes: [iconEl] });
+
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            box.classList.remove('scale-95', 'opacity-0');
+            box.classList.add('scale-100', 'opacity-100');
+        });
+
+        function close() {
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.classList.add('hidden'), 250);
+        }
+
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+        const newOk = okBtn.cloneNode(true);
+        const newCancel = cancelBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOk, okBtn);
+        cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+        newOk.textContent     = okText;
+        newCancel.textContent = 'Cancel';
+        newOk.className       = 'flex-1 py-4 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl ' + okClass;
+        newCancel.className   = 'flex-1 py-4 bg-slate-50 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all duration-300';
+
+        newOk.addEventListener('click', () => { close(); if (onConfirm) onConfirm(); });
+        newCancel.addEventListener('click', close);
+        overlay.addEventListener('click', function handler(e) {
+            if (e.target === overlay) { close(); overlay.removeEventListener('click', handler); }
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form[data-confirm]').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const msg    = form.getAttribute('data-confirm');
+                const type   = form.getAttribute('data-confirm-type') || 'danger';
+                const title  = form.getAttribute('data-confirm-title') || undefined;
+                const okText = form.getAttribute('data-confirm-ok') || undefined;
+                customConfirm(msg, function() { form.submit(); }, { type, title, okText });
+            });
+        });
+    });
     </script>
 </body>
 </html>

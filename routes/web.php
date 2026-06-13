@@ -33,6 +33,7 @@ Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
 Route::get('/orders', [TourController::class, 'myOrders'])->name('orders.my')->middleware('auth');
 Route::get('/orders/{id}/payment', [TourController::class, 'payment'])->name('orders.payment')->middleware('auth');
 Route::post('/orders/{id}/pay', [TourController::class, 'pay'])->name('orders.pay')->middleware('auth');
+Route::get('/orders/{id}/status', [TourController::class, 'checkStatus'])->name('orders.status')->middleware('auth');
 Route::post('/orders/reset', [TourController::class, 'resetOrders'])->name('orders.reset')->middleware('auth');
 Route::post('/orders/{id}/cancel', [TourController::class, 'cancelOrder'])->name('orders.cancel')->middleware('auth');
 Route::post('/orders/{id}/reschedule', [TourController::class, 'rescheduleOrder'])->name('orders.reschedule')->middleware('auth');
@@ -56,7 +57,10 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('adm
     Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     Route::delete('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::post('/bookings/{booking}/reschedule-noticed', [App\Http\Controllers\Admin\DashboardController::class, 'markRescheduleAsNoticed'])->name('bookings.reschedule-noticed');
+    Route::get('maintenance-board', [App\Http\Controllers\Admin\ArmadaController::class, 'maintenanceList'])->name('maintenance.board');
     Route::resource('armadas', App\Http\Controllers\Admin\ArmadaController::class);
+    Route::post('armadas/{armada}/maintenance', [App\Http\Controllers\Admin\ArmadaController::class, 'storeMaintenance'])->name('armadas.maintenance.store');
+    Route::patch('armadas/{armada}/maintenance/{maintenance}', [App\Http\Controllers\Admin\ArmadaController::class, 'completeMaintenance'])->name('armadas.maintenance.complete');
     Route::delete('armadas/{armada}/delete-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteImage'])->name('armadas.delete-image');
     Route::delete('armadas/{armada}/delete-main-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteMainImage'])->name('armadas.delete-main-image');
     

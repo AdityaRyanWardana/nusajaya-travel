@@ -87,7 +87,12 @@
                         <i data-lucide="settings-2" class="w-4 h-4 mr-2"></i>
                         Manage Package
                     </div>
-                    <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST" class="shrink-0" onsubmit="return confirm('{{ __('Are you sure you want to delete this package?') }}')" onclick="event.stopPropagation()">
+                    <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST"
+                          class="shrink-0"
+                          data-confirm="{{ __('Are you sure you want to delete this package? This cannot be undone.') }}"
+                          data-confirm-title="Delete Tour Package"
+                          data-confirm-ok="Yes, Delete Package"
+                          onclick="event.stopPropagation()">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-14 h-14 flex items-center justify-center bg-red-50 dark:bg-red-950/30 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all">

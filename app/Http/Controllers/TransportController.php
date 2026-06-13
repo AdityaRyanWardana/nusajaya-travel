@@ -26,8 +26,9 @@ class TransportController extends Controller
 
         foreach ($armadas as $armada) {
             $bookedCount = $bookingCounts[$armada->slug] ?? 0;
-            $armada->available = $bookedCount < $armada->total_units;
-            $armada->units_left = $armada->total_units - $bookedCount;
+            $availableUnits = $armada->total_units - $armada->maintenance_units - $bookedCount;
+            $armada->available = $availableUnits > 0;
+            $armada->units_left = $availableUnits > 0 ? $availableUnits : 0;
         }
 
         return view('transport.index', [
@@ -39,7 +40,22 @@ class TransportController extends Controller
     public function show($slug)
     {
         $transport = Armada::where('slug', $slug)->firstOrFail();
-        return view('transport.show', compact('transport'));
+
+        // Calculate availability for today as a default
+        $today = now()->format('Y-m-d');
+        $bookedCount = Booking::where('type', 'transport')
+            ->whereDate('travel_date', $today)
+            ->whereIn('status', ['pending', 'paid', 'completed'])
+            ->where('service_slug', $slug)
+            ->count();
+        
+        $availableUnits = $transport->total_units - $transport->maintenance_units - $bookedCount;
+        $transport->available = $availableUnits > 0;
+        $transport->units_left = $availableUnits > 0 ? $availableUnits : 0;
+
+        $isFullyMaintained = $transport->maintenance_units >= $transport->total_units;
+
+        return view('transport.show', compact('transport', 'isFullyMaintained'));
     }
 
     public function book(Request $request, $id)

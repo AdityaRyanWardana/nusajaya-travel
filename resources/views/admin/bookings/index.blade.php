@@ -77,8 +77,8 @@
                             {{-- Order Info --}}
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    <span class="text-[9px] font-black text-blue-500 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full uppercase tracking-widest">{{ $booking->order_number }}</span>
-                                    <span class="text-[9px] font-black bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-full uppercase tracking-widest">{{ $booking->type }}</span>
+                                <p class="text-[11px] font-black text-blue-500 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full uppercase tracking-widest">{{ $booking->order_number }}</p>
+                                    <span class="text-[11px] font-black bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-full uppercase tracking-widest">{{ $booking->type }}</span>
                                 </div>
                                 <p class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-2">{{ $booking->service_name }}</p>
                                 <div class="flex flex-wrap gap-x-4 gap-y-1">
@@ -100,7 +100,7 @@
 
                             {{-- Travel Date --}}
                             <div class="text-center shrink-0 lg:w-28">
-                                <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{{ __('Travel Date') }}</p>
+                                <p class="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{{ __('Travel Date') }}</p>
                                 <p class="text-sm font-black text-slate-700 dark:text-slate-200">{{ $booking->travel_date?->format('d') }}</p>
                                 <p class="text-xs font-bold text-slate-500 dark:text-slate-400">{{ $booking->travel_date?->format('M Y') }}</p>
                             </div>
@@ -110,7 +110,7 @@
 
                             {{-- Amount --}}
                             <div class="text-center shrink-0 lg:w-36">
-                                <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{{ __('Total') }}</p>
+                                <p class="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{{ __('Total') }}</p>
                                 <p class="text-lg font-black text-slate-800 dark:text-white leading-tight">IDR</p>
                                 <p class="text-base font-black text-blue-600 dark:text-blue-400 leading-tight">{{ number_format($booking->amount, 0, ',', '.') }}</p>
                             </div>
@@ -149,7 +149,11 @@
                                     </form>
                                     @endif
 
-                                    <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Delete this booking permanently?') && ('{{ $booking->status }}' !== 'paid' || confirm('WARNING: This booking is already PAID. Are you absolutely sure you want to delete this paid record?'));" class="inline">
+                                    <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST"
+                                          data-confirm="{{ $booking->status === 'paid' ? 'WARNING: This booking is PAID. Delete it permanently?' : 'Delete this booking permanently? This cannot be undone.' }}"
+                                          data-confirm-title="Delete Booking"
+                                          data-confirm-ok="Yes, Delete"
+                                          class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="w-9 h-9 flex items-center justify-center text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-500 hover:text-white rounded-xl transition-all duration-300 shadow-sm" title="Delete Record">

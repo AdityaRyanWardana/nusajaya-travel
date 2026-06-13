@@ -20,8 +20,8 @@
                 <div class="space-y-4">
                     <!-- Order ID & Service Name -->
                     <div class="p-4 bg-brandblue rounded-2xl text-white">
-                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">Order ID</p>
-                        <p class="text-[10px] font-black text-skyblue tracking-widest mb-3">{{ $order->order_number }}</p>
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">Order ID</p>
+                        <p class="text-xs font-black text-skyblue tracking-widest mb-3">{{ $order->order_number }}</p>
                         <p class="text-sm font-black leading-snug">{{ $order->service_name }}</p>
                     </div>
 
@@ -37,8 +37,8 @@
                                 <svg class="w-3.5 h-3.5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Rental Category') }}</p>
-                                <p class="text-xs font-bold text-brandblue">{{ $category }}</p>
+                                <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Rental Category') }}</p>
+                                <p class="text-sm font-bold text-brandblue">{{ $category }}</p>
                             </div>
                         </div>
 
@@ -49,8 +49,8 @@
                                 <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Pickup Point') }}</p>
-                                <p class="text-xs font-bold text-brandblue leading-relaxed">{{ $order->pickup_point }}</p>
+                                <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Pickup Point') }}</p>
+                                <p class="text-sm font-bold text-brandblue leading-relaxed">{{ $order->pickup_point }}</p>
                             </div>
                         </div>
                         @endif
@@ -62,8 +62,8 @@
                                 <svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Destination') }}</p>
-                                <p class="text-xs font-bold text-brandblue leading-relaxed">{{ $order->destination }}</p>
+                                <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Destination') }}</p>
+                                <p class="text-sm font-bold text-brandblue leading-relaxed">{{ $order->destination }}</p>
                             </div>
                         </div>
                         @endif
@@ -75,8 +75,8 @@
                                 <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Travel Date') }}</p>
-                                <p class="text-xs font-bold text-brandblue">{{ \Carbon\Carbon::parse($order->travel_date)->format('d F Y') }}</p>
+                                <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Travel Date') }}</p>
+                                <p class="text-sm font-bold text-brandblue">{{ \Carbon\Carbon::parse($order->travel_date)->format('d F Y') }}</p>
                             </div>
                         </div>
                         @endif
@@ -88,8 +88,8 @@
                                 <svg class="w-3.5 h-3.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Pickup Time') }}</p>
-                                <p class="text-xs font-bold text-brandblue">{{ $order->pickup_time }}</p>
+                                <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Pickup Time') }}</p>
+                                <p class="text-sm font-bold text-brandblue">{{ $order->pickup_time }}</p>
                             </div>
                         </div>
                         @endif
@@ -142,7 +142,7 @@
                 </div>
                 @endif
 
-                <p class="text-center mt-6 text-[10px] text-slate-400 font-medium italic">
+                <p class="text-center mt-6 text-xs text-slate-400 font-medium italic">
                     By proceeding, you agree to our <a href="#" class="underline">Terms & Conditions</a>.
                 </p>
             </div>
@@ -153,17 +153,53 @@
 @if($snapToken)
 <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script type="text/javascript">
+    // Show loading overlay
+    function showLoadingOverlay(message) {
+        const overlay = document.getElementById('status-overlay');
+        const msg = document.getElementById('status-overlay-msg');
+        if (overlay) {
+            overlay.classList.remove('hidden');
+            if (msg && message) msg.textContent = message;
+        }
+    }
+
+    // Poll payment status from server and redirect when confirmed
+    function pollPaymentStatus(orderId, token, maxAttempts) {
+        let attempts = 0;
+        const interval = setInterval(function() {
+            attempts++;
+            fetch('{{ route('orders.status', $order->id) }}', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'paid') {
+                    clearInterval(interval);
+                    window.location.href = '{{ route('orders.my') }}';
+                } else if (data.status === 'cancelled') {
+                    clearInterval(interval);
+                    window.location.href = '{{ route('orders.my') }}';
+                }
+            })
+            .catch(() => {});
+
+            if (attempts >= maxAttempts) {
+                clearInterval(interval);
+                window.location.href = '{{ route('orders.my') }}';
+            }
+        }, 3000); // Poll every 3 seconds
+    }
+
     document.getElementById('pay-button').onclick = function () {
-        // SnapToken acquired from previous step
         snap.pay('{{ $snapToken }}', {
-            // Optional
-            onSuccess: function(result){
-                /* You may add your own js here, this is just example */
-                // Update order status via ajax or form submission
+            onSuccess: function(result) {
+                showLoadingOverlay('Memverifikasi pembayaran, harap tunggu...');
+
+                // Immediately submit to backend
                 let form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '{{ route('orders.pay', $order->id) }}';
-                
+
                 let csrf = document.createElement('input');
                 csrf.type = 'hidden';
                 csrf.name = '_token';
@@ -175,7 +211,7 @@
                 paymentType.name = 'payment_type';
                 paymentType.value = result.payment_type || 'midtrans';
                 form.appendChild(paymentType);
-                
+
                 let midtransOrderId = document.createElement('input');
                 midtransOrderId.type = 'hidden';
                 midtransOrderId.name = 'midtrans_order_id';
@@ -191,18 +227,29 @@
                 document.body.appendChild(form);
                 form.submit();
             },
-            // Optional
-            onPending: function(result){
-                /* You may add your own js here, this is just example */
-                window.location.href = '{{ route('orders.my') }}';
+            onPending: function(result) {
+                showLoadingOverlay('Pembayaran pending, mengarahkan ke halaman pesanan...');
+                // Start polling to catch when webhook arrives
+                pollPaymentStatus({{ $order->id }}, '{{ $snapToken }}', 20);
             },
-            // Optional
-            onError: function(result){
-                /* You may add your own js here, this is just example */
-                alert("Payment failed!");
+            onError: function(result) {
+                alert('Pembayaran gagal. Silakan coba lagi atau hubungi support.');
+            },
+            onClose: function() {
+                // User closed popup without completing payment - start polling briefly
+                pollPaymentStatus({{ $order->id }}, '{{ $snapToken }}', 5);
             }
         });
     };
 </script>
+
+{{-- Loading / Status Overlay --}}
+<div id="status-overlay" class="hidden fixed inset-0 z-[200] flex flex-col items-center justify-center bg-brandblue/95 backdrop-blur-md">
+    <div class="text-center">
+        <div class="w-20 h-20 border-4 border-white/20 border-t-skyblue rounded-full animate-spin mx-auto mb-6"></div>
+        <p class="text-white font-black text-lg mb-2">Memproses Pembayaran</p>
+        <p id="status-overlay-msg" class="text-white/60 text-sm font-medium">Harap tunggu sebentar...</p>
+    </div>
+</div>
 @endif
 @endsection

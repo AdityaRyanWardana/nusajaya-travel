@@ -146,6 +146,18 @@
                 transferDest: '',
             }">
                 <div class="bg-brandblue rounded-[3rem] p-10 text-white shadow-2xl sticky top-32">
+                    @if(isset($isFullyMaintained) && $isFullyMaintained)
+                        <div class="text-center space-y-6 py-8">
+                            <div class="w-20 h-20 bg-red-500/20 text-red-500 rounded-3xl mx-auto flex items-center justify-center mb-6 border border-red-500/30">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <h3 class="text-2xl font-black uppercase italic tracking-tight text-red-400">Under Maintenance</h3>
+                            <p class="text-xs text-white/60 leading-relaxed font-medium">All units for this vehicle class are currently undergoing scheduled maintenance to ensure the best quality service. Please check back later.</p>
+                            <a href="{{ route('transport.index') }}" class="block mt-8 w-full py-5 bg-white text-brandblue rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-skyblue hover:text-white transition-all shadow-xl">
+                                Browse Other Fleet
+                            </a>
+                        </div>
+                    @else
                     <div class="mb-10 p-8 bg-white/5 rounded-3xl border border-white/10 group hover:border-skyblue/30 transition-all text-center">
                         <p class="text-[10px] font-black text-skyblue uppercase tracking-[0.4em] mb-4" 
                            x-text="category === 'Batam City Tour' ? '{{ __('Batam City Tour Rate') }}' : (category === 'PP Barelang' ? '{{ __('PP Barelang — Flat Rate') }}' : '{{ __('Transfer Rate') }}')"></p>
@@ -386,6 +398,7 @@
                         </div>
                         <p class="text-[9px] text-white/40 leading-relaxed font-medium capitalize">{{ __('Fuel, Driver fees, and standard insurance are already included in the displayed rate.') }}</p>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

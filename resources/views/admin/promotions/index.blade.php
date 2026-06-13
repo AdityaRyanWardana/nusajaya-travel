@@ -106,7 +106,10 @@
                             <a href="{{ route('admin.promotions.edit', $promotion->id) }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all duration-300">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </a>
-                            <form action="{{ route('admin.promotions.destroy', $promotion->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this promotion?')">
+                            <form action="{{ route('admin.promotions.destroy', $promotion->id) }}" method="POST"
+                                  data-confirm="Are you sure you want to delete this promotion? This cannot be undone."
+                                  data-confirm-title="Delete Promotion"
+                                  data-confirm-ok="Yes, Delete Promotion">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 hover:bg-red-500 hover:text-white transition-all duration-300">

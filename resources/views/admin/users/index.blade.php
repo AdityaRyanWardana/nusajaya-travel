@@ -66,7 +66,11 @@
                                     <i data-lucide="edit-3" class="w-5 h-5"></i>
                                 </a>
                                 @if($user->id !== auth()->id())
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline">
+                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                                      data-confirm="Are you sure you want to delete this user? This is permanent and cannot be undone."
+                                      data-confirm-title="Delete User"
+                                      data-confirm-ok="Yes, Delete User"
+                                      class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors" title="Delete User">

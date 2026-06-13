@@ -101,7 +101,12 @@
                         <i data-lucide="edit-3" class="w-3.5 h-3.5 mr-2"></i>
                         Manage Asset
                     </div>
-                    <form action="{{ route('admin.armadas.destroy', $armada->id) }}" method="POST" class="shrink-0" onsubmit="return confirm('{{ __('Are you sure you want to delete this fleet?') }}')" onclick="event.stopPropagation()">
+                    <form action="{{ route('admin.armadas.destroy', $armada->id) }}" method="POST"
+                          class="shrink-0"
+                          data-confirm="{{ __('Are you sure you want to delete this fleet? This cannot be undone.') }}"
+                          data-confirm-title="Delete Fleet"
+                          data-confirm-ok="Yes, Delete Fleet"
+                          onclick="event.stopPropagation()">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-12 h-12 flex items-center justify-center bg-red-50 dark:bg-red-950/30 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">
