@@ -179,79 +179,89 @@
 </header>
 
 <!-- Premium Services Section -->
-<section class="max-w-7xl mx-auto px-8 py-32 pb-48 reveal" x-data="{ showServices: false }">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-        <div class="max-w-xl">
+<section class="max-w-7xl mx-auto px-8 py-32 pb-48 reveal">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+        <div class="max-w-2xl">
             <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Our Expertise</span>
-            <h2 class="text-5xl font-black text-brandblue uppercase italic leading-none mb-6">Premium Travel Solutions</h2>
-            <p class="text-sm text-slate-500 font-medium leading-relaxed">
-                We bring a new standard to travel comfort. From the most complete VIP bus fleet to personally designed tour packages for an unforgettable experience in Batam.
+            <h2 class="text-5xl md:text-6xl font-black text-brandblue uppercase italic leading-none mb-6">Premium Travel Solutions</h2>
+            <p class="text-base text-slate-500 font-medium leading-relaxed max-w-lg">
+                We bring a new standard to travel comfort. Choose our premium fleet, personalized tours, or highly private car rentals.
             </p>
         </div>
-        <button @click="showServices = !showServices" :class="{'bg-skyblue': showServices}" class="w-16 h-16 rounded-[2rem] bg-brandblue text-white flex items-center justify-center hover:bg-skyblue transition-all duration-700 shadow-2xl shadow-brandblue/20 group">
-            <svg x-show="!showServices" class="w-6 h-6 group-hover:scale-125 transition group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            <svg x-show="showServices" x-cloak class="w-6 h-6 group-hover:scale-125 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
-        </button>
+        <a href="{{ route('transport.index') }}" class="hidden md:flex items-center gap-4 bg-brandblue/5 hover:bg-brandblue text-brandblue hover:text-white px-8 py-4 rounded-full transition-all duration-500 group">
+            <span class="text-xs font-black uppercase tracking-widest">Explore All</span>
+            <svg class="w-4 h-4 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
     </div>
 
-    <div x-show="showServices" 
-         x-transition:enter="transition ease-out duration-700"
-         x-transition:enter-start="opacity-0 translate-y-12"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-8"
-         x-cloak
-         class="grid lg:grid-cols-3 gap-10">
+    <!-- Expanding Flex Cards -->
+    <div class="flex flex-col lg:flex-row h-[700px] lg:h-[550px] gap-4 lg:gap-6 w-full group/accordion">
         <!-- Transport Booking -->
-        <a href="{{ route('transport.index') }}" class="group relative bg-white rounded-[4rem] p-12 border border-slate-100 shadow-2xl shadow-brandblue/5 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden reveal-left">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-brandblue/5 rounded-bl-[4rem] -mr-10 -mt-10 group-hover:scale-150 group-hover:bg-brandblue transition-all duration-700"></div>
+        <a href="{{ route('transport.index') }}" class="group relative flex-1 hover:flex-[3] transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-[2.5rem] flex flex-col justify-end p-8 reveal-left shadow-2xl shadow-brandblue/10">
+            <img src="{{ asset('images/hero_1.jpg') }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-brandblue/90 via-brandblue/40 to-black/30 group-hover:from-brandblue/90 group-hover:via-brandblue/10 transition-all duration-700"></div>
             
-            <div class="w-16 h-16 bg-brandblue rounded-3xl flex items-center justify-center text-white mb-10 group-hover:rotate-12 transition-all shadow-xl shadow-brandblue/20">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-            </div>
-            
-            <h3 class="text-2xl font-black text-brandblue mb-4 uppercase italic transition group-hover:text-skyblue">Transport Booking</h3>
-            <p class="text-sm text-slate-500 mb-10 leading-relaxed font-medium">Airport and seaport pickup services with our latest fleet that is clean, well-maintained, and executive class.</p>
-            
-            <div class="mt-auto flex items-center justify-between">
-                <span class="text-[10px] font-black text-brandblue uppercase tracking-[0.3em] group-hover:tracking-[0.5em] transition-all">Book Transport</span>
-                <div class="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-skyblue group-hover:border-skyblue group-hover:text-white transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            <div class="relative z-10 flex flex-col h-full justify-end">
+                <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/20 shadow-lg">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                </div>
+                
+                <h3 class="text-3xl lg:text-4xl font-black text-white uppercase italic mb-2 shrink-0 drop-shadow-md">Transport</h3>
+                
+                <div class="overflow-hidden max-h-0 opacity-0 group-hover:max-h-64 group-hover:opacity-100 group-hover:mt-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
+                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-8 pr-4 lg:pr-12">
+                        Airport and seaport pickup services with our latest fleet that is clean, well-maintained, and executive class.
+                    </p>
+                    <div class="inline-flex items-center gap-3 text-[10px] font-black text-brandblue uppercase tracking-[0.3em] bg-white hover:bg-skyblue hover:text-white px-6 py-3.5 rounded-full transition-all duration-300 shadow-xl">
+                        Book Now <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
                 </div>
             </div>
         </a>
 
         <!-- Tour Packages -->
-        <a href="{{ route('tours.index') }}" class="group relative bg-brandblue rounded-[4rem] p-12 shadow-2xl shadow-brandblue/30 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden text-white reveal">
-            <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+        <a href="{{ route('tours.index') }}" class="group relative flex-1 hover:flex-[3] transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-[2.5rem] flex flex-col justify-end p-8 reveal shadow-2xl shadow-skyblue/10">
+            <img src="{{ asset('images/ranoh_island.jpg') }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0B2447]/90 via-[#0B2447]/40 to-black/30 group-hover:from-[#0B2447]/90 group-hover:via-[#0B2447]/10 transition-all duration-700"></div>
             
-            <div class="w-16 h-16 bg-skyblue rounded-3xl flex items-center justify-center text-white mb-10 group-hover:-rotate-12 transition-all shadow-xl shadow-skyblue/40">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-            </div>
-            
-            <h3 class="text-2xl font-black mb-4 uppercase italic">Tour Packages</h3>
-            <p class="text-sm text-white/70 mb-10 leading-relaxed font-medium">Exploration of stunning destinations in Batam & Bintan with tour packages designed for limitless excitement.</p>
-            
-            <div class="mt-auto flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:tracking-[0.5em] transition-all">Book Tour</span>
-                <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-brandblue transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            <div class="relative z-10 flex flex-col h-full justify-end">
+                <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/20 shadow-lg">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                </div>
+                
+                <h3 class="text-3xl lg:text-4xl font-black text-white uppercase italic mb-2 shrink-0 drop-shadow-md">Tour Packages</h3>
+                
+                <div class="overflow-hidden max-h-0 opacity-0 group-hover:max-h-64 group-hover:opacity-100 group-hover:mt-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
+                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-8 pr-4 lg:pr-12">
+                        Exploration of stunning destinations in Batam & Bintan with tour packages designed for limitless excitement.
+                    </p>
+                    <div class="inline-flex items-center gap-3 text-[10px] font-black text-brandblue uppercase tracking-[0.3em] bg-white hover:bg-skyblue hover:text-white px-6 py-3.5 rounded-full transition-all duration-300 shadow-xl">
+                        Book Tour <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
                 </div>
             </div>
         </a>
 
-        <!-- Private Car (Soon) -->
-        <div class="group relative bg-slate-50/50 rounded-[4rem] p-12 border border-dashed border-slate-200 flex flex-col opacity-80 overflow-hidden reveal-right">
-            <div class="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 mb-10 grayscale">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            </div>
+        <!-- Private Car -->
+        <div class="group relative flex-1 hover:flex-[3] transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-[2.5rem] flex flex-col justify-end p-8 reveal-right shadow-2xl shadow-slate-900/10">
+            <img src="{{ asset('images/hero_5.jpg') }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110 grayscale group-hover:grayscale-0">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-black/30 group-hover:from-slate-900/90 group-hover:via-slate-900/20 transition-all duration-700"></div>
             
-            <h3 class="text-2xl font-black text-slate-400 mb-4 uppercase italic">Private Car</h3>
-            <p class="text-sm text-slate-400 mb-10 leading-relaxed font-medium">Daily car rental with personal drivers for business needs or highly private family holidays.</p>
-            
-            <div class="mt-auto">
-                <span class="px-6 py-2 bg-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest rounded-full inline-block italic">Reserved for Soon</span>
+            <div class="relative z-10 flex flex-col h-full justify-end">
+                <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/20 shadow-lg">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </div>
+                
+                <h3 class="text-3xl lg:text-4xl font-black text-white uppercase italic mb-2 shrink-0 drop-shadow-md">Private Car</h3>
+                
+                <div class="overflow-hidden max-h-0 opacity-0 group-hover:max-h-64 group-hover:opacity-100 group-hover:mt-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
+                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-8 pr-4 lg:pr-12">
+                        Daily car rental with personal drivers for business needs or highly private family holidays.
+                    </p>
+                    <div class="inline-flex items-center gap-3 text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/80 backdrop-blur px-6 py-3.5 rounded-full cursor-not-allowed">
+                        Reserved for Soon
+                    </div>
+                </div>
             </div>
         </div>
     </div>
