@@ -58,7 +58,18 @@
 
                         <div>
                             <label for="duration" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Package Duration') }}</label>
-                            <input type="text" name="duration" id="duration" placeholder="{{ __('Example: 3 Days 2 Nights') }}" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium" required>
+                            <div class="relative">
+                                <select name="duration" id="duration" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium appearance-none cursor-pointer" required>
+                                    <option value="1 Day">{{ __('1 Day') }}</option>
+                                    <option value="2 Days">{{ __('2 Days') }}</option>
+                                    <option value="3 Days">{{ __('3 Days') }}</option>
+                                    <option value="4 Days">{{ __('4 Days') }}</option>
+                                    <option value="5 Days">{{ __('5 Days') }}</option>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <div>

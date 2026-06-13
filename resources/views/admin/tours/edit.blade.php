@@ -59,7 +59,18 @@
 
                         <div>
                             <label for="duration" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Package Duration') }}</label>
-                            <input type="text" name="duration" id="duration" value="{{ $tour->duration }}" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium" required>
+                            <div class="relative">
+                                <select name="duration" id="duration" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium appearance-none cursor-pointer" required>
+                                    <option value="1 Day" {{ $tour->duration == '1 Day' ? 'selected' : '' }}>{{ __('1 Day') }}</option>
+                                    <option value="2 Days" {{ $tour->duration == '2 Days' ? 'selected' : '' }}>{{ __('2 Days') }}</option>
+                                    <option value="3 Days" {{ $tour->duration == '3 Days' ? 'selected' : '' }}>{{ __('3 Days') }}</option>
+                                    <option value="4 Days" {{ $tour->duration == '4 Days' ? 'selected' : '' }}>{{ __('4 Days') }}</option>
+                                    <option value="5 Days" {{ $tour->duration == '5 Days' ? 'selected' : '' }}>{{ __('5 Days') }}</option>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <div>
