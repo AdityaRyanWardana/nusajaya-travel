@@ -34,42 +34,46 @@
             {{-- Left Column: Main Details --}}
             <div class="lg:col-span-2 space-y-12">
                 {{-- Package Information Section --}}
-                <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 shadow-sm">
+                <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl flex items-center justify-center text-blue-600 shadow-sm border border-blue-100">
                             <i data-lucide="map" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800 uppercase italic tracking-tight">{{ __('Package Details') }}</h3>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">{{ __('Package Details') }}</h3>
+                            <p class="text-xs text-slate-400 mt-1">Tour details and specifications</p>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-2">
-                            <label for="title" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Package Title') }}</label>
-                            <input type="text" name="title" id="title" value="{{ $tour->title }}" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700" required>
+                            <label for="title" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Package Title') }}</label>
+                            <input type="text" name="title" id="title" value="{{ $tour->title }}" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium" required>
                         </div>
 
                         <div>
-                            <label for="destination" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Primary Destination') }}</label>
-                            <input type="text" name="destination" id="destination" value="{{ $tour->destination }}" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700" required>
+                            <label for="destination" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Primary Destination') }}</label>
+                            <input type="text" name="destination" id="destination" value="{{ $tour->destination }}" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium" required>
                         </div>
 
                         <div>
-                            <label for="duration" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Package Duration') }}</label>
-                            <input type="text" name="duration" id="duration" value="{{ $tour->duration }}" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700" required>
+                            <label for="duration" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Package Duration') }}</label>
+                            <input type="text" name="duration" id="duration" value="{{ $tour->duration }}" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium" required>
                         </div>
 
                         <div>
-                            <label for="price" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Price Per Guest (IDR)') }}</label>
+                            <label for="price" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Price Per Guest (IDR)') }}</label>
                             <div class="relative">
-                                <span class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">Rp</span>
-                                <input type="number" name="price" id="price" value="{{ intval($tour->price) }}" class="w-full pl-14 pr-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-black text-slate-700" required>
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">Rp</span>
+                                <input type="number" name="price" id="price" value="{{ intval($tour->price) }}" class="w-full pl-10 pr-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all text-slate-700 font-medium" required>
                             </div>
                         </div>
 
                         <div>
-                            <label for="armada_id" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Auto-Assigned Fleet') }}</label>
+                            <label for="armada_id" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Auto-Assigned Fleet') }}</label>
                             <div class="relative">
-                                <select name="armada_id" id="armada_id" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-700 appearance-none cursor-pointer">
+                                <select name="armada_id" id="armada_id" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium appearance-none cursor-pointer">
                                     <option value="">{{ __('No specific fleet') }}</option>
                                     @foreach($armadas as $armada)
                                         <option value="{{ $armada->id }}" {{ $tour->armada_id == $armada->id ? 'selected' : '' }}>
@@ -77,26 +81,30 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                    <i data-lucide="bus" class="w-5 h-5"></i>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-span-2">
-                            <label for="description" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{{ __('Full Itinerary Description') }}</label>
-                            <textarea name="description" id="description" rows="6" class="w-full px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium text-slate-600 resize-none leading-relaxed">{{ $tour->description }}</textarea>
+                            <label for="description" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Full Itinerary Description') }}</label>
+                            <textarea name="description" id="description" rows="6" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium resize-none">{{ $tour->description }}</textarea>
                         </div>
                     </div>
                 </div>
 
                 {{-- Inclusions Section --}}
-                <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 shadow-sm">
+                <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl flex items-center justify-center text-amber-600 shadow-sm border border-amber-100">
                             <i data-lucide="check-circle" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800 uppercase italic tracking-tight">{{ __('Package Inclusions') }}</h3>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">{{ __('Package Inclusions') }}</h3>
+                            <p class="text-xs text-slate-400 mt-1">What's included in this tour</p>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -136,12 +144,15 @@
             {{-- Right Column: Media --}}
             <div class="space-y-12">
                 {{-- Main Photo Section --}}
-                <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-500 shadow-sm">
+                <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-xl flex items-center justify-center text-purple-600 shadow-sm border border-purple-100">
                             <i data-lucide="image" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800 uppercase italic tracking-tight">{{ __('Cover View') }}</h3>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">{{ __('Cover View') }}</h3>
+                        </div>
                     </div>
 
                     <div class="space-y-6">
@@ -178,12 +189,15 @@
                 </div>
 
                 {{-- Gallery Section --}}
-                <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 shadow-sm">
+                <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-xl flex items-center justify-center text-orange-600 shadow-sm border border-orange-100">
                             <i data-lucide="images" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800 uppercase italic tracking-tight">{{ __('Experience Gallery') }}</h3>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">{{ __('Experience Gallery') }}</h3>
+                        </div>
                     </div>
 
                     <div class="space-y-8">
@@ -237,10 +251,10 @@
 
                 {{-- Action Buttons --}}
                 <div class="flex flex-col gap-4">
-                    <button type="submit" class="w-full py-6 bg-blue-600 text-white text-xs font-black uppercase tracking-widest rounded-3xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20">
-                        {{ __('Update Experience') }}
+                    <button type="submit" class="w-full py-4 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 hover:-translate-y-0.5">
+                        {{ __('Save All Changes') }}
                     </button>
-                    <a href="{{ route('admin.tours.index') }}" class="w-full py-6 bg-white text-slate-400 text-xs font-black uppercase tracking-widest rounded-3xl hover:bg-slate-50 transition-all text-center border border-slate-100">
+                    <a href="{{ route('admin.tours.index') }}" class="w-full py-4 bg-white text-slate-600 text-sm font-bold rounded-xl hover:bg-slate-50 transition-all text-center border border-slate-200 shadow-sm">
                         {{ __('Cancel and Return') }}
                     </a>
                 </div>
