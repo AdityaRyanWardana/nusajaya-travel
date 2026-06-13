@@ -179,7 +179,7 @@
 </header>
 
 <!-- Premium Services Section -->
-<section class="max-w-7xl mx-auto px-8 py-32 pb-48 reveal">
+<section class="max-w-7xl mx-auto px-8 py-32 pb-48 reveal" x-data="{ showServices: false }">
     <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
         <div class="max-w-xl">
             <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Our Expertise</span>
@@ -188,12 +188,21 @@
                 We bring a new standard to travel comfort. From the most complete VIP bus fleet to personally designed tour packages for an unforgettable experience in Batam.
             </p>
         </div>
-        <button class="w-16 h-16 rounded-[2rem] bg-brandblue text-white flex items-center justify-center hover:bg-skyblue hover:rotate-90 transition-all duration-700 shadow-2xl shadow-brandblue/20 group">
-            <svg class="w-6 h-6 group-hover:scale-125 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        <button @click="showServices = !showServices" :class="{'bg-skyblue': showServices}" class="w-16 h-16 rounded-[2rem] bg-brandblue text-white flex items-center justify-center hover:bg-skyblue transition-all duration-700 shadow-2xl shadow-brandblue/20 group">
+            <svg x-show="!showServices" class="w-6 h-6 group-hover:scale-125 transition group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            <svg x-show="showServices" x-cloak class="w-6 h-6 group-hover:scale-125 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
         </button>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-10">
+    <div x-show="showServices" 
+         x-transition:enter="transition ease-out duration-700"
+         x-transition:enter-start="opacity-0 translate-y-12"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-8"
+         x-cloak
+         class="grid lg:grid-cols-3 gap-10">
         <!-- Transport Booking -->
         <a href="{{ route('transport.index') }}" class="group relative bg-white rounded-[4rem] p-12 border border-slate-100 shadow-2xl shadow-brandblue/5 hover:-translate-y-4 transition-all duration-700 flex flex-col overflow-hidden reveal-left">
             <div class="absolute top-0 right-0 w-32 h-32 bg-brandblue/5 rounded-bl-[4rem] -mr-10 -mt-10 group-hover:scale-150 group-hover:bg-brandblue transition-all duration-700"></div>
