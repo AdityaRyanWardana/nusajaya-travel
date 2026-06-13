@@ -3,10 +3,25 @@
 @section('content')
 <main class="flex-1 bg-lightbg px-8 py-16 pb-24">
     <div class="max-w-7xl mx-auto">
-        <header class="mb-16 text-center reveal-zoom">
-            <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{{ __('Official Curator') }}</span>
-            <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6">{{ __('Batam Tour Packages') }}</h1>
-        </header>
+        <!-- Premium Header & Search -->
+        <div class="mb-20 grid lg:grid-cols-2 gap-12 items-end">
+            <div class="reveal-left">
+                <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{{ __('Official Curator') }}</span>
+                <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6 leading-[0.9]">{{ __('Batam Tour Packages') }}</h1>
+                <p class="text-sm text-slate-500 font-medium max-w-lg leading-relaxed">{{ __('Explore our carefully curated tour packages for an unforgettable experience in Batam and its surrounding islands.') }}</p>
+            </div>
+            
+            <form action="{{ route('tours.index') }}" method="GET" class="bg-white p-6 rounded-[3rem] shadow-2xl shadow-brandblue/5 border border-slate-50 flex flex-col sm:flex-row items-center gap-6 reveal-right">
+                <div class="flex-1 flex items-center gap-6 px-8 w-full sm:w-auto">
+                    <svg class="w-8 h-8 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <div class="flex flex-col gap-1 w-full">
+                        <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Search Destination') }}</span>
+                        <input type="text" name="category" value="{{ request('category') != 'All' ? request('category') : '' }}" placeholder="{{ __('E.g. Ranoh Island') }}" class="text-base font-black text-brandblue uppercase border-none p-0 focus:ring-0 placeholder:text-slate-200 w-full outline-none">
+                    </div>
+                </div>
+                <button type="submit" class="w-full sm:w-auto px-12 py-5 bg-brandblue text-white rounded-[2rem] text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all">{{ __('Find Tours') }}</button>
+            </form>
+        </div>
 
         <!-- Tours Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
