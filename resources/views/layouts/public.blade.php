@@ -98,15 +98,17 @@
                             <!-- Dropdown Trigger -->
                             <div class="relative">
                                 <button @click="open = !open" 
-                                        class="w-10 h-10 rounded-full bg-skyblue flex items-center justify-center text-white font-bold border-2 border-white shadow-sm overflow-hidden hover:ring-2 hover:ring-skyblue/30 transition relative">
-                                    @if(auth()->user()->avatar)
-                                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
-                                    @else
-                                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                                    @endif
+                                        class="w-10 h-10 rounded-full bg-skyblue text-white font-bold border-2 border-white shadow-sm hover:ring-2 hover:ring-skyblue/30 transition relative group">
+                                    <div class="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                                        @if(auth()->user()->avatar)
+                                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
+                                        @else
+                                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                        @endif
+                                    </div>
                                     
                                     <!-- Small Down Arrow -->
-                                    <div class="absolute -right-1 -bottom-1 bg-white rounded-full p-0.5 text-brandblue shadow-xs">
+                                    <div class="absolute -right-1 -bottom-1 bg-white rounded-full p-0.5 text-brandblue shadow-xs z-10 border border-slate-100 group-hover:-translate-y-0.5 transition-transform">
                                         <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
                                     </div>
                                 </button>
