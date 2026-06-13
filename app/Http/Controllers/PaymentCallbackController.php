@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Log;
+use App\Services\WhatsAppService;
 
 class PaymentCallbackController extends Controller
 {
@@ -44,10 +45,16 @@ class PaymentCallbackController extends Controller
             if ($fraudStatus == 'challenge') {
                 $booking->update(['status' => 'pending']);
             } else if ($fraudStatus == 'accept') {
-                $booking->update(['status' => 'paid', 'payment_method' => $paymentType]);
+                if ($booking->status !== 'paid') {
+                    $booking->update(['status' => 'paid', 'payment_method' => $paymentType]);
+                    WhatsAppService::sendReceipt($booking);
+                }
             }
         } else if ($transactionStatus == 'settlement') {
-            $booking->update(['status' => 'paid', 'payment_method' => $paymentType]);
+            if ($booking->status !== 'paid') {
+                $booking->update(['status' => 'paid', 'payment_method' => $paymentType]);
+                WhatsAppService::sendReceipt($booking);
+            }
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
             $booking->update(['status' => 'cancelled']);
         } else if ($transactionStatus == 'pending') {

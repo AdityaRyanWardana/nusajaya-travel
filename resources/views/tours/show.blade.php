@@ -183,7 +183,7 @@
                         <div x-show="step === 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-x-8" x-transition:enter-end="opacity-100 translate-x-0" class="space-y-8">
                             <div class="space-y-3">
                                 <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Select Date') }}</label>
-                                <input type="date" name="date" required min="{{ date('Y-m-d') }}"
+                                <input type="date" name="date" required min="{{ \Carbon\Carbon::now()->format('H:i') > '08:00' ? \Carbon\Carbon::tomorrow()->format('Y-m-d') : \Carbon\Carbon::today()->format('Y-m-d') }}"
                                        class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white">
                                 @error('date')
                                     <p class="text-xs text-red-400 font-bold mt-1">{{ $message }}</p>
@@ -265,13 +265,32 @@
                                     <select name="pickup_point" required 
                                             class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition-all outline-none appearance-none cursor-pointer text-white">
                                         <option value="" class="text-brandblue" disabled selected>{{ __('Select Terminal / Location') }}</option>
-                                        <option value="Batam Centre Ferry Terminal" class="text-brandblue">Batam Centre Ferry Terminal</option>
-                                        <option value="Harbour Bay Ferry Terminal" class="text-brandblue">Harbour Bay Ferry Terminal</option>
-                                        <option value="Sekupang Ferry Terminal" class="text-brandblue">Sekupang Ferry Terminal</option>
-                                        <option value="Waterfront City Ferry Terminal" class="text-brandblue">Waterfront City Ferry Terminal</option>
-                                        <option value="Nongsapura Ferry Terminal" class="text-brandblue">Nongsapura Ferry Terminal</option>
-                                        <option value="Telaga Punggur Ferry Terminal" class="text-brandblue">Telaga Punggur Ferry Terminal</option>
-                                        <option value="Other / Hotel (Specify in Notes)" class="text-brandblue">{{ __('Other / Hotel (Specify in Notes)') }}</option>
+                                        <optgroup label="Ferry Terminals / Airports" class="text-brandblue font-black">
+                                            <option value="Batam Centre Ferry Terminal" class="text-brandblue">Batam Centre Ferry Terminal</option>
+                                            <option value="Gold Coast Ferry Terminal (Bengkong)" class="text-brandblue">Gold Coast Ferry Terminal (Bengkong)</option>
+                                            <option value="Harbour Bay Ferry Terminal" class="text-brandblue">Harbour Bay Ferry Terminal</option>
+                                            <option value="Sekupang Ferry Terminal" class="text-brandblue">Sekupang Ferry Terminal</option>
+                                            <option value="Waterfront City Ferry Terminal" class="text-brandblue">Waterfront City Ferry Terminal</option>
+                                            <option value="Nongsapura Ferry Terminal" class="text-brandblue">Nongsapura Ferry Terminal</option>
+                                            <option value="Telaga Punggur Ferry Terminal" class="text-brandblue">Telaga Punggur Ferry Terminal</option>
+                                            <option value="Hang Nadim International Airport" class="text-brandblue">Hang Nadim International Airport</option>
+                                        </optgroup>
+                                        <optgroup label="Popular Hotels" class="text-brandblue font-black">
+                                            <option value="Aston Batam Hotel & Residence" class="text-brandblue">Aston Batam Hotel & Residence</option>
+                                            <option value="BCC Hotel & Residence" class="text-brandblue">BCC Hotel & Residence</option>
+                                            <option value="Wyndham Panbil Batam" class="text-brandblue">Wyndham Panbil Batam</option>
+                                            <option value="Harris Hotel Batam Center" class="text-brandblue">Harris Hotel Batam Center</option>
+                                            <option value="Marriott Hotel Batam Harbour Bay" class="text-brandblue">Marriott Hotel Batam Harbour Bay</option>
+                                            <option value="Montigo Resorts Nongsa" class="text-brandblue">Montigo Resorts Nongsa</option>
+                                            <option value="Nagoya Hill Hotel" class="text-brandblue">Nagoya Hill Hotel</option>
+                                            <option value="Pacific Palace Hotel" class="text-brandblue">Pacific Palace Hotel</option>
+                                            <option value="Planet Holiday Hotel & Residence" class="text-brandblue">Planet Holiday Hotel & Residence</option>
+                                            <option value="Radisson Golf & Convention" class="text-brandblue">Radisson Golf & Convention</option>
+                                            <option value="Swiss-Belhotel Harbour Bay" class="text-brandblue">Swiss-Belhotel Harbour Bay</option>
+
+                                            <option value="Turi Beach Resort" class="text-brandblue">Turi Beach Resort</option>
+                                        </optgroup>
+                                        <option value="Other / Hotel (Specify in Notes)" class="text-brandblue font-bold">{{ __('Other / Hotel (Specify in Notes)') }}</option>
                                     </select>
                                     <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
                                         <i data-lucide="map-pin" class="w-4 h-4 text-skyblue"></i>
@@ -279,10 +298,34 @@
                                 </div>
                             </div>
 
-                            <div class="space-y-3">
+                            <div class="space-y-3 mt-4">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Pinpoint Exact Location (Optional)') }}</label>
+                                <div id="mapPickup" style="height: 200px; z-index: 1;" class="rounded-2xl border border-white/10 w-full overflow-hidden"></div>
+                                <p class="text-[10px] font-bold text-white/50 px-2 mt-1">Drag the marker or tap the map to set a precise pickup coordinate.</p>
+                                <input type="hidden" name="pickup_lat" id="pickup_lat">
+                                <input type="hidden" name="pickup_lng" id="pickup_lng">
+                            </div>
+
+                            <div class="space-y-3" x-data="{ 
+                                code: '{{ auth()->user()->phone && Str::startsWith(auth()->user()->phone, '+65') ? '+65' : (auth()->user()->phone && Str::startsWith(auth()->user()->phone, '+60') ? '+60' : '+62') }}', 
+                                number: '{{ auth()->user()->phone ? preg_replace('/^\+(62|65|60)/', '', auth()->user()->phone) : '' }}' 
+                            }">
                                 <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Contact Number (WhatsApp)') }}</label>
-                                <input type="tel" name="customer_phone" required value="{{ auth()->user()->phone ?? '' }}"
-                                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white" placeholder="+62...">
+                                <div class="flex gap-2">
+                                    <div class="relative w-[110px] shrink-0">
+                                        <select x-model="code" class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer text-white">
+                                            <option value="+62" class="text-brandblue">🇮🇩 +62</option>
+                                            <option value="+65" class="text-brandblue">🇸🇬 +65</option>
+                                            <option value="+60" class="text-brandblue">🇲🇾 +60</option>
+                                        </select>
+                                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                            <svg class="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                        </div>
+                                    </div>
+                                    <input type="tel" x-model="number" required placeholder="81234567890" pattern="[0-9]*" minlength="8"
+                                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-skyblue focus:bg-white/10 transition-all outline-none text-white">
+                                </div>
+                                <input type="hidden" name="customer_phone" :value="code + number">
                             </div>
 
                             <div class="space-y-3">
@@ -333,6 +376,54 @@
 </main>
 @endsection
 
+@push('scripts')
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        let map;
+        let marker;
+
+        Alpine.effect(() => {
+            // Re-initialize or resize map when step 3 is shown
+            const currentStep = document.querySelector('[x-data]').__x.$data.step;
+            if (currentStep === 3) {
+                setTimeout(() => {
+                    if (!map) {
+                        // Default center: Batam Center
+                        map = L.map('mapPickup').setView([1.1293, 104.0536], 13);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+
+                        marker = L.marker([1.1293, 104.0536], {draggable: true}).addTo(map);
+                        
+                        function updateInputs(lat, lng) {
+                            document.getElementById('pickup_lat').value = lat.toFixed(8);
+                            document.getElementById('pickup_lng').value = lng.toFixed(8);
+                        }
+
+                        marker.on('dragend', function(e) {
+                            const pos = marker.getLatLng();
+                            updateInputs(pos.lat, pos.lng);
+                        });
+
+                        map.on('click', function(e) {
+                            marker.setLatLng(e.latlng);
+                            updateInputs(e.latlng.lat, e.latlng.lng);
+                        });
+
+                    } else {
+                        map.invalidateSize();
+                    }
+                }, 100);
+            }
+        });
+    });
+</script>
+@endpush
 @push('scripts')
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>

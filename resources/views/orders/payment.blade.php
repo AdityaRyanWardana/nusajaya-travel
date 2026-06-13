@@ -142,9 +142,22 @@
                 </div>
                 @endif
 
-                <p class="text-center mt-6 text-xs text-slate-400 font-medium italic">
+                <p class="text-center mt-6 text-xs text-slate-400 font-medium italic mb-6">
                     By proceeding, you agree to our <a href="#" class="underline">Terms & Conditions</a>.
                 </p>
+
+                <!-- DEV ONLY BYPASS BUTTON -->
+                <div class="mt-4 pt-4 border-t border-slate-100 border-dashed">
+                    <p class="text-xs font-bold text-slate-400 mb-3 uppercase tracking-widest">[Bypass Bayar - Untuk Test Lokal]</p>
+                    <form action="{{ route('orders.pay', $order->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_type" value="manual_bypass">
+                        <input type="hidden" name="status" value="paid">
+                        <button type="submit" class="w-full py-4 bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-700 transition">
+                            Bayar Manual (Lunas)
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

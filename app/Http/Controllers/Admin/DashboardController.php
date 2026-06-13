@@ -80,7 +80,11 @@ class DashboardController extends Controller
 
         $stats = [
             'total_bookings'      => Booking::where('status', '!=', 'unpaid')->count(),
-            'pending_bookings'    => Booking::where('status', 'pending')->count(),
+            'pending_bookings'    => Booking::where('status', 'pending')
+                                        ->orWhere(function($query) {
+                                            $query->where('reschedule_notified', false)
+                                                  ->whereNotNull('rescheduled_at');
+                                        })->count(),
             'total_armada'        => Armada::sum('total_units'),
             'available_armada'    => Armada::sum('total_units') - Armada::sum('maintenance_units'),
             'maintenance_armada'  => Armada::sum('maintenance_units'),

@@ -40,7 +40,29 @@
         @endif
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    @if($booking->rescheduled_at && !$booking->reschedule_notified)
+    <div class="mt-8 p-6 bg-amber-50 border border-amber-200 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center shrink-0">
+                <i data-lucide="calendar-clock" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-black text-amber-800 uppercase tracking-tight">Reschedule Requested! <span class="text-amber-600/60 text-sm">(Permintaan Perubahan Jadwal!)</span></h3>
+                <p class="text-sm font-medium text-amber-600">The customer has rescheduled their travel date to / <span class="italic text-amber-500">Pelanggan telah mengubah tanggal perjalanan ke</span> <strong class="text-amber-700">{{ \Carbon\Carbon::parse($booking->travel_date)->format('d F Y') }}</strong>.</p>
+            </div>
+        </div>
+        @if(auth()->user()->role !== 'superadmin')
+        <form action="{{ route('admin.bookings.reschedule-noticed', $booking) }}" method="POST" class="shrink-0 w-full md:w-auto">
+            @csrf
+            <button type="submit" class="w-full md:w-auto px-6 py-4 bg-amber-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-200 text-center">
+                Approve
+            </button>
+        </form>
+        @endif
+    </div>
+    @endif
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         
         {{-- Left Column: Customer & Main Details --}}
         <div class="lg:col-span-2 space-y-8">
@@ -151,6 +173,11 @@
                             </p>
                             <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
                                 <p class="text-sm font-bold text-slate-800 leading-relaxed italic">"{{ $booking->pickup_point ?? __('Not specified') }}"</p>
+                                @if($booking->pickup_lat && $booking->pickup_lng)
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ $booking->pickup_lat }},{{ $booking->pickup_lng }}" target="_blank" class="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-colors">
+                                        <i data-lucide="map" class="w-3 h-3"></i> Open in Maps
+                                    </a>
+                                @endif
                             </div>
                         </div>
 
@@ -160,6 +187,11 @@
                             </p>
                             <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
                                 <p class="text-sm font-bold text-slate-800 leading-relaxed italic">"{{ $booking->destination ?? $booking->service_name }}"</p>
+                                @if($booking->dropoff_lat && $booking->dropoff_lng)
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ $booking->dropoff_lat }},{{ $booking->dropoff_lng }}" target="_blank" class="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-colors">
+                                        <i data-lucide="map" class="w-3 h-3"></i> Open in Maps
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>

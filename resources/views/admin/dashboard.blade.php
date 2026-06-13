@@ -71,14 +71,15 @@
                         <span class="w-20 h-px bg-orange-200"></span>
                     </h3>
                 </div>
-                <span class="px-4 py-1.5 bg-orange-500 text-white rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-orange-200">
+                <span class="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-orange-200 flex items-center gap-2 animate-bounce">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i>
                     {{ count($stats['rescheduled_bookings']) }} Action Required
                 </span>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($stats['rescheduled_bookings'] as $rescheduled)
-                    <div class="bg-white p-8 rounded-[2.5rem] border border-orange-100 shadow-2xl shadow-orange-500/5 relative overflow-hidden group hover:-translate-y-1 transition-all duration-500">
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-orange-100 shadow-2xl shadow-orange-500/5 relative overflow-hidden group hover:-translate-y-1 hover:shadow-orange-500/10 transition-all duration-500 cursor-pointer" onclick="window.location.href='{{ route('admin.bookings.show', $rescheduled) }}'">
                         <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-1000"></div>
                         
                         <div class="relative z-10">
@@ -106,11 +107,11 @@
                             </div>
                             
                             <div class="flex items-center gap-4">
-                                <a href="{{ route('admin.bookings.show', $rescheduled) }}" class="flex-1 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest text-center hover:bg-orange-500 transition-all duration-500 shadow-lg shadow-slate-900/10">
+                                <div class="flex-1 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest text-center hover:bg-orange-500 transition-all duration-500 shadow-lg shadow-slate-900/10">
                                     Review Booking
-                                </a>
+                                </div>
                                 @if(auth()->user()->role !== 'superadmin')
-                                <form action="{{ route('admin.bookings.reschedule-noticed', $rescheduled) }}" method="POST" class="shrink-0">
+                                <form action="{{ route('admin.bookings.reschedule-noticed', $rescheduled) }}" method="POST" class="shrink-0 relative z-20" onclick="event.stopPropagation()">
                                     @csrf
                                     <button type="submit" class="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all duration-500 shadow-sm group/btn" title="Mark as Seen">
                                         <i data-lucide="check-check" class="w-6 h-6 group-hover/btn:scale-110 transition-transform"></i>
@@ -140,20 +141,24 @@
                     </h3>
                 </div>
                 
-                <div class="space-y-4">
-                    <div class="p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
-                        <p class="text-[8px] font-black text-sky-100 uppercase tracking-widest mb-1">Last Month</p>
-                        <p class="text-lg font-black text-white italic">IDR {{ number_format($stats['last_month_revenue'], 0, ',', '.') }}</p>
+                <div class="space-y-4 w-full">
+                    <div class="flex items-center gap-3 p-4 bg-emerald-500/20 backdrop-blur-md border border-emerald-500/20 rounded-2xl">
+                        <div class="w-8 h-8 rounded-full bg-emerald-500/30 flex items-center justify-center text-emerald-300">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-black text-emerald-100 uppercase tracking-widest leading-none mb-1">Funds Secured</p>
+                            <p class="text-xs font-bold text-emerald-200">Processed by Midtrans</p>
+                        </div>
                     </div>
-                    <div class="flex gap-3">
-                        <div class="flex-1 p-4 bg-emerald-500/20 backdrop-blur-md rounded-2xl border border-emerald-500/20">
-                            <p class="text-[8px] font-black text-emerald-100 uppercase tracking-widest mb-1">Growth</p>
-                            <p class="text-sm font-black text-white">+{{ $stats['booking_growth'] }}%</p>
+
+                    <div class="p-5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 relative overflow-hidden group/card hover:bg-white/15 transition-all cursor-pointer" onclick="window.location.href='{{ route('admin.bookings.index', ['status' => 'paid']) }}'">
+                        <div class="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-white/10 to-transparent"></div>
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-[9px] font-black text-sky-100 uppercase tracking-[0.2em]">Previous Month</p>
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-sky-200/50 group-hover/card:translate-x-1 transition-transform"></i>
                         </div>
-                        <div class="flex-1 p-4 bg-orange-500/20 backdrop-blur-md rounded-2xl border border-orange-500/20">
-                            <p class="text-[8px] font-black text-orange-100 uppercase tracking-widest mb-1">Pending</p>
-                            <p class="text-sm font-black text-white">IDR {{ number_format($stats['pending_revenue'] / 1000, 0) }}k</p>
-                        </div>
+                        <p class="text-2xl font-black text-white italic tracking-tight">IDR {{ number_format($stats['last_month_revenue'], 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>

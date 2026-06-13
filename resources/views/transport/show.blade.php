@@ -89,6 +89,7 @@
             <div class="lg:col-span-1" x-data="{ 
                 category: 'Batam City Tour', 
                 duration: 'one_day',
+                vehicleCount: 1,
                 pickup: '',
                 loadingLocation: false,
                 participants: [],
@@ -132,9 +133,12 @@
                     barelang: {{ $transport->price_barelang ?? 0 }}
                 },
                 get currentPrice() {
-                    if (this.category === 'PP Barelang') return this.prices.barelang;
-                    if (this.category === 'Transfer Only') return this.prices.city_one_way;
-                    return this.prices['city_' + this.duration];
+                    let base = 0;
+                    if (this.category === 'PP Barelang') base = this.prices.barelang;
+                    else if (this.category === 'Transfer Only') base = this.prices.city_one_way;
+                    else base = this.prices['city_' + this.duration];
+                    
+                    return base * (parseInt(this.vehicleCount) || 1);
                 },
                 destination: '',
                 get computedDestination() {
@@ -220,18 +224,40 @@
                             <input type="hidden" name="duration" :value="duration">
                         </div>
 
-                        <div class="space-y-2" x-data="{ locType: 'preset' }">
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Pickup Point') }}</label>
-                                <div class="flex gap-4">
-                                    <button type="button" @click="locType = 'preset'" :class="locType === 'preset' ? 'text-skyblue' : 'text-white/40'" class="text-[8px] font-black uppercase tracking-widest transition">Preset</button>
-                                    <button type="button" @click="locType = 'manual'" :class="locType === 'manual' ? 'text-skyblue' : 'text-white/40'" class="text-[8px] font-black uppercase tracking-widest transition">Manual</button>
-                                    <button type="button" @click="detectLocation(); locType = 'manual'" class="text-[8px] font-black text-white hover:text-skyblue transition flex items-center gap-1 uppercase tracking-widest">
-                                        <svg x-show="!loadingLocation" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                        <svg x-show="loadingLocation" class="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                        {{ __('Detect') }}
-                                    </button>
+                        <!-- Vehicle Count Selector -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Number of Vehicles') }}</label>
+                            <div class="relative">
+                                <select name="vehicle_count" x-model="vehicleCount" 
+                                    class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-white focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer">
+                                    @for($i = 1; $i <= 10; $i++)
+                                        <option value="{{ $i }}" class="text-brandblue">{{ $i }} {{ $i > 1 ? __('Units') : __('Unit') }}</option>
+                                    @endfor
+                                </select>
+                                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-skyblue"></i>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3" x-data="{ locType: 'preset' }">
+                            <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Pickup Point') }}</label>
+                            
+                            <div class="flex bg-white/5 border border-white/10 rounded-xl p-1 relative">
+                                <button type="button" @click="locType = 'preset'" 
+                                    :class="locType === 'preset' ? 'bg-skyblue text-white shadow-md' : 'text-white/40 hover:text-white'" 
+                                    class="flex-1 py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-300">Preset</button>
+                                
+                                <button type="button" @click="locType = 'manual'" 
+                                    :class="locType === 'manual' ? 'bg-skyblue text-white shadow-md' : 'text-white/40 hover:text-white'" 
+                                    class="flex-1 py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-300">Manual</button>
+                                
+                                <button type="button" @click="detectLocation(); locType = 'manual'" 
+                                    class="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-black uppercase tracking-widest text-white hover:text-skyblue rounded-lg transition-all duration-300 bg-white/5 border border-white/5 ml-1">
+                                    <svg x-show="!loadingLocation" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                    <svg x-show="loadingLocation" class="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    {{ __('Detect') }}
+                                </button>
                             </div>
                             <!-- Pickup Selection -->
                             <div class="relative" x-data="{ open: false }">
@@ -248,18 +274,31 @@
                                     class="absolute z-50 mt-2 w-full bg-brandblue/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto custom-scrollbar">
                                     
                                     <div class="p-2 space-y-1">
-                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest">Seaports</div>
+                                        <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest">Ferry Terminals</div>
                                         <button type="button" @click="pickup = 'Batam Centre Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Batam Centre Ferry Terminal</button>
+                                        <button type="button" @click="pickup = 'Gold Coast Ferry Terminal (Bengkong)'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Gold Coast Ferry Terminal (Bengkong)</button>
                                         <button type="button" @click="pickup = 'Harbour Bay Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Harbour Bay Ferry Terminal</button>
+                                        <button type="button" @click="pickup = 'Nongsapura Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Nongsapura Ferry Terminal</button>
                                         <button type="button" @click="pickup = 'Sekupang Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Sekupang Ferry Terminal</button>
+                                        <button type="button" @click="pickup = 'Telaga Punggur Ferry Terminal'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Telaga Punggur Ferry Terminal</button>
                                         
                                         <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Airports</div>
                                         <button type="button" @click="pickup = 'Hang Nadim International Airport'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Hang Nadim International Airport</button>
                                         
                                         <div class="px-4 py-2 text-[8px] font-black text-skyblue uppercase tracking-widest mt-2 border-t border-white/5 pt-4">Hotels</div>
+                                        <button type="button" @click="pickup = 'Aston Batam Hotel & Residence'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Aston Batam Hotel & Residence</button>
+                                        <button type="button" @click="pickup = 'BCC Hotel & Residence'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">BCC Hotel & Residence</button>
+                                        <button type="button" @click="pickup = 'Wyndham Panbil Batam'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Wyndham Panbil Batam</button>
+                                        <button type="button" @click="pickup = 'Harris Hotel Batam Center'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Harris Hotel Batam Center</button>
+                                        <button type="button" @click="pickup = 'Marriott Hotel Batam Harbour Bay'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Marriott Hotel Batam Harbour Bay</button>
+                                        <button type="button" @click="pickup = 'Montigo Resorts Nongsa'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Montigo Resorts Nongsa</button>
                                         <button type="button" @click="pickup = 'Nagoya Hill Hotel'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Nagoya Hill Hotel</button>
+                                        <button type="button" @click="pickup = 'Pacific Palace Hotel'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Pacific Palace Hotel</button>
+                                        <button type="button" @click="pickup = 'Planet Holiday Hotel & Residence'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Planet Holiday Hotel & Residence</button>
                                         <button type="button" @click="pickup = 'Radisson Golf & Convention'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Radisson Golf & Convention</button>
                                         <button type="button" @click="pickup = 'Swiss-Belhotel Harbour Bay'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Swiss-Belhotel Harbour Bay</button>
+
+                                        <button type="button" @click="pickup = 'Turi Beach Resort'; open = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all">Turi Beach Resort</button>
                                     </div>
                                 </div>
                             </div>
@@ -267,6 +306,14 @@
                             <input x-show="locType === 'manual'" type="text" x-model="pickup" placeholder="{{ __('Enter full address...') }}" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none placeholder:text-white/20">
                             <!-- Hidden input to ensure pickup is sent -->
                             <input type="hidden" name="pickup_point" :value="pickup">
+
+                            <div class="space-y-3 mt-4">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Pinpoint Pickup Location (Optional)') }}</label>
+                                <div id="mapPickup" style="height: 200px; z-index: 1;" class="rounded-2xl border border-white/10 w-full overflow-hidden"></div>
+                                <p class="text-[10px] font-bold text-white/50 px-2 mt-1">Drag the marker or tap the map to set a precise pickup coordinate.</p>
+                                <input type="hidden" name="pickup_lat" id="pickup_lat">
+                                <input type="hidden" name="pickup_lng" id="pickup_lng">
+                            </div>
                         </div>
 
                         <!-- Barelang Destination Selector (only for PP Barelang) -->
@@ -316,34 +363,46 @@
                         <div class="space-y-2" x-show="category === 'Transfer Only'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Drop Off Point') }}</label>
                             <input type="text" x-model="transferDest" placeholder="{{ __('Example: Hang Nadim Airport') }}" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none placeholder:text-white/20">
+                            
+                            <div class="space-y-3 mt-4">
+                                <label class="block text-[10px] font-black text-skyblue uppercase tracking-[0.2em] ml-2">{{ __('Pinpoint Dropoff Location (Optional)') }}</label>
+                                <div id="mapDropoff" style="height: 200px; z-index: 1;" class="rounded-2xl border border-white/10 w-full overflow-hidden"></div>
+                                <p class="text-[10px] font-bold text-white/50 px-2 mt-1">Drag the marker or tap the map to set a precise dropoff coordinate.</p>
+                                <input type="hidden" name="dropoff_lat" id="dropoff_lat">
+                                <input type="hidden" name="dropoff_lng" id="dropoff_lng">
+                            </div>
                         </div>
 
                         <!-- Single hidden input sends the correct destination value -->
                         <input type="hidden" name="destination" :value="computedDestination">
 
-                        <div class="space-y-2">
+                        <div class="space-y-2" x-data="{ timeOpen: false, pickupTimeValue: '' }">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Pickup Time') }}</label>
-                            <div class="grid gap-3" :class="category === 'Transfer Only' ? 'grid-cols-3' : 'grid-cols-2'">
-                                <label class="relative flex flex-col items-center justify-center p-4 rounded-2xl border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group">
-                                    <input type="radio" name="pickup_time" value="Morning (08:00 - 11:00)" required class="absolute opacity-0">
-                                    <div class="w-2 h-2 rounded-full border border-white/40 mb-2 group-has-[:checked]:bg-skyblue group-has-[:checked]:border-skyblue transition-all"></div>
-                                    <span class="text-[9px] font-black uppercase text-white/60 group-hover:text-white transition-colors">{{ __('Morning') }}</span>
-                                    <span class="text-[8px] font-bold text-white/30 uppercase mt-1">08:00-11:00</span>
-                                </label>
-                                <label class="relative flex flex-col items-center justify-center p-4 rounded-2xl border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group">
-                                    <input type="radio" name="pickup_time" value="Afternoon (12:00 - 15:00)" class="absolute opacity-0">
-                                    <div class="w-2 h-2 rounded-full border border-white/40 mb-2 group-has-[:checked]:bg-skyblue group-has-[:checked]:border-skyblue transition-all"></div>
-                                    <span class="text-[9px] font-black uppercase text-white/60 group-hover:text-white transition-colors">{{ __('Afternoon') }}</span>
-                                    <span class="text-[8px] font-bold text-white/30 uppercase mt-1">12:00-15:00</span>
-                                </label>
-                                <label class="relative flex flex-col items-center justify-center p-4 rounded-2xl border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group"
-                                    x-show="category === 'Transfer Only'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90">
-                                    <input type="radio" name="pickup_time" value="Evening (17:00 - 20:00)" :required="category === 'Transfer Only'" class="absolute opacity-0">
-                                    <div class="w-2 h-2 rounded-full border border-white/40 mb-2 group-has-[:checked]:bg-skyblue group-has-[:checked]:border-skyblue transition-all"></div>
-                                    <span class="text-[9px] font-black uppercase text-white/60 group-hover:text-white transition-colors">{{ __('Evening') }}</span>
-                                    <span class="text-[8px] font-bold text-white/30 uppercase mt-1">17:00-20:00</span>
-                                </label>
+                            
+                            <div class="relative">
+                                <button type="button" @click="timeOpen = !timeOpen" 
+                                    class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold text-left focus:ring-2 focus:ring-skyblue transition outline-none flex items-center justify-between group">
+                                    <span :class="pickupTimeValue ? 'text-white' : 'text-white/40'" x-text="pickupTimeValue || '-- {{ __('Select Time') }} --'"></span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-white/20 group-hover:text-skyblue transition-colors"></i>
+                                </button>
+                                
+                                <div x-show="timeOpen" @click.away="timeOpen = false" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    class="absolute z-50 mt-2 w-full bg-brandblue/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden max-h-64 overflow-y-auto custom-scrollbar">
+                                    
+                                    <div class="p-2 space-y-1">
+                                        @for($i = 6; $i <= 21; $i++)
+                                            @php $timeStr = sprintf('%02d:00', $i); @endphp
+                                            <button type="button" @click="pickupTimeValue = '{{ $timeStr }}'; timeOpen = false" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 text-xs font-bold transition-all text-white">{{ $timeStr }}</button>
+                                        @endfor
+                                    </div>
+                                </div>
                             </div>
+                            <!-- Laravel validation requires a value, we don't use HTML5 required on hidden to avoid focus errors -->
+                            <input type="hidden" name="pickup_time" :value="pickupTimeValue">
+
                             @error('pickup_time')
                                 <p class="text-xs text-red-400 font-bold mt-1">{{ $message }}</p>
                             @enderror
@@ -355,21 +414,37 @@
 
                         </div>
 
-                        <div class="space-y-2">
+                        <div class="space-y-2" x-data="{ 
+                            code: '{{ auth()->user()->phone && Str::startsWith(auth()->user()->phone, '+65') ? '+65' : (auth()->user()->phone && Str::startsWith(auth()->user()->phone, '+60') ? '+60' : '+62') }}', 
+                            number: '{{ auth()->user()->phone ? preg_replace('/^\+(62|65|60)/', '', auth()->user()->phone) : '' }}' 
+                        }">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('WhatsApp Number') }}</label>
-                            <input type="tel" name="customer_phone" required value="{{ auth()->user()->phone ?? '' }}"
-                                   class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none" placeholder="+62...">
+                            <div class="flex gap-2">
+                                <div class="relative w-[110px] shrink-0">
+                                    <select x-model="code" class="w-full bg-white/10 border border-white/20 rounded-2xl px-4 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none appearance-none cursor-pointer text-white">
+                                        <option value="+62" class="text-brandblue">🇮🇩 +62</option>
+                                        <option value="+65" class="text-brandblue">🇸🇬 +65</option>
+                                        <option value="+60" class="text-brandblue">🇲🇾 +60</option>
+                                    </select>
+                                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg class="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
+                                <input type="tel" x-model="number" required placeholder="81234567890" pattern="[0-9]*" minlength="8"
+                                       class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none text-white">
+                            </div>
+                            <input type="hidden" name="customer_phone" :value="code + number">
                         </div>
 
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">{{ __('Special Notes (Optional)') }}</label>
                             <textarea name="notes" rows="3"
-                                      class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none resize-none" placeholder="{{ __('Baggage info, flight number, etc...') }}"></textarea>
+                                      class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none resize-none text-white" placeholder="{{ __('Room number, total luggage, pickup instructions, etc...') }}"></textarea>
                         </div>
 
                         <div class="space-y-2">
                             <label class="block text-[10px] font-black text-skyblue uppercase tracking-widest">Travel Date</label>
-                            <input type="date" name="travel_date" required min="{{ date('Y-m-d') }}" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none cursor-pointer">
+                            <input type="date" name="travel_date" required min="{{ \Carbon\Carbon::now()->format('H:i') > '20:00' ? \Carbon\Carbon::tomorrow()->format('Y-m-d') : \Carbon\Carbon::today()->format('Y-m-d') }}" class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-skyblue transition outline-none cursor-pointer">
                             @error('travel_date')
                                 <p class="text-xs text-red-400 font-bold mt-1">{{ $message }}</p>
                             @enderror
@@ -409,6 +484,11 @@
 @push('scripts')
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <script>
     var swiper = new Swiper(".mySwiper", {
         loop: true,
@@ -426,6 +506,64 @@
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
         },
+    });
+
+    document.addEventListener('alpine:init', () => {
+        let mapPickup, markerPickup;
+        let mapDropoff, markerDropoff;
+
+        // Give Alpine a moment to render the DOM
+        setTimeout(() => {
+            // Setup Pickup Map
+            mapPickup = L.map('mapPickup').setView([1.1293, 104.0536], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapPickup);
+            
+            markerPickup = L.marker([1.1293, 104.0536], {draggable: true}).addTo(mapPickup);
+            
+            function updatePickupInputs(lat, lng) {
+                document.getElementById('pickup_lat').value = lat.toFixed(8);
+                document.getElementById('pickup_lng').value = lng.toFixed(8);
+            }
+            markerPickup.on('dragend', function() {
+                const pos = markerPickup.getLatLng();
+                updatePickupInputs(pos.lat, pos.lng);
+            });
+            mapPickup.on('click', function(e) {
+                markerPickup.setLatLng(e.latlng);
+                updatePickupInputs(e.latlng.lat, e.latlng.lng);
+            });
+
+            // Setup Dropoff Map
+            mapDropoff = L.map('mapDropoff').setView([1.1293, 104.0536], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapDropoff);
+
+            markerDropoff = L.marker([1.1293, 104.0536], {draggable: true}).addTo(mapDropoff);
+            
+            function updateDropoffInputs(lat, lng) {
+                document.getElementById('dropoff_lat').value = lat.toFixed(8);
+                document.getElementById('dropoff_lng').value = lng.toFixed(8);
+            }
+            markerDropoff.on('dragend', function() {
+                const pos = markerDropoff.getLatLng();
+                updateDropoffInputs(pos.lat, pos.lng);
+            });
+            mapDropoff.on('click', function(e) {
+                markerDropoff.setLatLng(e.latlng);
+                updateDropoffInputs(e.latlng.lat, e.latlng.lng);
+            });
+
+            // Fix map size when changing categories
+            document.querySelector('[x-data]').__x.$watch('category', (value) => {
+                setTimeout(() => {
+                    if(mapPickup) mapPickup.invalidateSize();
+                    if(mapDropoff) mapDropoff.invalidateSize();
+                }, 100);
+            });
+        }, 300);
     });
 </script>
 @endpush

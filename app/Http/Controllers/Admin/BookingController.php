@@ -9,12 +9,43 @@ use App\Models\Booking;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Booking::with('user')
-            ->latest()
-            ->paginate(15);
-        return view('admin.bookings.index', compact('bookings'));
+        $query = Booking::with('user');
+
+        if ($request->filled('status')) {
+            if ($request->status === 'pending') {
+                $query->where(function($q) {
+                    $q->where('status', 'pending')
+                      ->orWhere(function($sq) {
+                          $sq->where('reschedule_notified', false)
+                             ->whereNotNull('rescheduled_at');
+                      });
+                });
+            } else {
+                $query->where('status', $request->status);
+            }
+        }
+
+        if ($request->filled('month')) {
+            $parts = explode('-', $request->month);
+            if (count($parts) === 2) {
+                $query->whereYear('created_at', $parts[0])
+                      ->whereMonth('created_at', $parts[1]);
+            }
+        }
+
+        $bookings = $query->latest()->paginate(15)->appends($request->query());
+        
+        $counts = [
+            'pending' => Booking::where('status', 'pending')->orWhere(function($sq) {
+                            $sq->where('reschedule_notified', false)->whereNotNull('rescheduled_at');
+                        })->count(),
+            'paid' => Booking::where('status', 'paid')->count(),
+            'cancelled' => Booking::where('status', 'cancelled')->count(),
+        ];
+
+        return view('admin.bookings.index', compact('bookings', 'counts'));
     }
 
     public function show(Booking $booking)

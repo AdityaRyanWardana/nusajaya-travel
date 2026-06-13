@@ -99,6 +99,13 @@
                 <div class="h-[1px] flex-1 bg-slate-100"></div>
             </div>
 
+            <div class="mt-8">
+                <a href="{{ route('google.login') }}" class="w-full bg-slate-50 text-slate-600 font-bold py-4 rounded-[1.25rem] hover:bg-slate-100 hover:text-[#0B2447] hover:-translate-y-0.5 transition-all active:scale-[0.98] uppercase tracking-widest text-xs flex items-center justify-center group">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 mr-3">
+                    {{ __('Sign In with Google') }}
+                </a>
+            </div>
+
             <p class="mt-8 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
                 Don't have an account? <a href="{{ route('register') }}" class="text-sky-600 hover:text-[#0B2447] transition-colors">Register Now</a>
             </p>

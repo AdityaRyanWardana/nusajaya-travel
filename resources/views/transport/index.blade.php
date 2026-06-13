@@ -11,15 +11,15 @@
                 <p class="text-sm text-slate-500 font-medium max-w-lg leading-relaxed">{{ __('From luxury VIP buses to executive shuttles, our fleet is ready to guarantee your travel comfort in Batam.') }}</p>
             </div>
             
-            <form action="{{ route('transport.index') }}" method="GET" class="bg-white p-4 rounded-[2.5rem] shadow-2xl shadow-brandblue/5 border border-slate-50 flex flex-col sm:flex-row items-center gap-4 reveal-right">
-                <div class="flex-1 flex items-center gap-4 px-6 w-full sm:w-auto">
-                    <svg class="w-5 h-5 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <div class="flex flex-col">
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ __('Travel Date') }}</span>
-                        <input type="date" name="date" value="{{ $selectedDate }}" class="text-xs font-black text-brandblue uppercase border-none p-0 focus:ring-0 cursor-pointer">
+            <form action="{{ route('transport.index') }}" method="GET" class="bg-white p-6 rounded-[3rem] shadow-2xl shadow-brandblue/5 border border-slate-50 flex flex-col sm:flex-row items-center gap-6 reveal-right">
+                <div class="flex-1 flex items-center gap-6 px-8 w-full sm:w-auto">
+                    <svg class="w-8 h-8 text-skyblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ __('Travel Date') }}</span>
+                        <input type="date" name="date" value="{{ $selectedDate }}" min="{{ \Carbon\Carbon::now()->format('H:i') > '20:00' ? \Carbon\Carbon::tomorrow()->format('Y-m-d') : \Carbon\Carbon::today()->format('Y-m-d') }}" class="text-base font-black text-brandblue uppercase border-none p-0 focus:ring-0 cursor-pointer">
                     </div>
                 </div>
-                <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-brandblue text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all">{{ __('Check Now') }}</button>
+                <button type="submit" class="w-full sm:w-auto px-12 py-5 bg-brandblue text-white rounded-[2rem] text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all">{{ __('Check Now') }}</button>
             </form>
         </div>
 

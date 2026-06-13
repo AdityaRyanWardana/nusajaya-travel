@@ -70,6 +70,11 @@ class TransportController extends Controller
             'participants' => 'nullable|array',
             'customer_phone' => 'required|string|max:20',
             'notes' => 'nullable|string',
+            'pickup_lat' => 'nullable|numeric',
+            'pickup_lng' => 'nullable|numeric',
+            'dropoff_lat' => 'nullable|numeric',
+            'dropoff_lng' => 'nullable|numeric',
+            'vehicle_count' => 'nullable|integer|min:1',
         ]);
 
         $travelDate = \Carbon\Carbon::parse($request->travel_date)->startOfDay();
@@ -78,16 +83,10 @@ class TransportController extends Controller
         if ($travelDate->isSameDay($today)) {
             $timeStr = \Carbon\Carbon::now()->format('H:i');
 
-            if (str_contains($request->pickup_time, 'Morning') && $timeStr > '11:00') {
-                return back()->withErrors(['pickup_time' => 'Sesi Morning (08:00-11:00) sudah lewat untuk hari ini. Silakan pilih sesi lain atau pesan untuk besok.'])->withInput();
-            }
-
-            if (str_contains($request->pickup_time, 'Afternoon') && $timeStr > '15:00') {
-                return back()->withErrors(['pickup_time' => 'Sesi Afternoon (12:00-15:00) sudah lewat untuk hari ini. Silakan pesan untuk besok.'])->withInput();
-            }
-
-            if (str_contains($request->pickup_time, 'Evening') && $timeStr > '20:00') {
-                return back()->withErrors(['pickup_time' => 'Sesi Evening (17:00-20:00) sudah lewat untuk hari ini. Silakan pesan untuk besok.'])->withInput();
+            if (preg_match('/^\d{2}:\d{2}$/', $request->pickup_time)) {
+                if ($timeStr > $request->pickup_time) {
+                    return back()->withErrors(['pickup_time' => 'Jam pickup ' . $request->pickup_time . ' sudah lewat untuk hari ini. Silakan pilih jam lain atau pesan untuk besok.'])->withInput();
+                }
             }
         }
 
@@ -119,6 +118,13 @@ class TransportController extends Controller
             $serviceName .= ' (' . str_replace('_', ' ', $duration) . ')';
         }
 
+        $vehicleCount = (int) ($request->vehicle_count ?? 1);
+        $price = $price * $vehicleCount;
+        
+        if ($vehicleCount > 1) {
+            $serviceName .= ' [' . $vehicleCount . ' Units]';
+        }
+
         $booking = Booking::create([
             'user_id' => auth()->id(),
             'service_name' => $serviceName,
@@ -129,12 +135,17 @@ class TransportController extends Controller
             'guests' => $request->guests ?? 1,
             'travel_date' => $request->travel_date,
             'pickup_point' => $request->pickup_point,
+            'pickup_lat' => $request->pickup_lat,
+            'pickup_lng' => $request->pickup_lng,
             'destination' => $request->destination ?? $request->category,
+            'dropoff_lat' => $request->dropoff_lat,
+            'dropoff_lng' => $request->dropoff_lng,
             'pickup_time' => $request->pickup_time,
             'customer_details' => [
                 'names' => $participants,
                 'phone' => $request->customer_phone,
                 'notes' => $request->notes,
+                'vehicle_count' => $vehicleCount,
             ],
             'status' => 'pending'
         ]);

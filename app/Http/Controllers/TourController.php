@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tour;
 use App\Models\Booking;
+use App\Services\WhatsAppService;
 
 class TourController extends Controller
 {
@@ -44,6 +45,8 @@ class TourController extends Controller
             'participants.*.identity' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'notes' => 'nullable|string',
+            'pickup_lat' => 'nullable|numeric',
+            'pickup_lng' => 'nullable|numeric',
         ]);
 
         $travelDate = \Carbon\Carbon::parse($request->date)->startOfDay();
@@ -75,6 +78,8 @@ class TourController extends Controller
             ],
             'travel_date' => $request->date,
             'pickup_point' => $request->pickup_point,
+            'pickup_lat' => $request->pickup_lat,
+            'pickup_lng' => $request->pickup_lng,
             'status' => 'unpaid',
         ]);
 
@@ -150,11 +155,27 @@ class TourController extends Controller
         $request->validate([
             'payment_type' => 'required|string',
             'status' => 'required|string',
-            'midtrans_order_id' => 'required|string',
         ]);
 
         $order = Booking::where('user_id', auth()->id())->findOrFail($id);
+
+        // DEV ONLY: Manual Bypass
+        if ($request->payment_type === 'manual_bypass') {
+            if ($order->status !== 'paid') {
+                $order->update([
+                    'payment_method' => 'manual',
+                    'status' => 'paid',
+                ]);
+                $waService = new \App\Services\WhatsAppService();
+                $waService->sendReceipt($order);
+            }
+            return redirect()->route('orders.my')->with('success', 'Pembayaran manual berhasil (TEST MODE)! Pesanan Anda telah dilunasi. / Manual payment successful! Your order has been paid.');
+        }
         
+        $request->validate([
+            'midtrans_order_id' => 'required|string',
+        ]);
+
         // Verifikasi langsung ke Midtrans API (Bypass Webhook InfinityFree)
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = config('midtrans.is_production');
@@ -163,11 +184,15 @@ class TourController extends Controller
             $status = \Midtrans\Transaction::status($request->midtrans_order_id);
             
             if ($status->transaction_status == 'settlement' || $status->transaction_status == 'capture') {
-                $order->update([
-                    'payment_method' => $request->payment_type,
-                    'status' => 'paid',
-                ]);
-                return redirect()->route('orders.my')->with('success', 'Pembayaran berhasil dikonfirmasi! Pesanan Anda akan segera diproses.');
+                if ($order->status !== 'paid') {
+                    $order->update([
+                        'payment_method' => $request->payment_type,
+                        'status' => 'paid',
+                    ]);
+                    $waService = new \App\Services\WhatsAppService();
+                    $waService->sendReceipt($order);
+                }
+                return redirect()->route('orders.my')->with('success', 'Pembayaran berhasil dikonfirmasi! Pesanan Anda akan segera diproses. / Payment successfully confirmed! Your order will be processed shortly.');
             } else {
                 return redirect()->route('orders.my')->with('error', 'Status pembayaran belum lunas di sistem Midtrans (Status: ' . $status->transaction_status . ').');
             }
@@ -201,11 +226,16 @@ class TourController extends Controller
             return back()->with('error', 'Cancelled orders cannot be rescheduled.');
         }
 
+        $oldDate = $order->travel_date;
+
         $order->update([
             'travel_date' => $request->new_date,
             'reschedule_notified' => false,
             'rescheduled_at' => now(),
         ]);
+
+        \App\Services\WhatsAppService::sendRescheduleAlert($order, $oldDate);
+
         return back()->with('success', 'Travel date has been updated successfully.');
     }
 
