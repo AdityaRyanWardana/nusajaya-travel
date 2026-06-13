@@ -92,6 +92,10 @@ class ArmadaController extends Controller
 
         $armada = Armada::findOrFail($id);
         $data = $request->except(['image', 'gallery']);
+        
+        if ($armada->name !== $request->name) {
+            $data['slug'] = \Illuminate\Support\Str::slug($request->name) . '-' . rand(100, 999);
+        }
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
