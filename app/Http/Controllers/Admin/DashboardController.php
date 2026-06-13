@@ -37,15 +37,22 @@ class DashboardController extends Controller
             $growth = 100;
         }
 
-        // Chart Data (Last 6 Months - All booking types)
         $chartLabels  = [];
         $tourChartData = [];
+        $transportChartData = [];
 
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->copy()->subMonths($i);
             $chartLabels[] = $month->format('M');
 
             $tourChartData[] = Booking::where('status', '!=', 'unpaid')
+                ->where('type', 'tour')
+                ->whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->count();
+                
+            $transportChartData[] = Booking::where('status', '!=', 'unpaid')
+                ->where('type', 'transport')
                 ->whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
@@ -95,6 +102,7 @@ class DashboardController extends Controller
             'pending_revenue'     => $pendingRevenue,
             'chart_labels'        => $chartLabels,
             'tour_chart_data'     => $tourChartData,
+            'transport_chart_data'=> $transportChartData,
             'rescheduled_bookings'=> $rescheduledBookings,
             'recent_bookings'     => $recentBookings,
             'notif_bookings'      => $notifBookings,

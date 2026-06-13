@@ -169,12 +169,16 @@
             <div class="flex items-center justify-between mb-8">
                 <div>
                     <h3 class="text-xl font-black text-[#0B2447] dark:text-white uppercase italic tracking-tight">Booking Trends</h3>
-                    <p class="text-slate-500 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest mt-1">Monthly Tour Package Requests</p>
+                    <p class="text-slate-500 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest mt-1">Monthly Package & Transport Requests</p>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2">
                         <span class="w-3 h-3 rounded-full bg-sky-500"></span>
                         <span class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">Tour Packages</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">Transport</span>
                     </div>
                 </div>
             </div>
@@ -310,13 +314,25 @@
                     label: 'Tour Bookings',
                     data: @json($stats['tour_chart_data']),
                     borderColor: '#38BDF8',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
                     fill: true,
                     tension: 0.4,
                     borderWidth: 4,
                     pointRadius: 0,
                     pointHoverRadius: 6,
                     pointBackgroundColor: '#38BDF8'
+                },
+                {
+                    label: 'Transport Bookings',
+                    data: @json($stats['transport_chart_data']),
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#10B981'
                 }
             ]
         },
