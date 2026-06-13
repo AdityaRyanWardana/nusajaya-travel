@@ -58,8 +58,8 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('adm
     Route::delete('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::post('/bookings/{booking}/reschedule-noticed', [App\Http\Controllers\Admin\DashboardController::class, 'markRescheduleAsNoticed'])->name('bookings.reschedule-noticed');
     Route::get('maintenance-board', [App\Http\Controllers\Admin\ArmadaController::class, 'maintenanceList'])->name('maintenance.board');
+    Route::post('maintenance-board', [App\Http\Controllers\Admin\ArmadaController::class, 'storeMaintenanceGlobal'])->name('maintenance.store');
     Route::resource('armadas', App\Http\Controllers\Admin\ArmadaController::class);
-    Route::post('armadas/{armada}/maintenance', [App\Http\Controllers\Admin\ArmadaController::class, 'storeMaintenance'])->name('armadas.maintenance.store');
     Route::patch('armadas/{armada}/maintenance/{maintenance}', [App\Http\Controllers\Admin\ArmadaController::class, 'completeMaintenance'])->name('armadas.maintenance.complete');
     Route::delete('armadas/{armada}/delete-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteImage'])->name('armadas.delete-image');
     Route::delete('armadas/{armada}/delete-main-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteMainImage'])->name('armadas.delete-main-image');

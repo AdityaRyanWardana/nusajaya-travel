@@ -15,6 +15,39 @@
         </a>
     </div>
 
+    {{-- Add New Maintenance --}}
+    <div class="bg-slate-50/50 p-8 rounded-2xl shadow-sm border border-slate-200">
+        <div class="mb-6">
+            <h3 class="text-lg font-bold text-slate-800 tracking-tight">{{ __('Send Vehicle to Maintenance') }}</h3>
+            <p class="text-xs text-slate-500 mt-1">Select a fleet category and input the physical car's plate number.</p>
+        </div>
+        <form action="{{ route('admin.maintenance.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+            @csrf
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Select Fleet Category</label>
+                <select name="armada_id" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
+                    <option value="" disabled selected>-- Choose Fleet --</option>
+                    @foreach($armadas as $armada)
+                        <option value="{{ $armada->id }}">{{ $armada->name }} ({{ $armada->maintenance_units }}/{{ $armada->total_units }} in repair)</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Plate No. / Vehicle ID</label>
+                <input type="text" name="vehicle_name" placeholder="e.g. BP 1234 XY" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Expected Finish Date</label>
+                <input type="date" name="expected_finish_date" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
+            </div>
+            <div>
+                <button type="submit" class="w-full py-3.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all shadow-md hover:shadow-red-500/20">
+                    + Send to Repair
+                </button>
+            </div>
+        </form>
+    </div>
+
     {{-- Active Maintenance --}}
     <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>

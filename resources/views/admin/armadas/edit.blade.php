@@ -77,17 +77,6 @@
                             <input type="number" name="total_units" id="total_units" value="{{ $armada->total_units ?? 1 }}" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium" required>
                         </div>
 
-                        <div>
-                            <label for="maintenance_units" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Units Under Repair') }}</label>
-                            <div class="relative">
-                                <input type="number" name="maintenance_units" id="maintenance_units" value="{{ $armada->maintenance_units ?? 0 }}" class="w-full px-4 py-3 bg-slate-100/50 rounded-xl border border-slate-200 text-slate-400 cursor-not-allowed outline-none font-medium" readonly>
-                                <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                                    <i data-lucide="lock" class="w-4 h-4 text-slate-400"></i>
-                                </div>
-                            </div>
-                            <p class="text-[11px] text-slate-400 mt-1 italic">Managed via Maintenance Log below</p>
-                        </div>
-
                         <div class="col-span-2">
                             <label for="description" class="block text-xs font-semibold text-slate-600 mb-2">{{ __('Short Description / Notes') }}</label>
                             <textarea name="description" id="description" rows="4" class="w-full px-4 py-3 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700 font-medium resize-none">{{ $armada->description }}</textarea>
@@ -278,76 +267,6 @@
             </div>
         </div>
     </form>
-
-    {{-- Maintenance Log Section --}}
-    <div class="mt-8 bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-5xl relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6 pb-6 border-b border-slate-100">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-red-50 to-red-100/50 rounded-xl flex items-center justify-center text-red-600 shadow-sm border border-red-100">
-                    <i data-lucide="wrench" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-slate-800 tracking-tight">{{ __('Maintenance Log') }}</h3>
-                    <p class="text-xs text-slate-400 mt-1">Manage vehicles that are currently under repair.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-slate-50/50 rounded-2xl p-6 mb-8 border border-slate-200 shadow-sm">
-            <form action="{{ route('admin.armadas.maintenance.store', $armada->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                @csrf
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-2">Vehicle ID / Plate No.</label>
-                    <input type="text" name="vehicle_name" placeholder="e.g. BP 1234 XY" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-2">Expected Finish Date</label>
-                    <input type="date" name="expected_finish_date" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
-                </div>
-                <div>
-                    <button type="submit" class="w-full py-3.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all shadow-md hover:shadow-red-500/20">
-                        + Send to Repair
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="space-y-4">
-            @forelse($armada->maintenances()->orderBy('created_at', 'desc')->get() as $log)
-                <div class="flex flex-col sm:flex-row items-center justify-between p-5 bg-white border border-slate-200 rounded-xl {{ $log->status === 'completed' ? 'opacity-60 bg-slate-50' : 'shadow-sm' }}">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center {{ $log->status === 'completed' ? 'bg-slate-200 text-slate-500' : 'bg-red-50 text-red-500 border border-red-100' }}">
-                            <i data-lucide="{{ $log->status === 'completed' ? 'check-circle' : 'tool' }}" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-slate-800">{{ $log->vehicle_name }}</p>
-                            <p class="text-xs text-slate-500 mt-1">Est. Finish: <span class="font-semibold text-slate-700">{{ $log->expected_finish_date->format('d M Y') }}</span></p>
-                        </div>
-                    </div>
-                    <div class="mt-4 sm:mt-0">
-                        @if($log->status === 'active')
-                            <form action="{{ route('admin.armadas.maintenance.complete', [$armada->id, $log->id]) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="px-4 py-2 bg-white border border-emerald-500 text-emerald-600 hover:bg-emerald-50 rounded-lg text-xs font-semibold transition-all">
-                                    Mark as Ready
-                                </button>
-                            </form>
-                        @else
-                            <span class="px-3 py-1 bg-slate-200 text-slate-600 rounded-md text-xs font-semibold">
-                                Completed
-                            </span>
-                        @endif
-                    </div>
-                </div>
-            @empty
-                <div class="text-center py-8">
-                    <p class="text-slate-500 text-sm">No active maintenance records.</p>
-                </div>
-            @endforelse
-        </div>
-    </div>
 
     <!-- Hidden Delete Forms -->
     <form id="delete-main-image" action="{{ route('admin.armadas.delete-main-image', $armada->id) }}" method="POST" class="hidden">

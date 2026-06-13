@@ -185,7 +185,33 @@ class ArmadaController extends Controller
                                 ->limit(10) // show last 10 completed for history
                                 ->get();
 
-        return view('admin.armadas.maintenance', compact('activeMaintenances', 'completedMaintenances'));
+        $armadas = Armada::all();
+        return view('admin.armadas.maintenance', compact('activeMaintenances', 'completedMaintenances', 'armadas'));
+    }
+
+    public function storeMaintenanceGlobal(Request $request)
+    {
+        $request->validate([
+            'armada_id' => 'required|exists:armadas,id',
+            'vehicle_name' => 'required|string|max:255',
+            'expected_finish_date' => 'required|date',
+        ]);
+
+        $armada = Armada::findOrFail($request->armada_id);
+
+        if ($armada->maintenance_units >= $armada->total_units) {
+            return back()->with('error', 'Semua unit armada ini sudah berada di bengkel.');
+        }
+
+        $armada->maintenances()->create([
+            'vehicle_name' => $request->vehicle_name,
+            'expected_finish_date' => $request->expected_finish_date,
+            'status' => 'active'
+        ]);
+
+        $armada->increment('maintenance_units');
+
+        return back()->with('success', 'Mobil berhasil ditambahkan ke daftar maintenance.');
     }
 
     public function storeMaintenance(Request $request, Armada $armada)
