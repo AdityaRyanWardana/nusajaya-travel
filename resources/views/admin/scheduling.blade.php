@@ -66,11 +66,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/50 dark:bg-slate-800/50">
-                        <th class="p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 z-10 w-80 shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
+                        <th class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 z-20 min-w-[180px] w-[180px] md:min-w-[320px] md:w-80 shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
                             <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ __('Tour Package') }}</span>
                         </th>
                         @foreach($dates as $date)
-                            <th class="p-6 border-b border-slate-100 dark:border-slate-800 text-center min-w-[120px]">
+                            <th class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 text-center min-w-[80px] md:min-w-[120px]">
                                 <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">{{ \Carbon\Carbon::parse($date)->format('D') }}</p>
                                 <p class="text-base font-black text-slate-800 dark:text-white leading-none">{{ \Carbon\Carbon::parse($date)->format('d') }}</p>
                             </th>
@@ -80,15 +80,15 @@
                 <tbody>
                     @foreach($tours as $tour)
                         <tr class="group hover:bg-slate-50/30 dark:hover:bg-slate-800/30 transition-colors">
-                            <td class="p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50/30 dark:group-hover:bg-slate-800/30 z-10 transition-colors shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm shrink-0">
+                            <td class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50/30 dark:group-hover:bg-slate-800/30 z-20 transition-colors shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
+                                <div class="flex items-center gap-3 md:gap-4">
+                                    <div class="hidden md:flex w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm shrink-0">
                                         <i data-lucide="map" class="w-6 h-6"></i>
                                     </div>
                                     <div class="overflow-hidden flex-1">
-                                        <h4 class="text-sm font-black text-slate-800 dark:text-white leading-tight truncate" title="{{ $tour->title }}">{{ $tour->title }}</h4>
-                                        <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-0.5 truncate">{{ $tour->destination }} • {{ $tour->duration }}</p>
-                                        <div class="flex items-center gap-2 mt-1.5">
+                                        <h4 class="text-xs md:text-sm font-black text-slate-800 dark:text-white leading-tight truncate" title="{{ $tour->title }}">{{ $tour->title }}</h4>
+                                        <p class="text-[9px] md:text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-0.5 truncate">{{ $tour->destination }} • {{ $tour->duration }}</p>
+                                        <div class="flex items-center gap-2 mt-1.5 hidden md:flex">
                                             <span class="text-[9px] font-black text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest">{{ $tour->badge ?? 'Reg' }}</span>
                                         </div>
                                     </div>
@@ -128,11 +128,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/50 dark:bg-slate-800/50">
-                        <th class="p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 z-10 w-80 shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
+                        <th class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 z-20 min-w-[180px] w-[180px] md:min-w-[320px] md:w-80 shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
                             <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ __('Fleet / Vehicle') }}</span>
                         </th>
                         @foreach($dates as $date)
-                            <th class="p-6 border-b border-slate-100 dark:border-slate-800 text-center min-w-[120px]">
+                            <th class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 text-center min-w-[80px] md:min-w-[120px]">
                                 <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">{{ \Carbon\Carbon::parse($date)->format('D') }}</p>
                                 <p class="text-base font-black text-slate-800 dark:text-white leading-none">{{ \Carbon\Carbon::parse($date)->format('d') }}</p>
                             </th>
@@ -142,13 +142,13 @@
                 <tbody>
                     @foreach($armadas as $armada)
                         <tr class="group hover:bg-slate-50/30 dark:hover:bg-slate-800/30 transition-colors">
-                            <td class="p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50/30 dark:group-hover:bg-slate-800/30 z-10 transition-colors shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm shrink-0">
+                            <td class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50/30 dark:group-hover:bg-slate-800/30 z-20 transition-colors shadow-[10px_0_15px_-10px_rgba(0,0,0,0.05)] dark:shadow-[10px_0_15px_-10px_rgba(0,0,0,0.5)]">
+                                <div class="flex items-center gap-3 md:gap-4">
+                                    <div class="hidden md:flex w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm shrink-0">
                                         <i data-lucide="bus" class="w-6 h-6"></i>
                                     </div>
-                                    <div>
-                                        <h4 class="text-xs font-black text-slate-800 dark:text-white leading-tight">{{ $armada->name }}</h4>
+                                    <div class="overflow-hidden flex-1">
+                                        <h4 class="text-xs md:text-sm font-black text-slate-800 dark:text-white leading-tight truncate" title="{{ $armada->name }}">{{ $armada->name }}</h4>
                                         <p class="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">{{ $armada->capacity }} Seats</p>
                                     </div>
                                 </div>

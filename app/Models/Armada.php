@@ -44,6 +44,11 @@ class Armada extends Model
         return $this->hasMany(ArmadaMaintenance::class);
     }
 
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
     public function getImageUrlAttribute()
     {
         if (!$this->image) {

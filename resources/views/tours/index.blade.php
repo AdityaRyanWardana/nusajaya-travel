@@ -7,7 +7,7 @@
         <div class="mb-20 grid lg:grid-cols-2 gap-12 items-end">
             <div class="reveal-left">
                 <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{{ __('Official Curator') }}</span>
-                <h1 class="text-5xl font-black text-brandblue uppercase italic mb-6 leading-[0.9]">{{ __('Batam Tour Packages') }}</h1>
+                <h1 class="text-4xl font-black text-brandblue uppercase italic mb-6 leading-[0.9]">{{ __('Batam Tour Packages') }}</h1>
                 <p class="text-sm text-slate-500 font-medium max-w-lg leading-relaxed">{{ __('Explore our carefully curated tour packages for an unforgettable experience in Batam and its surrounding islands.') }}</p>
             </div>
             

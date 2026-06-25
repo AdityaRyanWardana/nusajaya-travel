@@ -186,36 +186,37 @@ class ArmadaController extends Controller
         $completedMaintenances = \App\Models\ArmadaMaintenance::with('armada')
                                 ->where('status', 'completed')
                                 ->orderBy('updated_at', 'desc')
-                                ->limit(10) // show last 10 completed for history
+                                ->limit(10)
                                 ->get();
 
-        $armadas = Armada::all();
-        return view('admin.armadas.maintenance', compact('activeMaintenances', 'completedMaintenances', 'armadas'));
+        $vehicles = \App\Models\Vehicle::with('armada')->where('status', 'active')->get();
+        return view('admin.armadas.maintenance', compact('activeMaintenances', 'completedMaintenances', 'vehicles'));
     }
 
     public function storeMaintenanceGlobal(Request $request)
     {
         $request->validate([
-            'armada_id' => 'required|exists:armadas,id',
-            'vehicle_name' => 'required|string|max:255',
+            'vehicle_id' => 'required|exists:vehicles,id',
             'expected_finish_date' => 'required|date',
         ]);
 
-        $armada = Armada::findOrFail($request->armada_id);
+        $vehicle = \App\Models\Vehicle::findOrFail($request->vehicle_id);
+        $armada = $vehicle->armada;
 
         if ($armada->maintenance_units >= $armada->total_units) {
             return back()->with('error', 'Semua unit armada ini sudah berada di bengkel.');
         }
 
         $armada->maintenances()->create([
-            'vehicle_name' => $request->vehicle_name,
+            'vehicle_name' => $vehicle->plate_number,
             'expected_finish_date' => $request->expected_finish_date,
             'status' => 'active'
         ]);
 
         $armada->increment('maintenance_units');
+        $vehicle->update(['status' => 'maintenance']);
 
-        return back()->with('success', 'Mobil berhasil ditambahkan ke daftar maintenance.');
+        return back()->with('success', 'Vehicle successfully sent to maintenance.');
     }
 
     public function storeMaintenance(Request $request, Armada $armada)
@@ -248,8 +249,26 @@ class ArmadaController extends Controller
             if ($armada->maintenance_units > 0) {
                 $armada->decrement('maintenance_units');
             }
+
+            $vehicle = \App\Models\Vehicle::where('plate_number', $maintenance->vehicle_name)->first();
+            if ($vehicle) {
+                $vehicle->update(['status' => 'active']);
+            }
         }
 
         return back()->with('success', 'Maintenance unit telah diselesaikan.');
+    }
+
+    public function updateMaintenance(Request $request, Armada $armada, ArmadaMaintenance $maintenance)
+    {
+        $request->validate([
+            'expected_finish_date' => 'required|date'
+        ]);
+
+        $maintenance->update([
+            'expected_finish_date' => $request->expected_finish_date
+        ]);
+
+        return back()->with('success', 'Estimated finish date updated successfully.');
     }
 }

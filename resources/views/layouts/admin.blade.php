@@ -129,11 +129,21 @@
                     <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Scheduling') }}</span>
                 </a>
 
+                <div class="h-px bg-slate-50 dark:bg-[#1A365D] my-6 mx-6"></div>
+                <p x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="text-[10px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap">{{ __('Fleet Management') }}</p>
+
                 <a href="{{ route('admin.armadas.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.armadas.*') && !request()->routeIs('admin.maintenance.board') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
-                   :title="sidebarCollapsed && !isMobile ? 'Fleets' : ''">
+                   :title="sidebarCollapsed && !isMobile ? 'Fleet' : ''">
                     <i data-lucide="bus" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
-                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Fleets') }}</span>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Fleet') }}</span>
+                </a>
+
+                <a href="{{ route('admin.vehicles.index') }}" 
+                   class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.vehicles.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"
+                   :title="sidebarCollapsed && !isMobile ? 'Vehicles Units' : ''">
+                    <i data-lucide="car" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
+                    <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Vehicle Units') }}</span>
                 </a>
 
                 <a href="{{ route('admin.maintenance.board') }}" 
@@ -142,6 +152,9 @@
                     <i data-lucide="wrench" class="w-5 h-5 transition-transform group-hover:scale-110 shrink-0" :class="sidebarCollapsed && !isMobile ? 'mx-auto' : 'mr-5'"></i>
                     <span x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="whitespace-nowrap">{{ __('Maintenance') }}</span>
                 </a>
+
+                <div class="h-px bg-slate-50 dark:bg-[#1A365D] my-6 mx-6"></div>
+                <p x-show="!sidebarCollapsed || isMobile" x-transition.opacity class="text-[10px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.25em] px-6 mb-4 whitespace-nowrap">{{ __('Tours & Packages') }}</p>
 
                 <a href="{{ route('admin.tours.index') }}" 
                    class="group flex items-center px-6 py-4 text-sm font-bold rounded-2xl transition-all duration-300 {{ request()->routeIs('admin.tours.*') ? 'nav-item-active' : 'text-slate-500  hover:bg-slate-50  hover:text-sky-500 ' }}"

@@ -1,13 +1,15 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="mb-8">
-    <a href="{{ route('admin.armadas.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors mb-4">
-        <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+    <div>
+        <h2 class="text-3xl font-black text-slate-800 uppercase italic tracking-tight">{{ __('Add New Fleet') }}</h2>
+        <p class="text-slate-500 text-sm mt-2 font-medium">{{ __('Enter vehicle details to add to the service list.') }}</p>
+    </div>
+    <a href="{{ route('admin.armadas.index') }}" class="flex items-center px-8 py-4 bg-white border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all shadow-sm group">
+        <i data-lucide="arrow-left" class="w-4 h-4 mr-3 group-hover:-translate-x-1 transition-transform"></i>
         {{ __('Back to List') }}
     </a>
-    <h2 class="text-2xl font-bold text-slate-800">{{ __('Add New Fleet') }}</h2>
-    <p class="text-slate-500 text-sm">{{ __('Enter vehicle details to add to the service list.') }}</p>
 </div>
 
 <div class="max-w-5xl" x-data="{ 

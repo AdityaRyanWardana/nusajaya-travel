@@ -18,6 +18,15 @@ use App\Http\Controllers\Auth\SocialiteController;
 // Midtrans Webhook (Server to Server Notification)
 Route::post('/midtrans/callback', [PaymentCallbackController::class, 'receive'])->name('midtrans.callback');
 
+// Cache Clear Route untuk InfinityFree
+Route::get('/clear-cache', function () {
+    $views = glob(storage_path('framework/views/*'));
+    foreach($views as $view) { if(is_file($view)) unlink($view); }
+    if(function_exists('opcache_reset')) opcache_reset();
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return 'Semua cache (Views, Route, Config, OPCache) berhasil dihapus! Silakan buka web Anda lagi.';
+});
+
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
@@ -65,7 +74,9 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin')->name('adm
     Route::get('maintenance-board', [App\Http\Controllers\Admin\ArmadaController::class, 'maintenanceList'])->name('maintenance.board');
     Route::post('maintenance-board', [App\Http\Controllers\Admin\ArmadaController::class, 'storeMaintenanceGlobal'])->name('maintenance.store');
     Route::resource('armadas', App\Http\Controllers\Admin\ArmadaController::class);
+    Route::resource('vehicles', App\Http\Controllers\VehicleController::class);
     Route::patch('armadas/{armada}/maintenance/{maintenance}', [App\Http\Controllers\Admin\ArmadaController::class, 'completeMaintenance'])->name('armadas.maintenance.complete');
+    Route::put('armadas/{armada}/maintenance/{maintenance}', [App\Http\Controllers\Admin\ArmadaController::class, 'updateMaintenance'])->name('armadas.maintenance.update');
     Route::delete('armadas/{armada}/delete-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteImage'])->name('armadas.delete-image');
     Route::delete('armadas/{armada}/delete-main-image', [App\Http\Controllers\Admin\ArmadaController::class, 'deleteMainImage'])->name('armadas.delete-main-image');
     

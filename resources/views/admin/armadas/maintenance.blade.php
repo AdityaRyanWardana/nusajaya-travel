@@ -16,6 +16,7 @@
     </div>
 
     {{-- Add New Maintenance --}}
+    @if(auth()->user()->role !== 'superadmin')
     <div class="bg-slate-50/50 p-8 rounded-2xl shadow-sm border border-slate-200">
         <div class="mb-6">
             <h3 class="text-lg font-bold text-slate-800 tracking-tight">{{ __('Send Vehicle to Maintenance') }}</h3>
@@ -23,30 +24,27 @@
         </div>
         <form action="{{ route('admin.maintenance.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
             @csrf
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-2">Select Fleet Category</label>
-                <select name="armada_id" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
-                    <option value="" disabled selected>-- Choose Fleet --</option>
-                    @foreach($armadas as $armada)
-                        <option value="{{ $armada->id }}">{{ $armada->name }} ({{ $armada->maintenance_units }}/{{ $armada->total_units }} in repair)</option>
+            <div class="md:col-span-2">
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Select Vehicle to Send</label>
+                <select name="vehicle_id" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
+                    <option value="" disabled selected>-- Choose an Active Vehicle --</option>
+                    @foreach($vehicles as $vehicle)
+                        <option value="{{ $vehicle->id }}">{{ $vehicle->armada->name }} - {{ $vehicle->plate_number }} {{ $vehicle->mirror_number ? '('.$vehicle->mirror_number.')' : '' }}</option>
                     @endforeach
                 </select>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-2">Plate No. / Vehicle ID</label>
-                <input type="text" name="vehicle_name" placeholder="e.g. BP 1234 XY" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Expected Finish Date</label>
                 <input type="date" name="expected_finish_date" class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm text-slate-700 font-medium" required>
             </div>
             <div>
-                <button type="submit" class="w-full py-3.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all shadow-md hover:shadow-red-500/20">
+                <button type="submit" class="w-full py-3.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all shadow-md hover:shadow-blue-500/20">
                     + Send to Repair
                 </button>
             </div>
         </form>
     </div>
+    @endif
 
     {{-- Active Maintenance --}}
     <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
@@ -69,12 +67,14 @@
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Plate No. / ID</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sent to Repair</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Est. Finish</th>
+                        @if(auth()->user()->role !== 'superadmin')
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($activeMaintenances as $log)
-                        <tr class="hover:bg-slate-50/50 transition-colors">
+                        <tr class="hover:bg-slate-50/50 transition-colors" x-data="{ editingDate: false }">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden">
@@ -94,8 +94,31 @@
                                 <span class="text-sm text-slate-600 font-medium">{{ $log->created_at->format('d M Y') }}</span>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="text-sm text-red-600 font-bold bg-red-50 px-3 py-1 rounded-md">{{ $log->expected_finish_date->format('d M Y') }}</span>
+                                <div x-show="!editingDate" class="flex items-center gap-2">
+                                    <span class="text-sm text-red-600 font-bold bg-red-50 px-3 py-1 rounded-md shadow-sm">{{ $log->expected_finish_date->format('d M Y') }}</span>
+                                    @if(auth()->user()->role !== 'superadmin')
+                                    <button @click="editingDate = true" class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-md transition-colors" title="Edit Extension Time">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </button>
+                                    @endif
+                                </div>
+                                @if(auth()->user()->role !== 'superadmin')
+                                <div x-show="editingDate" style="display: none;" class="flex items-center gap-2">
+                                    <form action="{{ route('admin.armadas.maintenance.update', [$log->armada_id, $log->id]) }}" method="POST" class="flex items-center gap-2 bg-white border border-slate-200 p-1 rounded-lg shadow-lg">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="date" name="expected_finish_date" value="{{ $log->expected_finish_date->format('Y-m-d') }}" class="px-2 py-1.5 text-xs border border-slate-200 rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" required>
+                                        <button type="submit" class="p-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white rounded-md transition-colors" title="Save">
+                                            <i data-lucide="check" class="w-4 h-4"></i>
+                                        </button>
+                                        <button type="button" @click="editingDate = false" class="p-1.5 bg-slate-50 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-md transition-colors" title="Cancel">
+                                            <i data-lucide="x" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                @endif
                             </td>
+                            @if(auth()->user()->role !== 'superadmin')
                             <td class="px-6 py-4 text-right">
                                 <form action="{{ route('admin.armadas.maintenance.complete', [$log->armada_id, $log->id]) }}" method="POST">
                                     @csrf
@@ -105,10 +128,11 @@
                                     </button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="{{ auth()->user()->role !== 'superadmin' ? '5' : '4' }}" class="px-6 py-12 text-center">
                                 <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 mx-auto mb-4 border border-slate-100">
                                     <i data-lucide="check-circle" class="w-8 h-8 text-emerald-400"></i>
                                 </div>

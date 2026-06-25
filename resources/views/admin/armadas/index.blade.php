@@ -9,10 +9,12 @@
             <h2 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight uppercase italic leading-none">{{ __('Fleet Management') }}</h2>
             <p class="text-slate-400 dark:text-slate-500 font-medium mt-2">{{ __('Organize and monitor your transportation assets.') }}</p>
         </div>
+        @if(auth()->user()->role !== 'superadmin')
         <a href="{{ route('admin.armadas.create') }}" class="flex items-center px-8 py-4 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 group">
             <i data-lucide="plus" class="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform"></i>
             {{ __('Register New Fleet') }}
         </a>
+        @endif
     </div>
 
     {{-- Stats Mini Row --}}
@@ -38,7 +40,7 @@
     {{-- Fleet Grid --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($armadas as $armada)
-        <div class="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-500 overflow-hidden flex flex-col cursor-pointer" onclick="window.location.href='{{ route('admin.armadas.edit', $armada->id) }}'">
+        <div class="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-500 overflow-hidden flex flex-col {{ auth()->user()->role !== 'superadmin' ? 'cursor-pointer' : '' }}" @if(auth()->user()->role !== 'superadmin') onclick="window.location.href='{{ route('admin.armadas.edit', $armada->id) }}'" @endif>
             {{-- Image Header --}}
             <div class="relative h-56 overflow-hidden">
                 @if($armada->image)
@@ -96,6 +98,7 @@
                 </div>
 
                 {{-- Actions --}}
+                @if(auth()->user()->role !== 'superadmin')
                 <div class="pt-6 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div class="flex-1 flex items-center justify-center px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
                         <i data-lucide="edit-3" class="w-3.5 h-3.5 mr-2"></i>
@@ -114,6 +117,7 @@
                         </button>
                     </form>
                 </div>
+                @endif
             </div>
         </div>
         @empty

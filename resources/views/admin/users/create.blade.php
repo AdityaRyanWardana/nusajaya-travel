@@ -2,13 +2,15 @@
 
 @section('content')
 <div class="max-w-4xl space-y-8">
-    <div class="mb-8">
-        <a href="{{ route('admin.users.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors mb-4">
-            <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div>
+            <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">{{ __('Add New User') }}</h2>
+            <p class="text-slate-400 dark:text-slate-400 font-medium mt-2 italic text-lg">{{ __('Create a new administrative or customer account.') }}</p>
+        </div>
+        <a href="{{ route('admin.users.index') }}" class="flex items-center px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm group">
+            <i data-lucide="arrow-left" class="w-4 h-4 mr-3 group-hover:-translate-x-1 transition-transform"></i>
             {{ __('Back to List') }}
         </a>
-        <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight italic uppercase">{{ __('Add New User') }}</h2>
-        <p class="text-slate-400 dark:text-slate-400 font-medium mt-2 italic text-lg">{{ __('Create a new administrative or customer account.') }}</p>
     </div>
 
     <form action="{{ route('admin.users.store') }}" method="POST" class="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm p-12 space-y-10">

@@ -25,7 +25,7 @@
                 <span class="text-[10px] font-black text-skyblue uppercase tracking-[0.3em]">Established Since 1995</span>
             </div>
 
-            <h1 class="text-5xl md:text-8xl font-black text-white leading-[0.9] mb-8 tracking-tighter italic animate-fade-up">
+            <h1 class="text-5xl md:text-7xl font-black text-white leading-[0.9] mb-8 tracking-tighter italic animate-fade-up">
                 Explore <span class="text-skyblue not-italic">Batam</span> 
                 <span class="text-white/60 font-normal text-3xl md:text-5xl block mt-4 not-italic tracking-normal">
                     Discover <span id="typewriter" class="text-white font-black border-r-4 border-skyblue pr-2"></span>
@@ -183,7 +183,7 @@
     <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
         <div class="max-w-2xl">
             <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Our Expertise</span>
-            <h2 class="text-5xl md:text-6xl font-black text-brandblue uppercase italic leading-none mb-6">Premium Travel Solutions</h2>
+            <h2 class="text-4xl md:text-5xl font-black text-brandblue uppercase italic leading-none mb-6">Premium Travel Solutions</h2>
             <p class="text-base text-slate-500 font-medium leading-relaxed max-w-lg">
                 We bring a new standard to travel comfort. Choose our premium fleet, personalized tours, or highly private car rentals.
             </p>
@@ -209,7 +209,7 @@
                 <h3 class="text-3xl lg:text-4xl font-black text-white uppercase italic mb-2 shrink-0 drop-shadow-md">Transport</h3>
                 
                 <div class="overflow-hidden max-h-0 opacity-0 group-hover:max-h-64 group-hover:opacity-100 group-hover:mt-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
-                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-8 pr-4 lg:pr-12">
+                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-6 pr-4 lg:pr-12">
                         Airport and seaport pickup services with our latest fleet that is clean, well-maintained, and executive class.
                     </p>
                     <div class="inline-flex items-center gap-3 text-[10px] font-black text-brandblue uppercase tracking-[0.3em] bg-white hover:bg-skyblue hover:text-white px-6 py-3.5 rounded-full transition-all duration-300 shadow-xl">
@@ -232,7 +232,7 @@
                 <h3 class="text-3xl lg:text-4xl font-black text-white uppercase italic mb-2 shrink-0 drop-shadow-md">Tour Packages</h3>
                 
                 <div class="overflow-hidden max-h-0 opacity-0 group-hover:max-h-64 group-hover:opacity-100 group-hover:mt-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
-                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-8 pr-4 lg:pr-12">
+                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-6 pr-4 lg:pr-12">
                         Exploration of stunning destinations in Batam & Bintan with tour packages designed for limitless excitement.
                     </p>
                     <div class="inline-flex items-center gap-3 text-[10px] font-black text-brandblue uppercase tracking-[0.3em] bg-white hover:bg-skyblue hover:text-white px-6 py-3.5 rounded-full transition-all duration-300 shadow-xl">
@@ -255,7 +255,7 @@
                 <h3 class="text-3xl lg:text-4xl font-black text-white uppercase italic mb-2 shrink-0 drop-shadow-md">Private Car</h3>
                 
                 <div class="overflow-hidden max-h-0 opacity-0 group-hover:max-h-64 group-hover:opacity-100 group-hover:mt-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
-                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-8 pr-4 lg:pr-12">
+                    <p class="text-sm text-white/90 font-medium leading-relaxed mb-6 pr-4 lg:pr-12">
                         Daily car rental with personal drivers for business needs or highly private family holidays.
                     </p>
                     <div class="inline-flex items-center gap-3 text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/80 backdrop-blur px-6 py-3.5 rounded-full cursor-not-allowed">
@@ -271,7 +271,7 @@
 <section class="max-w-7xl mx-auto px-8 pb-32 reveal">
     <div class="flex flex-col items-center text-center mb-16">
         <span class="text-skyblue font-black uppercase tracking-[0.4em] text-[10px] mb-4">Discover Batam</span>
-        <h2 class="text-5xl font-black text-brandblue uppercase italic">Top Destinations</h2>
+        <h2 class="text-4xl md:text-5xl font-black text-brandblue uppercase italic">Top Destinations</h2>
     </div>
     
     <div class="grid grid-cols-4 grid-rows-2 gap-6 h-[700px]">
@@ -284,7 +284,7 @@
             
             <div class="absolute bottom-10 left-10 right-10">
                 <span class="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-4">Main Gate</span>
-                <h3 class="text-4xl font-black text-white mb-4 uppercase leading-none">Batam City <br><span class="text-skyblue">Experience</span></h3>
+                <h3 class="text-3xl md:text-4xl font-black text-white mb-4 uppercase leading-none">Batam City <br><span class="text-skyblue">Experience</span></h3>
                 <p class="text-sm text-white/70 font-medium line-clamp-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">
                     {{ $batamCity ? $batamCity->description : 'Discover the industrial heartbeat and shopping paradise of the Riau Islands.' }}
                 </p>
@@ -302,8 +302,8 @@
                 </div>
             </div>
             <div class="absolute inset-y-0 left-10 flex flex-col justify-center max-w-xs">
-                <h3 class="text-3xl font-black text-white mb-2 uppercase italic">Ranoh Island</h3>
-                <p class="text-xs text-white/80 font-medium tracking-tight line-clamp-2 group-hover:line-clamp-none transition-all">
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-2 uppercase italic">Ranoh Island</h3>
+                <p class="text-sm text-white/80 font-medium tracking-tight line-clamp-2 group-hover:line-clamp-none transition-all">
                     {{ $ranoh ? $ranoh->description : 'Tropical paradise with crystal clear water.' }}
                 </p>
             </div>
@@ -316,7 +316,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 via-transparent to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
                 <p class="text-[9px] font-black text-skyblue uppercase tracking-widest mb-1 italic">Architecture</p>
-                <h3 class="text-lg font-black text-white uppercase italic leading-none mb-2">Maha <br>Vihara</h3>
+                <h3 class="text-lg md:text-xl font-black text-white uppercase italic leading-none mb-2">Maha <br>Vihara</h3>
                 <p class="text-[10px] text-white/60 font-medium line-clamp-2 opacity-0 group-hover:opacity-100 transition duration-500">
                     {{ $mahaVihara ? $mahaVihara->description : 'Visit one of the largest Buddhist temples in Southeast Asia.' }}
                 </p>
@@ -329,7 +329,7 @@
             <img src="{{ asset('images/barelang_bridge.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
             <div class="absolute inset-0 bg-gradient-to-t from-brandblue/70 to-transparent"></div>
             <div class="absolute bottom-6 left-6 right-6">
-                <h3 class="text-lg font-black text-white uppercase italic leading-none mb-2">Barelang <br>Bridge</h3>
+                <h3 class="text-lg md:text-xl font-black text-white uppercase italic leading-none mb-2">Barelang <br>Bridge</h3>
                 <p class="text-[10px] text-white/60 font-medium line-clamp-2 opacity-0 group-hover:opacity-100 transition duration-500">
                     {{ $barelang ? $barelang->description : 'The iconic landmark connecting the islands of Batam.' }}
                 </p>
@@ -342,7 +342,7 @@
 <section class="max-w-7xl mx-auto px-8 pb-32 reveal">
     <div class="text-center mb-16">
         <span class="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Seasonal Offers</span>
-        <h2 class="text-4xl font-black text-brandblue uppercase italic">Travel More, Spend Less</h2>
+        <h2 class="text-4xl md:text-5xl font-black text-brandblue uppercase italic">Travel More, Spend Less</h2>
     </div>
 
     <!-- Flash Sale Banner / Main Promotion -->
@@ -366,10 +366,10 @@
                     <span class="text-white/60 text-[10px] font-bold tracking-widest uppercase">Ends {{ $main_promotion->expires_at->diffForHumans() }}</span>
                 @endif
             </div>
-            <h3 class="text-5xl font-black text-white mb-6 uppercase leading-none tracking-tighter">
+            <h3 class="text-4xl md:text-5xl font-black text-white mb-4 uppercase leading-none tracking-tighter">
                 {!! str_replace(['<br>', ' '], ['<br>', ' <br>'], $main_promotion->title) !!}
             </h3>
-            <p class="text-slate-300 mb-8 font-medium leading-relaxed italic">{{ $main_promotion->description }}</p>
+            <p class="text-base text-slate-300 mb-6 font-medium leading-relaxed italic">{{ $main_promotion->description }}</p>
             <div class="bg-skyblue group-hover:bg-white group-hover:text-brandblue text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition shadow-2xl shadow-skyblue/30 inline-block">
                 {{ $main_promotion->link_text ?? 'Learn More' }}
             </div>
@@ -387,8 +387,8 @@
                 <span class="bg-red-500 text-white text-[10px] font-black px-4 py-1 rounded-full animate-pulse">FLASH SALE</span>
                 <span class="text-white/60 text-[10px] font-bold tracking-widest uppercase">Ends in 24 Hours</span>
             </div>
-            <h3 class="text-5xl font-black text-white mb-6 uppercase leading-none tracking-tighter">Batam <br>Weekend <br><span class="text-skyblue">Gateaway</span></h3>
-            <p class="text-slate-300 mb-8 font-medium leading-relaxed italic">Book any tour for this weekend and get a free pickup from Batam Center or Harbour Bay Ferry Terminal.</p>
+            <h3 class="text-4xl md:text-5xl font-black text-white mb-4 uppercase leading-none tracking-tighter">Batam <br>Weekend <br><span class="text-skyblue">Gateaway</span></h3>
+            <p class="text-base text-slate-300 mb-6 font-medium leading-relaxed italic">Book any tour for this weekend and get a free pickup from Batam Center or Harbour Bay Ferry Terminal.</p>
             <div class="bg-skyblue group-hover:bg-white group-hover:text-brandblue text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition shadow-2xl shadow-skyblue/30 inline-block">Book My Weekend</div>
         </div>
     </a>
@@ -456,12 +456,12 @@
             <img src="{{ asset('images/fleet.png') }}" class="rounded-2xl shadow-md w-full h-[300px] object-cover">
             <div class="absolute -top-6 -left-6 bg-white p-4 rounded-xl shadow-lg text-center">
                 <p class="text-3xl font-black text-brandblue">15+</p>
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Years of Service</p>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Years</p>
             </div>
         </div>
         <div>
-            <h2 class="text-3xl font-bold text-brandblue mb-6 leading-tight">PT Nusa Jaya Indofast T&T: Your Trusted Travel Partner</h2>
-            <p class="text-sm text-slate-500 mb-8 leading-relaxed">
+            <h2 class="text-3xl font-bold text-brandblue mb-4 leading-tight">PT Nusa Jaya Indofast T&T: Your Trusted Travel Partner</h2>
+            <p class="text-sm text-slate-500 mb-6 leading-relaxed">
                 Since our establishment, we have been committed to providing unforgettable travel experiences. As a one-stop travel service provider in the Riau Islands, we prioritize safety, comfort, and punctuality in every service we provide.
             </p>
             <div class="grid grid-cols-2 gap-6 mb-8">
